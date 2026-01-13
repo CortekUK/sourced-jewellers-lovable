@@ -62,9 +62,9 @@ const QuickActionsBar = () => {
   const actions = [
     { label: 'New Sale', icon: ShoppingCart, route: '/sales' },
     { label: 'Add Product', icon: Plus, route: '/products?add=true' },
+    { label: 'Add Customer', icon: UserPlus, route: '/customers?add=true' },
     { label: 'Log Expense', icon: ReceiptPoundSterling, route: '/expenses?add=true' },
     { label: 'Add Supplier', icon: Users, route: '/suppliers?add=true' },
-    { label: 'Add Customer', icon: UserPlus, route: '/customers?add=true' },
     { label: 'View Reports', icon: FileText, route: '/reports' },
   ];
   
