@@ -4,7 +4,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Package, TrendingDown, Eye, Edit, Image as ImageIcon, AlertTriangle, PoundSterling, Award, Repeat, Copy, MapPin } from 'lucide-react';
+import { Plus, Package, TrendingDown, Eye, Edit, Image as ImageIcon, AlertTriangle, PoundSterling, Award, Repeat, Copy, MapPin, Search } from 'lucide-react';
 import { useSuppliers, useCreateProduct, useStockAdjustment } from '@/hooks/useDatabase';
 import { useLocations } from '@/hooks/useLocations';
 import { supabase } from '@/integrations/supabase/client';
@@ -550,9 +550,20 @@ export default function Products() {
   return (
     <AppLayout title="Products" subtitle="Manage inventory and product catalogue" showSearch>
       <div className="space-y-6">
-        {/* Header Actions */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div className="flex-1 flex flex-wrap items-center gap-2 sm:gap-3">
+        {/* Row 1: Full-width Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search products by name, SKU, or category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 w-full"
+          />
+        </div>
+
+        {/* Row 2: Controls Bar - Filters + Sort on left, Add Product on right */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
             <EnhancedProductFilters
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -567,7 +578,7 @@ export default function Products() {
               value={filters.sortBy || 'newest'}
               onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value as any }))}
             >
-              <SelectTrigger className="w-[140px] sm:w-[180px]">
+              <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Sort by..." />
               </SelectTrigger>
               <SelectContent>
@@ -583,12 +594,10 @@ export default function Products() {
             </Select>
           </div>
           {canCreate(CRM_MODULES.PRODUCTS) && (
-            <div className="ml-0 sm:ml-4 w-full sm:w-auto">
-              <Button variant="premium" onClick={() => setShowAddProduct(true)} className="w-full sm:w-auto">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Product
-              </Button>
-            </div>
+            <Button variant="premium" onClick={() => setShowAddProduct(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
           )}
         </div>
 

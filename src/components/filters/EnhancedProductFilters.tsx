@@ -178,31 +178,18 @@ export function EnhancedProductFilters({
   const activeChips = getActiveFilterChips();
 
   return (
-    <div className="space-y-4">
-      {/* Search and Filter Bar */}
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search products by name, SKU, or category..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="outline" className="relative" data-filter-trigger>
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-              {activeFilters > 0 && (
-                <Badge variant="destructive" className="ml-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
-                  {activeFilters}
-                </Badge>
-              )}
-            </Button>
-          </SheetTrigger>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="outline" className="relative" data-filter-trigger>
+          <Filter className="h-4 w-4 mr-2" />
+          Filters
+          {activeFilters > 0 && (
+            <Badge variant="destructive" className="ml-2 h-5 w-5 p-0 flex items-center justify-center text-xs">
+              {activeFilters}
+            </Badge>
+          )}
+        </Button>
+      </SheetTrigger>
           <SheetContent className="w-full sm:w-96 sm:max-w-96">
             <SheetHeader>
               <div className="flex items-center justify-between">
@@ -485,28 +472,5 @@ export function EnhancedProductFilters({
             </ScrollArea>
           </SheetContent>
         </Sheet>
-      </div>
-
-      {/* Active Filters Display */}
-      {activeChips.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Active filters:</span>
-          
-          {activeChips.map((chip, index) => (
-            <Badge key={index} variant="secondary" className="gap-1">
-              {chip.label}
-              <X 
-                className="h-3 w-3 cursor-pointer hover:text-destructive" 
-                onClick={() => removeFilter(chip.key, chip.value)} 
-              />
-            </Badge>
-          ))}
-          
-          <Button variant="ghost" size="sm" onClick={clearAllFilters}>
-            Clear All
-          </Button>
-        </div>
-      )}
-    </div>
   );
 }
