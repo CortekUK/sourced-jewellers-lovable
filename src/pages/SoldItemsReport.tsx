@@ -485,9 +485,9 @@ export default function SoldItemsReport() {
             </>
           ) : (
             <>
-          <Card className="shadow-elegant hover:shadow-gold transition-all duration-300 border-l-4 border-l-muted/30">
+          <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <span>Total Items Sold</span>
                 {totals.tradeInCount > 0 && (
                   <Badge variant="secondary" className="text-xs font-normal">
@@ -495,45 +495,45 @@ export default function SoldItemsReport() {
                   </Badge>
                 )}
               </CardTitle>
-              <Package className="h-5 w-5 text-muted-foreground" />
+              <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{totals.items}</div>
+              <div className="text-2xl font-bold font-luxury">{totals.items}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 across {filteredItems.length} line items
               </p>
             </CardContent>
           </Card>
           
-          <Card className="shadow-elegant hover:shadow-gold transition-all duration-300 border-l-4 border-l-success/20">
+          <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-success">Total Revenue</CardTitle>
-              <PoundSterling className="h-5 w-5 text-muted-foreground" />
+              <PoundSterling className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-success">£{totals.revenue.toFixed(2)}</div>
+              <div className="text-2xl font-bold font-luxury text-success">£{totals.revenue.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground mt-1">gross revenue</p>
             </CardContent>
           </Card>
           
-          <Card className="shadow-elegant hover:shadow-gold transition-all duration-300 border-l-4 border-l-muted/30">
+          <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total COGS</CardTitle>
-              <Package className="h-5 w-5 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total COGS</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">£{totals.cogs.toFixed(2)}</div>
+              <div className="text-2xl font-bold font-luxury">£{totals.cogs.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground mt-1">cost of goods sold</p>
             </CardContent>
           </Card>
           
-          <Card className="shadow-elegant hover:shadow-gold transition-all duration-300 border-l-4 border-l-muted/30">
+          <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Gross Profit</CardTitle>
-              <TrendingUp className="h-5 w-5 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">Gross Profit</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className={`text-3xl font-bold ${totals.profit >= 0 ? 'text-foreground' : 'text-destructive'}`}>
+              <div className={`text-2xl font-bold font-luxury ${totals.profit >= 0 ? 'text-foreground' : 'text-destructive'}`}>
                 £{totals.profit.toFixed(2)}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
