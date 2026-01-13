@@ -645,15 +645,7 @@ export default function Suppliers() {
       subtitle="Manage your supplier relationships and track spending"
     >
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-end">
-          <Button onClick={() => setIsAddDialogOpen(true)} variant="default" size="lg">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Supplier
-          </Button>
-        </div>
-
-        {/* Search and Filters */}
+        {/* Search, Filters and Add Button */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -695,6 +687,10 @@ export default function Suppliers() {
               <SelectItem value="inactive">Inactive</SelectItem>
             </SelectContent>
           </Select>
+          <Button onClick={() => setIsAddDialogOpen(true)} variant="premium" className="whitespace-nowrap">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Supplier
+          </Button>
         </div>
 
         {/* Summary Cards */}
