@@ -415,7 +415,7 @@ export default function Transactions() {
                 <PoundSterling className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold font-luxury text-primary">£{totalRevenue.toFixed(2)}</div>
+                <div className="text-2xl font-bold font-luxury">£{totalRevenue.toFixed(2)}</div>
                 <p className="text-xs text-muted-foreground mt-1">gross after discounts</p>
               </CardContent>
             </Card>
