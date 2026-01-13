@@ -17,6 +17,12 @@ export interface CustomFilter {
   };
 }
 
+export interface VIPTierThresholds {
+  silver: number;
+  gold: number;
+  platinum: number;
+}
+
 export interface AppSettings {
   currency: string;
   taxInclusive: boolean;
@@ -30,6 +36,7 @@ export interface AppSettings {
   quickFilterPresets: string[];
   staffMembers: string[];
   customFilters: CustomFilter[];
+  vipTierThresholds: VIPTierThresholds;
 }
 
 interface SettingsContextType {
@@ -51,7 +58,12 @@ const defaultSettings: AppSettings = {
   digitalReceiptDefault: 'none',
   quickFilterPresets: ['watches', 'rings', 'gold', 'white-gold', 'rose-gold', 'silver', 'in-stock', 'low-stock'],
   staffMembers: [],
-  customFilters: []
+  customFilters: [],
+  vipTierThresholds: {
+    silver: 500,
+    gold: 2000,
+    platinum: 5000,
+  },
 };
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
