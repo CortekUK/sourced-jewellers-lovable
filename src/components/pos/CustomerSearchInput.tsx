@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverAnchor } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { VIPTierBadge, VIPTier } from '@/components/customers/VIPTierBadge';
 import { useCustomerSearch } from '@/hooks/useCustomers';
@@ -62,7 +62,7 @@ export function CustomerSearchInput({
       <div className="space-y-2">
         <Label htmlFor="customer-search">Customer Name (Optional)</Label>
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
+          <PopoverAnchor asChild>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -71,6 +71,14 @@ export function CustomerSearchInput({
                 value={selectedCustomerId ? customerName : searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 onFocus={() => setOpen(true)}
+                onBlur={(e) => {
+                  // Delay close to allow clicking items in dropdown
+                  setTimeout(() => {
+                    if (!e.currentTarget.contains(document.activeElement)) {
+                      setOpen(false);
+                    }
+                  }, 200);
+                }}
                 className={cn(
                   "pl-9 pr-9",
                   selectedCustomerId && "border-primary/50 bg-primary/5"
@@ -88,8 +96,12 @@ export function CustomerSearchInput({
                 </Button>
               )}
             </div>
-          </PopoverTrigger>
-          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+          </PopoverAnchor>
+          <PopoverContent 
+            className="w-[var(--radix-popover-trigger-width)] p-0" 
+            align="start"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
             <Command shouldFilter={false}>
               <CommandList>
                 {isLoading && searchQuery.length >= 2 && (
