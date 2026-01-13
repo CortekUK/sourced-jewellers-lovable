@@ -1,0 +1,78 @@
+import * as React from "react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+
+export interface CurrencyInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
+  value: string | number;
+  onValueChange: (value: string) => void;
+  error?: string;
+}
+
+const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
+  ({ className, value, onValueChange, error, ...props }, ref) => {
+    const [displayValue, setDisplayValue] = React.useState("");
+
+    React.useEffect(() => {
+      if (value === "" || value === undefined || value === null) {
+        setDisplayValue("");
+        return;
+      }
+      const numValue = typeof value === "string" ? parseFloat(value) : value;
+      if (!isNaN(numValue)) {
+        setDisplayValue(numValue.toFixed(2));
+      }
+    }, [value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const rawValue = e.target.value.replace(/[^0-9.]/g, "");
+      
+      // Prevent multiple decimal points
+      const parts = rawValue.split(".");
+      let cleanValue = parts[0];
+      if (parts.length > 1) {
+        cleanValue += "." + parts.slice(1).join("").substring(0, 2);
+      }
+
+      setDisplayValue(cleanValue);
+      onValueChange(cleanValue);
+    };
+
+    const handleBlur = () => {
+      if (displayValue && !isNaN(parseFloat(displayValue))) {
+        const formatted = parseFloat(displayValue).toFixed(2);
+        setDisplayValue(formatted);
+        onValueChange(formatted);
+      }
+    };
+
+    return (
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#D4AF37] font-medium">
+          £
+        </span>
+        <Input
+          ref={ref}
+          type="text"
+          inputMode="decimal"
+          value={displayValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          className={cn(
+            "pl-8",
+            error && "border-destructive focus-visible:ring-destructive",
+            className
+          )}
+          {...props}
+        />
+        {error && (
+          <p className="text-sm text-destructive mt-1">{error}</p>
+        )}
+      </div>
+    );
+  }
+);
+
+CurrencyInput.displayName = "CurrencyInput";
+
+export { CurrencyInput };
