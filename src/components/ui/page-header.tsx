@@ -13,7 +13,7 @@ export function PageHeader({ title, description, children, className }: PageHead
     <div className={cn("border-b border-border bg-gradient-surface pb-6 mb-6", className)}>
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl font-luxury font-semibold tracking-tight text-foreground">
+          <h1 className="text-3xl font-serif font-semibold tracking-tight text-foreground">
             {title}
           </h1>
           {description && (
