@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { VIPTierBadge } from '@/components/customers/VIPTierBadge';
 import { AddCustomerDialog } from '@/components/customers/AddCustomerDialog';
+import { CustomerFiltersComponent, CustomerFilters, defaultCustomerFilters } from '@/components/customers/CustomerFilters';
 import { useCustomers, useCustomerReminders } from '@/hooks/useCustomers';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -35,6 +36,27 @@ const isWithinNextDays = (eventDate: string | null, days: number): boolean => {
   return daysUntil >= 0 && daysUntil <= days;
 };
 
+// Check spend range filter
+const matchesSpendRange = (spend: number, range: string): boolean => {
+  switch (range) {
+    case 'under-500': return spend < 500;
+    case '500-2000': return spend >= 500 && spend < 2000;
+    case '2000-5000': return spend >= 2000 && spend < 5000;
+    case 'over-5000': return spend >= 5000;
+    default: return true;
+  }
+};
+
+// Check purchase count filter
+const matchesPurchaseCount = (count: number, filter: string): boolean => {
+  switch (filter) {
+    case '1': return count === 1;
+    case '2-5': return count >= 2 && count <= 5;
+    case '6+': return count >= 6;
+    default: return true;
+  }
+};
+
 type SortField = 'name' | 'lifetime_spend' | 'total_purchases';
 type SortDirection = 'asc' | 'desc';
 
@@ -46,6 +68,7 @@ export default function Customers() {
   
   const [search, setSearch] = useState('');
   const [vipFilter, setVipFilter] = useState<string>('all');
+  const [filters, setFilters] = useState<CustomerFilters>(defaultCustomerFilters);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
@@ -70,11 +93,55 @@ export default function Customers() {
     }).format(amount);
   };
 
-  // Filter by VIP tier
-  const filteredCustomers = customers?.filter(customer => {
-    if (vipFilter === 'all') return true;
-    return customer.vip_tier === vipFilter;
-  });
+  // Calculate active filters count
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (filters.spendRange !== 'all') count++;
+    if (filters.purchaseCount !== 'all') count++;
+    if (filters.upcomingBirthday) count++;
+    if (filters.upcomingAnniversary) count++;
+    count += filters.metalPreference.length;
+    if (filters.hasEmail) count++;
+    if (filters.hasPhone) count++;
+    return count;
+  }, [filters]);
+
+  // Filter customers by VIP tier and advanced filters
+  const filteredCustomers = useMemo(() => {
+    return customers?.filter(customer => {
+      // VIP tier filter
+      if (vipFilter !== 'all' && customer.vip_tier !== vipFilter) return false;
+      
+      // Spend range filter
+      if (!matchesSpendRange(customer.lifetime_spend, filters.spendRange)) return false;
+      
+      // Purchase count filter
+      if (!matchesPurchaseCount(customer.total_purchases, filters.purchaseCount)) return false;
+      
+      // Upcoming birthday filter
+      if (filters.upcomingBirthday && !isWithinNextDays(customer.birthday, 30)) return false;
+      
+      // Upcoming anniversary filter
+      if (filters.upcomingAnniversary && !isWithinNextDays(customer.anniversary, 30)) return false;
+      
+      // Metal preference filter
+      if (filters.metalPreference.length > 0) {
+        const customerMetal = customer.metal_preference?.toLowerCase() || '';
+        const hasMatchingMetal = filters.metalPreference.some(
+          metal => customerMetal.includes(metal.toLowerCase())
+        );
+        if (!hasMatchingMetal) return false;
+      }
+      
+      // Has email filter
+      if (filters.hasEmail && !customer.email) return false;
+      
+      // Has phone filter
+      if (filters.hasPhone && !customer.phone) return false;
+      
+      return true;
+    });
+  }, [customers, vipFilter, filters]);
 
   // Sort customers
   const sortedCustomers = useMemo(() => {
@@ -197,28 +264,35 @@ export default function Customers() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by name, email, or phone..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+      <div className="flex flex-col gap-3 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, email, or phone..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Select value={vipFilter} onValueChange={setVipFilter}>
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Filter by VIP tier" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tiers</SelectItem>
+              <SelectItem value="platinum">Platinum</SelectItem>
+              <SelectItem value="gold">Gold</SelectItem>
+              <SelectItem value="silver">Silver</SelectItem>
+              <SelectItem value="standard">Standard</SelectItem>
+            </SelectContent>
+          </Select>
+          <CustomerFiltersComponent
+            filters={filters}
+            onFiltersChange={setFilters}
+            activeFiltersCount={activeFiltersCount}
           />
         </div>
-        <Select value={vipFilter} onValueChange={setVipFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Filter by VIP tier" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Tiers</SelectItem>
-            <SelectItem value="platinum">Platinum</SelectItem>
-            <SelectItem value="gold">Gold</SelectItem>
-            <SelectItem value="silver">Silver</SelectItem>
-            <SelectItem value="standard">Standard</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Customer Table */}
@@ -311,14 +385,14 @@ export default function Customers() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Users className="h-12 w-12 text-muted-foreground/40 mb-3" />
             <h3 className="text-lg font-medium text-muted-foreground mb-1">
-              {search || vipFilter !== 'all' ? 'No customers found' : 'No customers yet'}
+              {search || vipFilter !== 'all' || activeFiltersCount > 0 ? 'No customers found' : 'No customers yet'}
             </h3>
             <p className="text-sm text-muted-foreground text-center max-w-sm mb-4">
-              {search || vipFilter !== 'all'
+              {search || vipFilter !== 'all' || activeFiltersCount > 0
                 ? 'Try adjusting your search or filter criteria'
                 : 'Start building your customer database by adding your first customer'}
             </p>
-            {canCreate('customers') && !search && vipFilter === 'all' && (
+            {canCreate('customers') && !search && vipFilter === 'all' && activeFiltersCount === 0 && (
               <Button onClick={() => setAddDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Your First Customer
