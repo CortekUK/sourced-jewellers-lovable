@@ -65,11 +65,24 @@ export function VIPTierBadge({ tier, size = 'md', showLabel = true, className }:
   );
 }
 
-export function getVIPTierThreshold(tier: VIPTier): number {
+export interface VIPThresholds {
+  silver: number;
+  gold: number;
+  platinum: number;
+}
+
+const defaultThresholds: VIPThresholds = {
+  silver: 500,
+  gold: 2000,
+  platinum: 5000,
+};
+
+export function getVIPTierThreshold(tier: VIPTier, thresholds?: VIPThresholds): number {
+  const t = thresholds || defaultThresholds;
   switch (tier) {
-    case 'platinum': return 5000;
-    case 'gold': return 2000;
-    case 'silver': return 500;
+    case 'platinum': return t.platinum;
+    case 'gold': return t.gold;
+    case 'silver': return t.silver;
     default: return 0;
   }
 }

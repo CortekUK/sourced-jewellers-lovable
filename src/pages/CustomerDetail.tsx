@@ -11,6 +11,7 @@ import { CustomerPurchaseHistory } from '@/components/customers/CustomerPurchase
 import { EditCustomerDialog } from '@/components/customers/EditCustomerDialog';
 import { useCustomer, useDeleteCustomer } from '@/hooks/useCustomers';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useSettings } from '@/contexts/SettingsContext';
 import { format, parseISO } from 'date-fns';
 import { 
   ArrowLeft, 
@@ -42,6 +43,7 @@ export default function CustomerDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { canEdit, canDelete } = usePermissions();
+  const { settings } = useSettings();
   
   const customerId = id ? parseInt(id, 10) : null;
   const { data: customer, isLoading } = useCustomer(customerId);
@@ -89,7 +91,7 @@ export default function CustomerDetail() {
   }
 
   const nextTier = getNextVIPTier(customer.vip_tier);
-  const nextTierThreshold = nextTier ? getVIPTierThreshold(nextTier) : null;
+  const nextTierThreshold = nextTier ? getVIPTierThreshold(nextTier, settings.vipTierThresholds) : null;
   const progressToNextTier = nextTierThreshold 
     ? Math.min(100, (customer.lifetime_spend / nextTierThreshold) * 100)
     : 100;

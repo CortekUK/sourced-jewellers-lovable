@@ -841,6 +841,109 @@ export default function Settings() {
             </CardContent>
           </Card>
 
+          {/* Customer VIP Tiers */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-amber-500" />
+                Customer VIP Tiers
+              </CardTitle>
+              <CardDescription>
+                Set the lifetime spending thresholds that determine customer loyalty tiers.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <Label htmlFor="silverThreshold" className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                      Silver
+                    </Badge>
+                    Threshold
+                  </Label>
+                  <div className="relative mt-2">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {localSettings.currency}
+                    </span>
+                    <Input
+                      id="silverThreshold"
+                      type="number"
+                      min="0"
+                      className="pl-7"
+                      value={localSettings.vipTierThresholds?.silver ?? 500}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        handleSettingChange('vipTierThresholds', {
+                          ...localSettings.vipTierThresholds,
+                          silver: value,
+                        });
+                      }}
+                      disabled={settingsLoading}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="goldThreshold" className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                      Gold
+                    </Badge>
+                    Threshold
+                  </Label>
+                  <div className="relative mt-2">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {localSettings.currency}
+                    </span>
+                    <Input
+                      id="goldThreshold"
+                      type="number"
+                      min="0"
+                      className="pl-7"
+                      value={localSettings.vipTierThresholds?.gold ?? 2000}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        handleSettingChange('vipTierThresholds', {
+                          ...localSettings.vipTierThresholds,
+                          gold: value,
+                        });
+                      }}
+                      disabled={settingsLoading}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="platinumThreshold" className="flex items-center gap-2">
+                    <Badge variant="outline" className="bg-gradient-to-r from-violet-50 to-purple-50 text-purple-700 dark:from-violet-900/30 dark:to-purple-900/30 dark:text-purple-300">
+                      Platinum
+                    </Badge>
+                    Threshold
+                  </Label>
+                  <div className="relative mt-2">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                      {localSettings.currency}
+                    </span>
+                    <Input
+                      id="platinumThreshold"
+                      type="number"
+                      min="0"
+                      className="pl-7"
+                      value={localSettings.vipTierThresholds?.platinum ?? 5000}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        handleSettingChange('vipTierThresholds', {
+                          ...localSettings.vipTierThresholds,
+                          platinum: value,
+                        });
+                      }}
+                      disabled={settingsLoading}
+                    />
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Customers automatically move to higher tiers as their lifetime spend increases.
+              </p>
+            </CardContent>
+          </Card>
           {/* POS Settings */}
           <Card>
             <CardHeader>
