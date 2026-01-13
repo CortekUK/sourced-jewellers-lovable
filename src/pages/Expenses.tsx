@@ -270,51 +270,51 @@ export default function Expenses() {
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">This Month</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">This Month</CardTitle>
               <PoundSterling className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">£{stats.thisMonthTotal.toLocaleString()}</div>
+              <div className="text-2xl font-bold font-luxury">£{stats.thisMonthTotal.toLocaleString()}</div>
               <p className="text-xs text-muted-foreground">{stats.thisMonthCount} expenses</p>
             </CardContent>
           </Card>
 
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">This Year</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">This Year</CardTitle>
               <PoundSterling className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">£{stats.thisYearTotal.toLocaleString()}</div>
+              <div className="text-2xl font-bold font-luxury">£{stats.thisYearTotal.toLocaleString()}</div>
               <p className="text-xs text-muted-foreground">{stats.thisYearCount} expenses</p>
             </CardContent>
           </Card>
 
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Records</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Records</CardTitle>
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.totalRecords}</div>
+              <div className="text-2xl font-bold font-luxury">{stats.totalRecords}</div>
               <p className="text-xs text-muted-foreground">All time</p>
             </CardContent>
           </Card>
 
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average/Month</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Average/Month</CardTitle>
               <PoundSterling className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">£{stats.averageMonthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+              <div className="text-2xl font-bold font-luxury">£{stats.averageMonthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
               <p className="text-xs text-muted-foreground">This year</p>
             </CardContent>
           </Card>
 
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">YoY Change</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">YoY Change</CardTitle>
               {yoyComparison && yoyComparison.percentageChange >= 0 ? (
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               ) : (
@@ -324,14 +324,14 @@ export default function Expenses() {
             <CardContent>
               {yoyComparison ? (
                 <>
-                  <div className={`text-2xl font-bold ${yoyComparison.percentageChange >= 0 ? 'text-destructive' : 'text-success'}`}>
+                  <div className={`text-2xl font-bold font-luxury ${yoyComparison.percentageChange >= 0 ? 'text-destructive' : 'text-success'}`}>
                     {yoyComparison.percentageChange >= 0 ? '+' : ''}{yoyComparison.percentageChange.toFixed(1)}%
                   </div>
                   <p className="text-xs text-muted-foreground">vs last year</p>
                 </>
               ) : (
                 <>
-                  <div className="text-2xl font-bold text-muted-foreground">--</div>
+                  <div className="text-2xl font-bold font-luxury text-muted-foreground">--</div>
                   <p className="text-xs text-muted-foreground">No data</p>
                 </>
               )}
