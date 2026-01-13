@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Filter, X } from 'lucide-react';
 
 export interface CustomerFilters {
@@ -55,6 +57,8 @@ export function CustomerFiltersComponent({
   onFiltersChange,
   activeFiltersCount,
 }: CustomerFiltersProps) {
+  const [open, setOpen] = useState(false);
+
   const updateFilter = <K extends keyof CustomerFilters>(
     key: K,
     value: CustomerFilters[K]
@@ -143,47 +147,45 @@ export function CustomerFiltersComponent({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" size="default" className="gap-2">
-              <Filter className="h-4 w-4" />
-              Filters
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button variant="outline" size="default" className="gap-2">
+            <Filter className="h-4 w-4" />
+            Filters
+            {activeFiltersCount > 0 && (
+              <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
+                {activeFiltersCount}
+              </Badge>
+            )}
+          </Button>
+        </SheetTrigger>
+        <SheetContent className="w-full sm:max-w-md">
+          <SheetHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <SheetTitle>Filter Customers</SheetTitle>
               {activeFiltersCount > 0 && (
-                <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
-                  {activeFiltersCount}
-                </Badge>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="h-auto py-1 px-2 text-xs text-muted-foreground"
+                >
+                  Clear all
+                </Button>
               )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80" align="start">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-medium text-sm">Filter Customers</h4>
-                {activeFiltersCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearAllFilters}
-                    className="h-auto py-1 px-2 text-xs text-muted-foreground"
-                  >
-                    Clear all
-                  </Button>
-                )}
-              </div>
+            </div>
+          </SheetHeader>
 
-              <Separator />
-
+          <ScrollArea className="h-[calc(100vh-8rem)] pr-4">
+            <div className="space-y-6">
               {/* Spend Range */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Lifetime Spend
-                </Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Lifetime Spend</Label>
                 <Select
                   value={filters.spendRange}
                   onValueChange={(value) => updateFilter('spendRange', value)}
                 >
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -197,15 +199,13 @@ export function CustomerFiltersComponent({
               </div>
 
               {/* Purchase Count */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Purchase Count
-                </Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Purchase Count</Label>
                 <Select
                   value={filters.purchaseCount}
                   onValueChange={(value) => updateFilter('purchaseCount', value)}
                 >
-                  <SelectTrigger className="h-9">
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -221,11 +221,9 @@ export function CustomerFiltersComponent({
               <Separator />
 
               {/* Upcoming Events */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Upcoming Events (30 days)
-                </Label>
-                <div className="space-y-2">
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Upcoming Events (30 days)</Label>
+                <div className="space-y-3">
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="birthday"
@@ -262,17 +260,14 @@ export function CustomerFiltersComponent({
               <Separator />
 
               {/* Metal Preference */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Metal Preference
-                </Label>
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Metal Preference</Label>
                 <div className="flex flex-wrap gap-2">
                   {METAL_OPTIONS.map((metal) => (
                     <Button
                       key={metal}
                       variant={filters.metalPreference.includes(metal) ? 'default' : 'outline'}
                       size="sm"
-                      className="h-7 text-xs"
                       onClick={() => toggleMetalPreference(metal)}
                     >
                       {metal}
@@ -284,11 +279,9 @@ export function CustomerFiltersComponent({
               <Separator />
 
               {/* Contact Info */}
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Contact Information
-                </Label>
-                <div className="space-y-2">
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Contact Information</Label>
+                <div className="space-y-3">
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="hasEmail"
@@ -318,9 +311,9 @@ export function CustomerFiltersComponent({
                 </div>
               </div>
             </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
 
       {/* Active Filter Badges */}
       {activeBadges.length > 0 && (
