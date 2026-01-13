@@ -201,9 +201,9 @@ export function MonthlyTrendsChart({ filters }: ExpenseChartsProps) {
               type="monotone"
               dataKey="operating"
               name="Operating"
-              stroke="hsl(var(--primary))"
+              stroke="#0ea5e9"
               strokeWidth={2}
-              dot={{ fill: 'hsl(var(--primary))' }}
+              dot={{ fill: '#0ea5e9' }}
             />
             <Line
               type="monotone"
