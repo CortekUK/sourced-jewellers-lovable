@@ -393,7 +393,7 @@ export default function Transactions() {
   const avgSale = totalSales > 0 ? totalRevenue / totalSales : 0;
 
   return (
-    <AppLayout title="Transactions" subtitle="View and analyze sales history" showSearch>
+    <AppLayout title="Transactions" subtitle="View and analyse sales history" showSearch>
       <div className="space-y-8">
         {/* Summary Cards */}
         <div className="space-y-4">
