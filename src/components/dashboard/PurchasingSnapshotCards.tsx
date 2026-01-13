@@ -310,14 +310,14 @@ const PurchasesVsSalesCard = () => {
                   dot={{ fill: '#D4AF37', r: 2 }}
                   name="Sales"
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="purchases" 
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  dot={{ fill: 'hsl(var(--primary))', r: 2 }}
-                  name="Purchases"
-                />
+              <Line 
+                type="monotone" 
+                dataKey="purchases" 
+                stroke="#0ea5e9"
+                strokeWidth={2}
+                dot={{ fill: '#0ea5e9', r: 2 }}
+                name="Purchases"
+              />
               </LineChart>
             </ResponsiveContainer>
           </div>
