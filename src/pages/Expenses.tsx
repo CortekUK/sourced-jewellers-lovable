@@ -212,19 +212,20 @@ export default function Expenses() {
         
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <ExpenseFiltersEnhanced
-            filters={filters}
-            onFiltersChange={setFilters}
-            suppliers={suppliers}
-            staffMembers={staffMembers}
-          />
-
+          {/* Left group: Display controls */}
           <div className="flex flex-wrap items-center gap-2">
+            <ExpenseFiltersEnhanced
+              filters={filters}
+              onFiltersChange={setFilters}
+              suppliers={suppliers}
+              staffMembers={staffMembers}
+            />
             <div className="flex items-center gap-1 border rounded-lg p-1">
               <Button
                 variant={viewMode === 'grid' ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
+                className="h-8 w-8 p-0"
               >
                 <LayoutGrid className="h-4 w-4" />
               </Button>
@@ -232,15 +233,19 @@ export default function Expenses() {
                 variant={viewMode === 'table' ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('table')}
+                className="h-8 w-8 p-0"
               >
                 <List className="h-4 w-4" />
               </Button>
             </div>
+          </div>
 
+          {/* Right group: Actions */}
+          <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="mr-2 h-4 w-4" />
                   Export
                 </Button>
               </DropdownMenuTrigger>
@@ -254,7 +259,7 @@ export default function Expenses() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="premium" size="sm" onClick={() => { setShowModal(true); setEditingExpense(null); }} className="w-full sm:w-auto">
+            <Button variant="premium" size="sm" onClick={() => { setShowModal(true); setEditingExpense(null); }}>
               <Plus className="mr-2 h-4 w-4" />
               Record Expense
             </Button>
