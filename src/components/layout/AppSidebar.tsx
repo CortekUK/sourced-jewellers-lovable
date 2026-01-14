@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, Truck, ShoppingCart, PoundSterling, BarChart3, Activity, Settings, LogOut, Moon, Sun, ChevronRight, Handshake, CreditCard, Repeat, Users, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, Package, Truck, ShoppingCart, PoundSterling, BarChart3, Activity, Settings, LogOut, Moon, Sun, ChevronRight, Handshake, CreditCard, Repeat, Users, User, type LucideIcon } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from 'next-themes';
@@ -67,9 +67,9 @@ const navigationItems: NavigationItem[] = [{
     url: '/sales',
     icon: CreditCard
   }, {
-    title: 'Transactions',
-    url: '/sales/transactions',
-    icon: PoundSterling
+    title: 'My Sales',
+    url: '/sales/my-sales',
+    icon: User
   }, {
     title: 'Sold Items',
     url: '/sales/items',
@@ -82,8 +82,13 @@ const navigationItems: NavigationItem[] = [{
   module: CRM_MODULES.EXPENSES
 }];
 
-// Items accessible by manager and owner (Reports, Analytics)
+// Items accessible by manager and owner (Reports, Analytics, Transactions)
 const managerPlusItems: NavigationItem[] = [{
+  title: 'Transactions',
+  url: '/sales/transactions',
+  icon: PoundSterling,
+  module: CRM_MODULES.REPORTS
+}, {
   title: 'Reports',
   url: '/reports',
   icon: BarChart3,

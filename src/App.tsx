@@ -22,6 +22,7 @@ import SupplierDetail from "./pages/SupplierDetail";
 import Customers from "./pages/Customers";
 import CustomerDetail from "./pages/CustomerDetail";
 import EnhancedSales from "./pages/EnhancedSales";
+import MySales from "./pages/MySales";
 import Transactions from "./pages/Transactions";
 import SaleDetail from "./pages/SaleDetail";
 import SoldItemsReport from "./pages/SoldItemsReport";
@@ -76,7 +77,8 @@ function AppInner() {
           <Route path="/customers/:id" element={<ProtectedRoute module="customers"><CustomerDetail /></ProtectedRoute>} />
           <Route path="/consignments" element={<ProtectedRoute><Consignments /></ProtectedRoute>} />
           <Route path="/sales" element={<ProtectedRoute><EnhancedSales /></ProtectedRoute>} />
-          <Route path="/sales/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+          <Route path="/sales/my-sales" element={<ProtectedRoute><MySales /></ProtectedRoute>} />
+          <Route path="/sales/transactions" element={<ProtectedRoute module="reports"><Transactions /></ProtectedRoute>} />
           <Route path="/sales/items" element={<ProtectedRoute><SoldItemsReport /></ProtectedRoute>} />
           {/* Legacy redirects */}
           <Route path="/sales/history" element={<ProtectedRoute><SalesHistory /></ProtectedRoute>} />

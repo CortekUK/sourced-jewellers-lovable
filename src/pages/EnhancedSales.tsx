@@ -38,6 +38,30 @@ export default function EnhancedSales() {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [completedSale, setCompletedSale] = useState<{ sale: any; items: any[]; partExchanges: any[]; signature: string | null } | null>(null);
 
+  // Fetch current user's profile for auto-fill
+  const { data: userProfile } = useQuery({
+    queryKey: ['current-user-profile', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (error) return null;
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  // Auto-set staff member when profile loads
+  useEffect(() => {
+    if (userProfile?.full_name && !staffMember) {
+      setStaffMember(userProfile.full_name);
+    }
+  }, [userProfile?.full_name, staffMember]);
+
   // Fetch products
   const { data: products, isLoading: productsLoading } = useQuery({
     queryKey: ['products'],
