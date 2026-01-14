@@ -29,7 +29,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, Shield, AlertTriangle, Loader2, UserPlus, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Users, Shield, AlertTriangle, Loader2, UserPlus, Trash2, Eye, EyeOff, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -73,6 +73,11 @@ export function UserManagement() {
   } | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<UserProfile | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  // Edit user state
+  const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
+  const [editName, setEditName] = useState('');
+  const [saving, setSaving] = useState(false);
 
   // Add user state
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -287,6 +292,45 @@ export function UserManagement() {
     } finally {
       setDeleting(false);
       setDeleteConfirm(null);
+    }
+  };
+
+  const handleUpdateUser = async () => {
+    if (!editingUser) return;
+
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ full_name: editName.trim() || null })
+        .eq('user_id', editingUser.user_id);
+
+      if (error) throw error;
+
+      // Update local state
+      setUsers(users.map(u =>
+        u.user_id === editingUser.user_id
+          ? { ...u, full_name: editName.trim() || null }
+          : u
+      ));
+
+      toast({
+        title: 'User updated',
+        description: editingUser.user_id === currentUser?.id 
+          ? 'Your name has been updated.'
+          : `Updated name for ${editingUser.email}`,
+      });
+
+      setEditingUser(null);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update user',
+        variant: 'destructive',
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -521,16 +565,29 @@ export function UserManagement() {
                       </Select>
                     </TableCell>
                     <TableCell>
-                      {user.user_id !== currentUser?.id && (
+                      <div className="flex gap-1">
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => setDeleteConfirm(user)}
+                          className="h-8 w-8"
+                          onClick={() => {
+                            setEditingUser(user);
+                            setEditName(user.full_name || '');
+                          }}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </Button>
-                      )}
+                        {user.user_id !== currentUser?.id && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => setDeleteConfirm(user)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -619,6 +676,48 @@ export function UserManagement() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
+              Update team member information.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Full Name</Label>
+              <Input
+                id="edit-name"
+                placeholder="Enter full name"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-muted-foreground">Email</Label>
+              <p className="text-sm">{editingUser?.email}</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingUser(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateUser} disabled={saving}>
+              {saving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
