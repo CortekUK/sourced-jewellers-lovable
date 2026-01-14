@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, Truck, ShoppingCart, PoundSterling, BarChart3, Activity, Settings, LogOut, Moon, Sun, ChevronRight, Handshake, CreditCard, Repeat, Users, User, Receipt, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, Package, Truck, ShoppingCart, PoundSterling, BarChart3, Activity, Settings, LogOut, Moon, Sun, ChevronRight, Handshake, CreditCard, Repeat, Users, User, ReceiptPoundSterling, type LucideIcon } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from 'next-themes';
@@ -72,7 +72,7 @@ const salesItems: NavigationItem[] = [
       { title: 'POS', url: '/sales', icon: CreditCard },
       { title: 'My Sales', url: '/sales/my-sales', icon: User },
       { title: 'Sold Items', url: '/sales/items', icon: Package },
-      { title: 'Transactions', url: '/sales/transactions', icon: Receipt }
+      { title: 'Transactions', url: '/sales/transactions', icon: ReceiptPoundSterling }
     ]
   }
 ];
