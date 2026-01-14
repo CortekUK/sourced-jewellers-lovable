@@ -13,7 +13,10 @@ import type { CartItem, PaymentMethod, PartExchangeItem } from '@/types';
 import { CreditCard, Banknote, Smartphone, Building, Loader2, PenTool, ChevronDown } from 'lucide-react';
 import { SignaturePad, SignaturePadRef } from './SignaturePad';
 import { CustomerSearchInput } from './CustomerSearchInput';
+import { LocationSelector } from '@/components/cash-drawer/LocationSelector';
+
 export type DiscountType = 'percentage' | 'fixed';
+
 interface CheckoutFormProps {
   items: CartItem[];
   partExchanges: PartExchangeItem[];
@@ -39,6 +42,8 @@ interface CheckoutFormProps {
   staffMember: string;
   onStaffMemberChange: (member: string) => void;
   staffMembers?: string[]; // Now optional - kept for backwards compatibility
+  locationId: number | null;
+  onLocationChange: (locationId: number | null) => void;
 }
 const paymentMethods = [{
   value: 'cash' as PaymentMethod,
@@ -80,7 +85,9 @@ export function CheckoutForm({
   signature,
   onSignatureChange,
   staffMember,
-  onStaffMemberChange
+  onStaffMemberChange,
+  locationId,
+  onLocationChange
 }: CheckoutFormProps) {
   const [discountInput, setDiscountInput] = useState(discount.toString());
   const signaturePadRef = useRef<SignaturePadRef>(null);
@@ -112,7 +119,7 @@ export function CheckoutForm({
       }
     }
   };
-  const canCompleteSale = (items.length > 0 || partExchanges.length > 0) && paymentMethod && staffMember && !isProcessing && (!requiresOwnerApproval || netTotal >= 0);
+  const canCompleteSale = (items.length > 0 || partExchanges.length > 0) && paymentMethod && staffMember && locationId && !isProcessing && (!requiresOwnerApproval || netTotal >= 0);
   return <Card className="shadow-card">
       <CardHeader>
         <CardTitle className="font-luxury">Checkout</CardTitle>
@@ -132,6 +139,13 @@ export function CheckoutForm({
             </span>
           </div>
         </div>
+
+        {/* Shop Location */}
+        <LocationSelector
+          value={locationId}
+          onChange={onLocationChange}
+          required
+        />
 
         {/* Customer Information */}
         <CustomerSearchInput
@@ -300,8 +314,12 @@ export function CheckoutForm({
             Select staff member to complete sale
           </p>}
         
-        {(items.length > 0 || partExchanges.length > 0) && !paymentMethod && staffMember && <p className="text-center text-sm text-muted-foreground">
+        {(items.length > 0 || partExchanges.length > 0) && !paymentMethod && staffMember && locationId && <p className="text-center text-sm text-muted-foreground">
             Select a payment method to complete sale
+          </p>}
+
+        {(items.length > 0 || partExchanges.length > 0) && staffMember && !locationId && <p className="text-center text-sm text-muted-foreground">
+            Select a shop location to complete sale
           </p>}
 
         {requiresOwnerApproval && netTotal < 0 && <p className="text-center text-sm text-red-600">

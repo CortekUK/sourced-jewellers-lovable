@@ -65,6 +65,71 @@ export type Database = {
         }
         Relationships: []
       }
+      cash_drawer_movements: {
+        Row: {
+          amount: number
+          created_at: string
+          demo_session_id: string | null
+          id: number
+          location_id: number
+          movement_type: string
+          notes: string | null
+          reference_sale_id: number | null
+          staff_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          demo_session_id?: string | null
+          id?: never
+          location_id: number
+          movement_type: string
+          notes?: string | null
+          reference_sale_id?: number | null
+          staff_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          demo_session_id?: string | null
+          id?: never
+          location_id?: number
+          movement_type?: string
+          notes?: string | null
+          reference_sale_id?: number | null
+          staff_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cash_drawer_movements_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cash_drawer_movements_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "v_cash_drawer_balance"
+            referencedColumns: ["location_id"]
+          },
+          {
+            foreignKeyName: "cash_drawer_movements_reference_sale_id_fkey"
+            columns: ["reference_sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cash_drawer_movements_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       consignment_settlements: {
         Row: {
           agreed_price: number | null
@@ -868,6 +933,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "products_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "v_cash_drawer_balance"
+            referencedColumns: ["location_id"]
+          },
+          {
             foreignKeyName: "products_supplier_id_fkey"
             columns: ["supplier_id"]
             isOneToOne: false
@@ -1021,6 +1093,7 @@ export type Database = {
           edited_by: string | null
           id: number
           is_voided: boolean
+          location_id: number | null
           notes: string | null
           original_total: number | null
           part_exchange_total: number | null
@@ -1047,6 +1120,7 @@ export type Database = {
           edited_by?: string | null
           id?: number
           is_voided?: boolean
+          location_id?: number | null
           notes?: string | null
           original_total?: number | null
           part_exchange_total?: number | null
@@ -1073,6 +1147,7 @@ export type Database = {
           edited_by?: string | null
           id?: number
           is_voided?: boolean
+          location_id?: number | null
           notes?: string | null
           original_total?: number | null
           part_exchange_total?: number | null
@@ -1116,6 +1191,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "sales_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "v_cash_drawer_balance"
+            referencedColumns: ["location_id"]
           },
           {
             foreignKeyName: "sales_staff_id_fkey"
@@ -1365,6 +1454,16 @@ export type Database = {
       }
     }
     Views: {
+      v_cash_drawer_balance: {
+        Row: {
+          current_balance: number | null
+          last_movement_at: string | null
+          location_id: number | null
+          location_name: string | null
+          total_movements: number | null
+        }
+        Relationships: []
+      }
       v_consign_unsettled: {
         Row: {
           agreed_price: number | null

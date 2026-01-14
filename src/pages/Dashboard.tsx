@@ -17,7 +17,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useStockStatus } from '@/hooks/useStockStatus';
 import { usePendingPartExchangesStats } from '@/hooks/usePartExchanges';
 import { PendingTradeInsCard } from '@/components/dashboard/PendingTradeInsCard';
-
+import { CashDrawerPanel } from '@/components/cash-drawer/CashDrawerPanel';
 import { PurchasingSnapshotCards } from '@/components/dashboard/PurchasingSnapshotCards';
 
 // Enhanced KPI Card Component
@@ -658,6 +658,13 @@ export default function Dashboard() {
         
         <PurchasingSnapshotCards />
       </div>
+
+      {/* Cash Drawer Status - Owner/Manager only */}
+      {isOwner && (
+        <div className="mb-6 md:mb-8">
+          <CashDrawerPanel />
+        </div>
+      )}
 
       {/* Weekly Expenses & Pending Trade-Ins */}
       <div className="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 lg:grid-cols-2 mb-6 md:mb-8">
