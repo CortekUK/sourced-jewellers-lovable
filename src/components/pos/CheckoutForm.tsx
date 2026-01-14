@@ -38,7 +38,7 @@ interface CheckoutFormProps {
   onSignatureChange?: (signature: string | null) => void;
   staffMember: string;
   onStaffMemberChange: (member: string) => void;
-  staffMembers: string[];
+  staffMembers?: string[]; // Now optional - kept for backwards compatibility
 }
 const paymentMethods = [{
   value: 'cash' as PaymentMethod,
@@ -80,8 +80,7 @@ export function CheckoutForm({
   signature,
   onSignatureChange,
   staffMember,
-  onStaffMemberChange,
-  staffMembers
+  onStaffMemberChange
 }: CheckoutFormProps) {
   const [discountInput, setDiscountInput] = useState(discount.toString());
   const signaturePadRef = useRef<SignaturePadRef>(null);
@@ -119,28 +118,19 @@ export function CheckoutForm({
         <CardTitle className="font-luxury">Checkout</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Staff Member Selection */}
+        {/* Staff Member Display - Auto-filled from logged-in user */}
         <div className="space-y-2">
-          <Label htmlFor="staff-member">Processed By *</Label>
-          <Select value={staffMember} onValueChange={onStaffMemberChange}>
-            <SelectTrigger id="staff-member">
-              <SelectValue placeholder="Select staff member" />
-            </SelectTrigger>
-            <SelectContent>
-              {staffMembers.length === 0 ? (
-                <div className="px-2 py-3 text-sm text-muted-foreground text-center">
-                  No staff members configured.<br/>
-                  Add staff in Settings.
-                </div>
-              ) : (
-                staffMembers.map(member => (
-                  <SelectItem key={member} value={member}>
-                    {member}
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
+          <Label htmlFor="staff-member">Processed By</Label>
+          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg border">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-sm font-medium text-primary">
+                {staffMember ? staffMember.charAt(0).toUpperCase() : '?'}
+              </span>
+            </div>
+            <span className="font-medium">
+              {staffMember || 'Loading...'}
+            </span>
+          </div>
         </div>
 
         {/* Customer Information */}
