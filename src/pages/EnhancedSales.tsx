@@ -13,6 +13,7 @@ import { formatCurrency } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useOwnerGuard } from '@/hooks/useOwnerGuard';
 import { matchOrCreateCustomer } from '@/hooks/useCustomerMatchOrCreate';
+import { useRecordCashMovement } from '@/hooks/useCashDrawer';
 import type { CartItem, Product, Sale, PartExchangeItem } from '@/types';
 
 export default function EnhancedSales() {
@@ -21,6 +22,7 @@ export default function EnhancedSales() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const isOwner = useOwnerGuard();
+  const recordCashMovement = useRecordCashMovement();
   
   const [cart, setCart] = useState<CartItem[]>([]);
   const [partExchanges, setPartExchanges] = useState<PartExchangeItem[]>([]);
@@ -37,6 +39,7 @@ export default function EnhancedSales() {
   const [showPartExchangeModal, setShowPartExchangeModal] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [completedSale, setCompletedSale] = useState<{ sale: any; items: any[]; partExchanges: any[]; signature: string | null } | null>(null);
+  const [locationId, setLocationId] = useState<number | null>(null);
 
   // Fetch current user's profile for auto-fill
   const { data: userProfile } = useQuery({
@@ -215,7 +218,8 @@ export default function EnhancedSales() {
         customer_id: customerId,
         customer_name: customerName || null,
         customer_email: customerEmail || null,
-        signature_data: signature
+        signature_data: signature,
+        location_id: locationId
       };
 
       const { data: sale, error: saleError } = await supabase
@@ -288,6 +292,17 @@ export default function EnhancedSales() {
         if (pxError) throw pxError;
       }
 
+      // Record cash drawer movement for cash payments
+      if (paymentMethod === 'cash' && locationId && netTotal > 0) {
+        await recordCashMovement.mutateAsync({
+          location_id: locationId,
+          movement_type: 'sale_cash_in',
+          amount: netTotal,
+          reference_sale_id: sale.id,
+          notes: `Sale #${sale.id}`,
+        });
+      }
+
       return { sale, items: cart, partExchanges, signature };
     },
     onSuccess: ({ sale, items, partExchanges: pxItems, signature: sig }) => {
@@ -296,7 +311,8 @@ export default function EnhancedSales() {
       queryClient.invalidateQueries({ queryKey: ['consignment-settlements'] });
       queryClient.invalidateQueries({ queryKey: ['consignment-products'] });
       queryClient.invalidateQueries({ queryKey: ['customers'] });
-      
+      queryClient.invalidateQueries({ queryKey: ['cash-drawer-balances'] });
+      queryClient.invalidateQueries({ queryKey: ['cash-drawer-history'] });
       // Store completed sale data for modal
       setCompletedSale({ 
         sale, 
@@ -320,7 +336,7 @@ export default function EnhancedSales() {
       setNotes('');
       setSignature(null);
       setStaffMember('');
-
+      // Keep locationId - user likely wants to continue at same location
       // Show confirmation modal
       setShowConfirmationModal(true);
     },
@@ -393,6 +409,8 @@ export default function EnhancedSales() {
               staffMember={staffMember}
               onStaffMemberChange={setStaffMember}
               staffMembers={settings.staffMembers || []}
+              locationId={locationId}
+              onLocationChange={setLocationId}
             />
           </div>
         </div>
