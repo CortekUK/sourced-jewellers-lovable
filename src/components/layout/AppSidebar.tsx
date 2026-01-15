@@ -166,8 +166,8 @@ export function AppSidebar() {
                 {allItems.map(item => {
                 if (item.subItems) {
                   // Handle expandable menu items (like Sales and Products)
-                  const isExpanded = item.title === 'Sales/POS' ? salesExpanded : productsExpanded;
-                  const setExpanded = item.title === 'Sales/POS' ? setSalesExpanded : setProductsExpanded;
+                  const isExpanded = item.title === 'Sales' ? salesExpanded : productsExpanded;
+                  const setExpanded = item.title === 'Sales' ? setSalesExpanded : setProductsExpanded;
                   const hasActiveChild = item.subItems.some(sub => isActive(sub.url));
                   if (isCollapsed) {
                     // Collapsed: show flyout on hover
