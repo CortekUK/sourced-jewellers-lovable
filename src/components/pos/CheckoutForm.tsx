@@ -16,6 +16,7 @@ import { CustomerSearchInput } from './CustomerSearchInput';
 import { LocationSelector } from '@/components/cash-drawer/LocationSelector';
 import { Badge } from '@/components/ui/badge';
 import { MapPin } from 'lucide-react';
+import { useLocation } from '@/hooks/useLocations';
 
 export type DiscountType = 'percentage' | 'fixed';
 
@@ -30,8 +31,10 @@ interface CheckoutFormProps {
   onCustomerNameChange: (name: string) => void;
   customerEmail: string;
   onCustomerEmailChange: (email: string) => void;
+  customerPhone: string;
+  onCustomerPhoneChange: (phone: string) => void;
   selectedCustomerId: number | null;
-  onCustomerSelect: (customerId: number | null, name: string, email: string) => void;
+  onCustomerSelect: (customerId: number | null, name: string, email: string, phone: string) => void;
   customerNotes: string;
   onCustomerNotesChange: (notes: string) => void;
   paymentMethod: PaymentMethod | '';
@@ -46,7 +49,6 @@ interface CheckoutFormProps {
   locationId: number | null;
   onLocationChange: (locationId: number | null) => void;
   locationLocked?: boolean;
-  locationName?: string;
 }
 const paymentMethods = [{
   value: 'cash' as PaymentMethod,
@@ -76,6 +78,8 @@ export function CheckoutForm({
   onCustomerNameChange,
   customerEmail,
   onCustomerEmailChange,
+  customerPhone,
+  onCustomerPhoneChange,
   selectedCustomerId,
   onCustomerSelect,
   customerNotes,
@@ -91,12 +95,15 @@ export function CheckoutForm({
   onStaffMemberChange,
   locationId,
   onLocationChange,
-  locationLocked,
-  locationName
+  locationLocked
 }: CheckoutFormProps) {
   const [discountInput, setDiscountInput] = useState(discount.toString());
   const signaturePadRef = useRef<SignaturePadRef>(null);
   const [signatureOpen, setSignatureOpen] = useState(false);
+  
+  // Fetch location name when locked
+  const { data: locationData } = useLocation(locationLocked && locationId ? locationId : 0);
+  const resolvedLocationName = locationData?.name || `Location #${locationId}`;
 
   // Calculate discount amount based on type
   const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0);
@@ -151,7 +158,7 @@ export function CheckoutForm({
               Shop Location *
             </Label>
             <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg border">
-              <span className="font-medium">{locationName || `Location #${locationId}`}</span>
+              <span className="font-medium">{resolvedLocationName}</span>
               <Badge variant="secondary" className="ml-auto text-xs">
                 From product
               </Badge>
@@ -169,9 +176,11 @@ export function CheckoutForm({
         <CustomerSearchInput
           customerName={customerName}
           customerEmail={customerEmail}
+          customerPhone={customerPhone}
           selectedCustomerId={selectedCustomerId}
           onCustomerNameChange={onCustomerNameChange}
           onCustomerEmailChange={onCustomerEmailChange}
+          onCustomerPhoneChange={onCustomerPhoneChange}
           onCustomerSelect={onCustomerSelect}
         />
         

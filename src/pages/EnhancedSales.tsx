@@ -31,6 +31,7 @@ export default function EnhancedSales() {
   const [searchQuery, setSearchQuery] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
   const [discount, setDiscount] = useState(0);
   const [discountType, setDiscountType] = useState<DiscountType>('percentage');
@@ -500,11 +501,14 @@ export default function EnhancedSales() {
               onCustomerNameChange={setCustomerName}
               customerEmail={customerEmail}
               onCustomerEmailChange={setCustomerEmail}
+              customerPhone={customerPhone}
+              onCustomerPhoneChange={setCustomerPhone}
               selectedCustomerId={selectedCustomerId}
-              onCustomerSelect={(id, name, email) => {
+              onCustomerSelect={(id, name, email, phone) => {
                 setSelectedCustomerId(id);
                 setCustomerName(name);
                 setCustomerEmail(email);
+                setCustomerPhone(phone);
               }}
               customerNotes={notes}
               onCustomerNotesChange={setNotes}
@@ -520,7 +524,6 @@ export default function EnhancedSales() {
               locationId={locationId}
               onLocationChange={setLocationId}
               locationLocked={cart.length > 0}
-              locationName={cart.length > 0 ? (cart[0].product as any).location?.name : undefined}
             />
           </div>
         </div>

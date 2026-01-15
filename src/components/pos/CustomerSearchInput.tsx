@@ -12,19 +12,23 @@ import { cn } from '@/lib/utils';
 interface CustomerSearchInputProps {
   customerName: string;
   customerEmail: string;
+  customerPhone: string;
   selectedCustomerId: number | null;
   onCustomerNameChange: (name: string) => void;
   onCustomerEmailChange: (email: string) => void;
-  onCustomerSelect: (customerId: number | null, name: string, email: string) => void;
+  onCustomerPhoneChange: (phone: string) => void;
+  onCustomerSelect: (customerId: number | null, name: string, email: string, phone: string) => void;
   className?: string;
 }
 
 export function CustomerSearchInput({
   customerName,
   customerEmail,
+  customerPhone,
   selectedCustomerId,
   onCustomerNameChange,
   onCustomerEmailChange,
+  onCustomerPhoneChange,
   onCustomerSelect,
 }: CustomerSearchInputProps) {
   const [open, setOpen] = useState(false);
@@ -38,20 +42,20 @@ export function CustomerSearchInput({
     onCustomerNameChange(value);
     // Clear selection when typing new value
     if (selectedCustomerId) {
-      onCustomerSelect(null, value, customerEmail);
+      onCustomerSelect(null, value, customerEmail, customerPhone);
     }
   };
 
   // Select an existing customer
-  const handleSelectCustomer = (customer: { id: number; name: string; email: string | null; vip_tier: string }) => {
-    onCustomerSelect(customer.id, customer.name, customer.email || '');
+  const handleSelectCustomer = (customer: { id: number; name: string; email: string | null; phone: string | null; vip_tier: string }) => {
+    onCustomerSelect(customer.id, customer.name, customer.email || '', customer.phone || '');
     setSearchQuery(customer.name);
     setOpen(false);
   };
 
   // Clear selection
   const handleClear = () => {
-    onCustomerSelect(null, '', '');
+    onCustomerSelect(null, '', '', '');
     setSearchQuery('');
     setOpen(false);
   };
@@ -153,7 +157,7 @@ export function CustomerSearchInput({
                       <CommandItem
                         key={customer.id}
                         value={customer.id.toString()}
-                        onSelect={() => handleSelectCustomer(customer as { id: number; name: string; email: string | null; vip_tier: string })}
+                        onSelect={() => handleSelectCustomer(customer as { id: number; name: string; email: string | null; phone: string | null; vip_tier: string })}
                         className="flex items-center justify-between py-3 cursor-pointer"
                       >
                         <div className="flex items-center gap-3">
@@ -182,7 +186,7 @@ export function CustomerSearchInput({
                   <CommandGroup>
                     <CommandItem
                       onSelect={() => {
-                        onCustomerSelect(null, searchQuery, customerEmail);
+                        onCustomerSelect(null, searchQuery, customerEmail, customerPhone);
                         setOpen(false);
                       }}
                       className="flex items-center gap-2 py-3 cursor-pointer border-t"
@@ -227,6 +231,25 @@ export function CustomerSearchInput({
         {selectedCustomerId && customerEmail && (
           <p className="text-xs text-muted-foreground">
             Email from customer profile
+          </p>
+        )}
+      </div>
+
+      {/* Phone field */}
+      <div className="space-y-2">
+        <Label htmlFor="customer-phone">Customer Phone (Optional)</Label>
+        <Input
+          id="customer-phone"
+          type="tel"
+          placeholder="+44 7123 456789"
+          value={customerPhone}
+          onChange={(e) => onCustomerPhoneChange(e.target.value)}
+          disabled={!!selectedCustomerId}
+          className={cn(selectedCustomerId && "bg-muted/50")}
+        />
+        {selectedCustomerId && customerPhone && (
+          <p className="text-xs text-muted-foreground">
+            Phone from customer profile
           </p>
         )}
       </div>
