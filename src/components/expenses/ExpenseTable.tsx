@@ -455,7 +455,7 @@ export function ExpenseTable({ expenses, onEdit, searchQuery = '', onSearchChang
         <CardHeader className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle className="text-xl font-semibold">Expense Records</CardTitle>
+              <CardTitle className="text-2xl font-semibold">Expense Records</CardTitle>
               <p className="text-sm text-muted-foreground mt-1">
                 {expenses.length} {expenses.length === 1 ? 'expense' : 'expenses'} total
               </p>
