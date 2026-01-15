@@ -76,7 +76,8 @@ export function ExpenseFiltersEnhanced({
     (filters.paymentMethods?.length || 0) +
     (filters.minAmount !== undefined ? 1 : 0) +
     (filters.maxAmount !== undefined ? 1 : 0) +
-    (filters.isCogs !== undefined ? 1 : 0);
+    (filters.isCogs !== undefined ? 1 : 0) +
+    (filters.scheduleType !== undefined ? 1 : 0);
 
   const clearAllFilters = () => {
     onFiltersChange({});
@@ -329,6 +330,29 @@ export function ExpenseFiltersEnhanced({
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Schedule Type */}
+              <div className="space-y-2">
+                <Label>Schedule</Label>
+                <Select
+                  value={filters.scheduleType || 'all'}
+                  onValueChange={(value) =>
+                    onFiltersChange({
+                      ...filters,
+                      scheduleType: value === 'all' ? undefined : value as 'recurring' | 'one-time',
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Schedules</SelectItem>
+                    <SelectItem value="recurring">Recurring Only</SelectItem>
+                    <SelectItem value="one-time">One-time Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </PopoverContent>
         </Popover>
@@ -370,6 +394,15 @@ export function ExpenseFiltersEnhanced({
               />
             </Badge>
           ))}
+          {filters.scheduleType && (
+            <Badge variant="secondary" className="gap-1">
+              {filters.scheduleType === 'recurring' ? 'Recurring' : 'One-time'}
+              <X
+                className="h-3 w-3 cursor-pointer"
+                onClick={() => onFiltersChange({ ...filters, scheduleType: undefined })}
+              />
+            </Badge>
+          )}
         </div>
       )}
     </div>
