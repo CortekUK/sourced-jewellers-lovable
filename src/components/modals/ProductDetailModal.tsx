@@ -95,10 +95,11 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className={`w-full max-w-[58rem] max-h-[90vh] overflow-y-auto p-0 ${soldInfo ? 'border-destructive/50' : ''}`}>
+        <DialogContent className={`w-full max-w-[58rem] max-h-[90vh] overflow-hidden p-0 ${soldInfo ? 'border-destructive/50' : ''}`}>
+          <div className="max-h-[90vh] overflow-y-auto">
           
-          {/* Hero Header Section */}
-          <div className="p-6 pb-0">
+            {/* Hero Header Section */}
+            <div className="p-6 pb-0">
             {soldInfo && (
               <div className="mb-5 p-4 bg-destructive/10 border border-destructive/30 rounded-xl">
                 <div className="flex items-center justify-between gap-4">
@@ -672,7 +673,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
               </div>
             </div>
           )}
-
+          </div>
         </DialogContent>
       </Dialog>
 
