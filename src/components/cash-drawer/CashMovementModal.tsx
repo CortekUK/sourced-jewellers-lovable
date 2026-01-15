@@ -140,14 +140,26 @@ export function CashMovementModal({
           <Button variant="outline" onClick={onClose} disabled={isProcessing}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isProcessing}>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isProcessing}
+            className={
+              movementType === 'deposit' 
+                ? 'bg-green-600 hover:bg-green-700 text-white' 
+                : movementType === 'withdrawal'
+                  ? 'bg-orange-600 hover:bg-orange-700 text-white'
+                  : ''
+            }
+          >
             {isProcessing ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Processing...
               </>
             ) : (
-              'Confirm'
+              movementType === 'deposit' ? 'Add Cash' :
+              movementType === 'withdrawal' ? 'Remove Cash' :
+              'Set Float'
             )}
           </Button>
         </DialogFooter>

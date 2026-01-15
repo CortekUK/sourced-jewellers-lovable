@@ -54,18 +54,21 @@ export function CashDrawerHistoryModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-2xl max-h-[80vh]">
-        <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle>Cash Drawer History - {locationName}</DialogTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExport}
-            disabled={!movements || movements.length === 0}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
+      <DialogContent className="sm:max-w-2xl max-h-[85vh]">
+        <DialogHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <DialogTitle className="text-lg">{locationName} - Cash History</DialogTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleExport}
+              disabled={!movements || movements.length === 0}
+              className="w-fit"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
         </DialogHeader>
 
         <ScrollArea className="h-[500px] pr-4">

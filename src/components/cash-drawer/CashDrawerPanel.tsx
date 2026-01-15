@@ -88,12 +88,18 @@ export function CashDrawerPanel() {
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className={`grid gap-4 ${
+          balances.length === 1 
+            ? 'grid-cols-1' 
+            : balances.length === 2 
+              ? 'grid-cols-1 md:grid-cols-2' 
+              : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+        }`}>
           {balances.map((location) => (
-            <Card key={location.location_id} className="relative overflow-hidden">
+            <Card key={location.location_id} className="relative overflow-hidden h-full group hover:shadow-md transition-shadow">
               <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-3">
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start mb-4">
                   <div>
                     <h4 className="font-semibold text-base">{location.location_name}</h4>
                     <p className="text-xs text-muted-foreground">
@@ -104,7 +110,7 @@ export function CashDrawerPanel() {
                   </div>
                 </div>
                 
-                <div className={`text-2xl font-bold mb-4 ${
+                <div className={`text-3xl font-bold mb-5 ${
                   location.current_balance < 0 ? 'text-destructive' : 'text-primary'
                 }`}>
                   {formatCurrency(location.current_balance)}
@@ -116,6 +122,7 @@ export function CashDrawerPanel() {
                       <Button
                         variant="outline"
                         size="sm"
+                        className="text-green-600 hover:text-green-700 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-950"
                         onClick={() => setMovementModal({
                           isOpen: true,
                           locationId: location.location_id,
@@ -129,6 +136,7 @@ export function CashDrawerPanel() {
                       <Button
                         variant="outline"
                         size="sm"
+                        className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-950"
                         onClick={() => setMovementModal({
                           isOpen: true,
                           locationId: location.location_id,
