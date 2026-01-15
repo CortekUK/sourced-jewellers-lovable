@@ -327,7 +327,21 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
                 </div>
                 <Switch
                   checked={formData.is_consignment}
-                  onCheckedChange={(checked) => setFormData({...formData, is_consignment: checked})}
+                  onCheckedChange={(checked) => {
+                    const updates: Partial<typeof formData> = { is_consignment: checked };
+                    
+                    // Auto-fill consignment supplier if enabling and a registered supplier is selected
+                    if (checked && formData.supplier_type === 'registered' && formData.supplier_id && !formData.consignment_supplier_id) {
+                      updates.consignment_supplier_id = parseInt(formData.supplier_id);
+                    }
+                    
+                    // Auto-fill start date to today if not already set
+                    if (checked && !formData.consignment_start_date) {
+                      updates.consignment_start_date = new Date().toISOString().split('T')[0];
+                    }
+                    
+                    setFormData({...formData, ...updates});
+                  }}
                 />
               </div>
               
