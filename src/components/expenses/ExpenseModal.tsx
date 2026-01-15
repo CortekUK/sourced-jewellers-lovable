@@ -1,25 +1,12 @@
 import { useState, useEffect } from 'react';
 import { format, addWeeks, addMonths, addYears } from 'date-fns';
 import { Calendar, CalendarIcon, Plus } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -32,17 +19,7 @@ import { useAllExpenseCategories, formatCategoryDisplay } from '@/hooks/useCusto
 import { useAuth } from '@/contexts/AuthContext';
 import { useOwnerGuard } from '@/hooks/useOwnerGuard';
 import { cn } from '@/lib/utils';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 interface ExpenseFormData {
   description: string;
   amount: string;
@@ -58,7 +35,6 @@ interface ExpenseFormData {
   frequency: 'weekly' | 'monthly' | 'quarterly' | 'annually';
   next_due_date: Date;
 }
-
 interface ExpenseModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -67,31 +43,45 @@ interface ExpenseModalProps {
   onSave: (data: any) => void;
   onDelete?: (id: number) => void;
 }
-
-const PAYMENT_METHODS: Array<{ value: 'cash' | 'card' | 'transfer' | 'check' | 'other'; label: string }> = [
-  { value: 'cash', label: 'Cash' },
-  { value: 'card', label: 'Card' },
-  { value: 'transfer', label: 'Bank Transfer' },
-  { value: 'check', label: 'Cheque' },
-  { value: 'other', label: 'Other' },
-];
+const PAYMENT_METHODS: Array<{
+  value: 'cash' | 'card' | 'transfer' | 'check' | 'other';
+  label: string;
+}> = [{
+  value: 'cash',
+  label: 'Cash'
+}, {
+  value: 'card',
+  label: 'Card'
+}, {
+  value: 'transfer',
+  label: 'Bank Transfer'
+}, {
+  value: 'check',
+  label: 'Cheque'
+}, {
+  value: 'other',
+  label: 'Other'
+}];
 const VAT_RATES = [0, 5, 20];
-
 export function ExpenseModal({
   open,
   onOpenChange,
   mode,
   expense,
   onSave,
-  onDelete,
+  onDelete
 }: ExpenseModalProps) {
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const isOwner = useOwnerGuard();
-  const { data: suppliers = [] } = useSuppliers();
-  const { all: allCategories } = useAllExpenseCategories();
-  
+  const {
+    data: suppliers = []
+  } = useSuppliers();
+  const {
+    all: allCategories
+  } = useAllExpenseCategories();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
   const [formData, setFormData] = useState<ExpenseFormData>({
     description: '',
     amount: '',
@@ -105,9 +95,8 @@ export function ExpenseModal({
     is_cogs: false,
     recurring: false,
     frequency: 'monthly',
-    next_due_date: new Date(),
+    next_due_date: new Date()
   });
-
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Populate form when editing
@@ -126,7 +115,7 @@ export function ExpenseModal({
         is_cogs: expense.is_cogs || false,
         recurring: false,
         frequency: 'monthly',
-        next_due_date: new Date(),
+        next_due_date: new Date()
       });
     } else if (mode === 'create') {
       // Reset form for create mode
@@ -143,7 +132,7 @@ export function ExpenseModal({
         is_cogs: false,
         recurring: false,
         frequency: 'monthly',
-        next_due_date: new Date(),
+        next_due_date: new Date()
       });
     }
     setErrors({});
@@ -153,26 +142,26 @@ export function ExpenseModal({
   const calculateVAT = () => {
     const amountNum = parseFloat(formData.amount) || 0;
     if (!formData.include_vat) {
-      return { amountExVat: amountNum, vatAmount: 0, amountIncVat: amountNum };
+      return {
+        amountExVat: amountNum,
+        vatAmount: 0,
+        amountIncVat: amountNum
+      };
     }
-
     const vatDecimal = formData.vat_rate / 100;
     const amountExVat = amountNum / (1 + vatDecimal);
     const vatAmount = amountNum - amountExVat;
-
     return {
       amountExVat: parseFloat(amountExVat.toFixed(2)),
       vatAmount: parseFloat(vatAmount.toFixed(2)),
-      amountIncVat: amountNum,
+      amountIncVat: amountNum
     };
   };
-
   const vatBreakdown = calculateVAT();
 
   // Validation
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
@@ -188,14 +177,11 @@ export function ExpenseModal({
     if (formData.recurring && !formData.next_due_date) {
       newErrors.next_due_date = 'Next due date is required for recurring expenses';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSave = () => {
     if (!validate()) return;
-
     const saveData: any = {
       description: formData.description,
       incurred_at: formData.date.toISOString(),
@@ -204,9 +190,8 @@ export function ExpenseModal({
       payment_method: formData.payment_method,
       notes: formData.notes || null,
       is_cogs: formData.is_cogs,
-      staff_id: user?.id,
+      staff_id: user?.id
     };
-
     if (formData.include_vat) {
       saveData.amount_ex_vat = vatBreakdown.amountExVat;
       saveData.vat_amount = vatBreakdown.vatAmount;
@@ -220,30 +205,25 @@ export function ExpenseModal({
       saveData.vat_rate = null;
       saveData.amount_inc_vat = null;
     }
-
     if (mode === 'edit' && expense) {
       saveData.id = expense.id;
     }
-
     onSave({
       expense: saveData,
       recurring: formData.recurring,
-      template: formData.recurring
-        ? {
-            description: formData.description,
-            amount: parseFloat(formData.amount),
-            category: formData.category,
-            supplier_id: formData.supplier_id,
-            payment_method: formData.payment_method,
-            vat_rate: formData.include_vat ? formData.vat_rate : null,
-            notes: formData.notes || null,
-            frequency: formData.frequency,
-            next_due_date: formData.next_due_date.toISOString().split('T')[0],
-          }
-        : null,
+      template: formData.recurring ? {
+        description: formData.description,
+        amount: parseFloat(formData.amount),
+        category: formData.category,
+        supplier_id: formData.supplier_id,
+        payment_method: formData.payment_method,
+        vat_rate: formData.include_vat ? formData.vat_rate : null,
+        notes: formData.notes || null,
+        frequency: formData.frequency,
+        next_due_date: formData.next_due_date.toISOString().split('T')[0]
+      } : null
     });
   };
-
   const handleDelete = () => {
     if (expense && onDelete) {
       onDelete(expense.id);
@@ -251,28 +231,18 @@ export function ExpenseModal({
       onOpenChange(false);
     }
   };
-
-  const isValid =
-    formData.description.trim() &&
-    formData.amount &&
-    parseFloat(formData.amount) > 0 &&
-    formData.category &&
-    formData.payment_method;
-
-  return (
-    <>
+  const isValid = formData.description.trim() && formData.amount && parseFloat(formData.amount) > 0 && formData.category && formData.payment_method;
+  return <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 md:p-6">
           <DialogHeader>
             <DialogTitle className="font-playfair text-2xl">
               {mode === 'create' ? 'Record New Expense' : 'Edit Expense'}
             </DialogTitle>
-            {mode === 'edit' && expense && (
-              <DialogDescription>
+            {mode === 'edit' && expense && <DialogDescription>
                 Created by {expense.staff?.full_name || 'Unknown'} on{' '}
                 {format(new Date(expense.created_at), 'MMM d, yyyy')}
-              </DialogDescription>
-            )}
+              </DialogDescription>}
           </DialogHeader>
 
           <div className="space-y-6 py-4">
@@ -281,16 +251,11 @@ export function ExpenseModal({
               <Label htmlFor="description">
                 Description <span className="text-destructive">*</span>
               </Label>
-              <Input
-                id="description"
-                placeholder="e.g., Office rent"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className={errors.description ? 'border-destructive' : ''}
-              />
-              {errors.description && (
-                <p className="text-sm text-destructive">{errors.description}</p>
-              )}
+              <Input id="description" placeholder="e.g., Office rent" value={formData.description} onChange={e => setFormData({
+              ...formData,
+              description: e.target.value
+            })} className={errors.description ? 'border-destructive' : ''} />
+              {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
             </div>
 
             {/* Amount & VAT */}
@@ -299,48 +264,38 @@ export function ExpenseModal({
                 <Label htmlFor="amount">
                   Amount <span className="text-destructive">*</span>
                 </Label>
-                <CurrencyInput
-                  id="amount"
-                  value={formData.amount}
-                  onValueChange={(value) => setFormData({ ...formData, amount: value })}
-                  error={errors.amount}
-                />
+                <CurrencyInput id="amount" value={formData.amount} onValueChange={value => setFormData({
+                ...formData,
+                amount: value
+              })} error={errors.amount} />
               </div>
 
               {/* VAT Toggle */}
               <div className="flex items-center gap-2">
-                <Switch
-                  id="include-vat"
-                  checked={formData.include_vat}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, include_vat: checked })
-                  }
-                />
+                <Switch id="include-vat" checked={formData.include_vat} onCheckedChange={checked => setFormData({
+                ...formData,
+                include_vat: checked
+              })} />
                 <Label htmlFor="include-vat" className="cursor-pointer">
                   Include VAT/Tax
                 </Label>
               </div>
 
               {/* VAT Breakdown */}
-              {formData.include_vat && (
-                <div className="space-y-3 rounded-lg border bg-muted/50 p-4">
+              {formData.include_vat && <div className="space-y-3 rounded-lg border bg-muted/50 p-4">
                   <div className="space-y-2">
                     <Label htmlFor="vat-rate">VAT Rate</Label>
-                    <Select
-                      value={formData.vat_rate.toString()}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, vat_rate: parseInt(value) })
-                      }
-                    >
+                    <Select value={formData.vat_rate.toString()} onValueChange={value => setFormData({
+                  ...formData,
+                  vat_rate: parseInt(value)
+                })}>
                       <SelectTrigger id="vat-rate">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {VAT_RATES.map((rate) => (
-                          <SelectItem key={rate} value={rate.toString()}>
+                        {VAT_RATES.map(rate => <SelectItem key={rate} value={rate.toString()}>
                             {rate}%
-                          </SelectItem>
-                        ))}
+                          </SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>
@@ -363,8 +318,7 @@ export function ExpenseModal({
                       </span>
                     </div>
                   </div>
-                </div>
-              )}
+                </div>}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -375,25 +329,16 @@ export function ExpenseModal({
                 </Label>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full justify-start text-left font-normal',
-                        !formData.date && 'text-muted-foreground'
-                      )}
-                    >
+                    <Button variant="outline" className={cn('w-full justify-start text-left font-normal', !formData.date && 'text-muted-foreground')}>
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {formData.date ? format(formData.date, 'PPP') : <span>Pick a date</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <CalendarPicker
-                      mode="single"
-                      selected={formData.date}
-                      onSelect={(date) => date && setFormData({ ...formData, date })}
-                      initialFocus
-                      className="pointer-events-auto"
-                    />
+                    <CalendarPicker mode="single" selected={formData.date} onSelect={date => date && setFormData({
+                    ...formData,
+                    date
+                  })} initialFocus className="pointer-events-auto" />
                   </PopoverContent>
                 </Popover>
               </div>
@@ -403,19 +348,17 @@ export function ExpenseModal({
                 <Label htmlFor="category">
                   Category <span className="text-destructive">*</span>
                 </Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
-                >
+                <Select value={formData.category} onValueChange={value => setFormData({
+                ...formData,
+                category: value
+              })}>
                   <SelectTrigger id="category" className={errors.category ? 'border-destructive' : ''}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {allCategories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
+                    {allCategories.map(cat => <SelectItem key={cat} value={cat}>
                         {formatCategoryDisplay(cat)}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
                 {errors.category && <p className="text-sm text-destructive">{errors.category}</p>}
@@ -426,26 +369,27 @@ export function ExpenseModal({
               {/* Supplier */}
               <div className="space-y-2">
                 <Label htmlFor="supplier">Vendor / Supplier (Optional)</Label>
-                <Select
-                  value={formData.supplier_id?.toString() || 'none'}
-                  onValueChange={(value) => {
-                    if (value === 'none') {
-                      setFormData({ ...formData, supplier_id: null });
-                    } else {
-                      setFormData({ ...formData, supplier_id: parseInt(value) });
-                    }
-                  }}
-                >
+                <Select value={formData.supplier_id?.toString() || 'none'} onValueChange={value => {
+                if (value === 'none') {
+                  setFormData({
+                    ...formData,
+                    supplier_id: null
+                  });
+                } else {
+                  setFormData({
+                    ...formData,
+                    supplier_id: parseInt(value)
+                  });
+                }
+              }}>
                   <SelectTrigger id="supplier">
                     <SelectValue placeholder="Select supplier" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None</SelectItem>
-                    {suppliers.map((supplier) => (
-                      <SelectItem key={supplier.id} value={supplier.id.toString()}>
+                    {suppliers.map(supplier => <SelectItem key={supplier.id} value={supplier.id.toString()}>
                         {supplier.name}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -455,37 +399,29 @@ export function ExpenseModal({
                 <Label htmlFor="payment">
                   Payment Method <span className="text-destructive">*</span>
                 </Label>
-                <Select
-                  value={formData.payment_method}
-                  onValueChange={(value) => setFormData({ ...formData, payment_method: value })}
-                >
-                  <SelectTrigger
-                    id="payment"
-                    className={errors.payment_method ? 'border-destructive' : ''}
-                  >
+                <Select value={formData.payment_method} onValueChange={value => setFormData({
+                ...formData,
+                payment_method: value
+              })}>
+                  <SelectTrigger id="payment" className={errors.payment_method ? 'border-destructive' : ''}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {PAYMENT_METHODS.map((method) => (
-                      <SelectItem key={method.value} value={method.value}>
+                    {PAYMENT_METHODS.map(method => <SelectItem key={method.value} value={method.value}>
                         {method.label}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
-                {errors.payment_method && (
-                  <p className="text-sm text-destructive">{errors.payment_method}</p>
-                )}
+                {errors.payment_method && <p className="text-sm text-destructive">{errors.payment_method}</p>}
               </div>
             </div>
 
             {/* COGS Toggle */}
             <div className="flex items-center gap-2">
-              <Switch
-                id="is-cogs"
-                checked={formData.is_cogs}
-                onCheckedChange={(checked) => setFormData({ ...formData, is_cogs: checked })}
-              />
+              <Switch id="is-cogs" checked={formData.is_cogs} onCheckedChange={checked => setFormData({
+              ...formData,
+              is_cogs: checked
+            })} />
               <Label htmlFor="is-cogs" className="cursor-pointer">
                 This is a Cost of Goods Sold (COGS)
               </Label>
@@ -494,13 +430,10 @@ export function ExpenseModal({
             {/* Notes */}
             <div className="space-y-2">
               <Label htmlFor="notes">Notes (Optional)</Label>
-              <Textarea
-                id="notes"
-                placeholder="Additional notes..."
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                rows={3}
-              />
+              <Textarea id="notes" placeholder="Additional notes..." value={formData.notes} onChange={e => setFormData({
+              ...formData,
+              notes: e.target.value
+            })} rows={3} />
             </div>
 
             {/* Receipts */}
@@ -512,71 +445,74 @@ export function ExpenseModal({
             {/* Recurring Expenses */}
             <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
               <div className="flex items-center gap-2">
-                <Switch
-                  id="recurring"
-                  checked={formData.recurring}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      // Auto-calculate next due date based on current frequency when enabling
-                      const baseDate = formData.date || new Date();
-                      let nextDate: Date;
-                      switch (formData.frequency) {
-                        case 'weekly':
-                          nextDate = addWeeks(baseDate, 1);
-                          break;
-                        case 'monthly':
-                          nextDate = addMonths(baseDate, 1);
-                          break;
-                        case 'quarterly':
-                          nextDate = addMonths(baseDate, 3);
-                          break;
-                        case 'annually':
-                          nextDate = addYears(baseDate, 1);
-                          break;
-                        default:
-                          nextDate = addMonths(baseDate, 1);
-                      }
-                      setFormData({ ...formData, recurring: checked, next_due_date: nextDate });
-                    } else {
-                      setFormData({ ...formData, recurring: checked });
-                    }
-                  }}
-                />
+                <Switch id="recurring" checked={formData.recurring} onCheckedChange={checked => {
+                if (checked) {
+                  // Auto-calculate next due date based on current frequency when enabling
+                  const baseDate = formData.date || new Date();
+                  let nextDate: Date;
+                  switch (formData.frequency) {
+                    case 'weekly':
+                      nextDate = addWeeks(baseDate, 1);
+                      break;
+                    case 'monthly':
+                      nextDate = addMonths(baseDate, 1);
+                      break;
+                    case 'quarterly':
+                      nextDate = addMonths(baseDate, 3);
+                      break;
+                    case 'annually':
+                      nextDate = addYears(baseDate, 1);
+                      break;
+                    default:
+                      nextDate = addMonths(baseDate, 1);
+                  }
+                  setFormData({
+                    ...formData,
+                    recurring: checked,
+                    next_due_date: nextDate
+                  });
+                } else {
+                  setFormData({
+                    ...formData,
+                    recurring: checked
+                  });
+                }
+              }} />
                 <Label htmlFor="recurring" className="cursor-pointer font-semibold">
                   Make this a recurring expense
                 </Label>
               </div>
 
-              {formData.recurring && (
-                <div className="space-y-4 pl-6">
+              {formData.recurring && <div className="space-y-4 pl-6">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="frequency">Frequency</Label>
-                      <Select
-                        value={formData.frequency}
-                        onValueChange={(value: 'weekly' | 'monthly' | 'quarterly' | 'annually') => {
-                          // Calculate next due date based on frequency
-                          const baseDate = formData.date || new Date();
-                          let nextDate: Date;
-                          switch (value) {
-                            case 'weekly':
-                              nextDate = addWeeks(baseDate, 1);
-                              break;
-                            case 'monthly':
-                              nextDate = addMonths(baseDate, 1);
-                              break;
-                            case 'quarterly':
-                              nextDate = addMonths(baseDate, 3);
-                              break;
-                            case 'annually':
-                              nextDate = addYears(baseDate, 1);
-                              break;
-                            default:
-                              nextDate = addMonths(baseDate, 1);
-                          }
-                          setFormData({ ...formData, frequency: value, next_due_date: nextDate });
-                        }}
-                      >
+                      <Select value={formData.frequency} onValueChange={(value: 'weekly' | 'monthly' | 'quarterly' | 'annually') => {
+                    // Calculate next due date based on frequency
+                    const baseDate = formData.date || new Date();
+                    let nextDate: Date;
+                    switch (value) {
+                      case 'weekly':
+                        nextDate = addWeeks(baseDate, 1);
+                        break;
+                      case 'monthly':
+                        nextDate = addMonths(baseDate, 1);
+                        break;
+                      case 'quarterly':
+                        nextDate = addMonths(baseDate, 3);
+                        break;
+                      case 'annually':
+                        nextDate = addYears(baseDate, 1);
+                        break;
+                      default:
+                        nextDate = addMonths(baseDate, 1);
+                    }
+                    setFormData({
+                      ...formData,
+                      frequency: value,
+                      next_due_date: nextDate
+                    });
+                  }}>
                         <SelectTrigger id="frequency">
                           <SelectValue />
                         </SelectTrigger>
@@ -593,40 +529,23 @@ export function ExpenseModal({
                       <Label>Next Due Date</Label>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              'w-full justify-start text-left font-normal',
-                              !formData.next_due_date && 'text-muted-foreground'
-                            )}
-                          >
+                          <Button variant="outline" className={cn('w-full justify-start text-left font-normal', !formData.next_due_date && 'text-muted-foreground')}>
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {formData.next_due_date ? (
-                              format(formData.next_due_date, 'PPP')
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
+                            {formData.next_due_date ? format(formData.next_due_date, 'PPP') : <span>Pick a date</span>}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                          <CalendarPicker
-                            mode="single"
-                            selected={formData.next_due_date}
-                            onSelect={(date) => date && setFormData({ ...formData, next_due_date: date })}
-                            initialFocus
-                            className="pointer-events-auto"
-                          />
+                          <CalendarPicker mode="single" selected={formData.next_due_date} onSelect={date => date && setFormData({
+                        ...formData,
+                        next_due_date: date
+                      })} initialFocus className="pointer-events-auto" />
                         </PopoverContent>
                       </Popover>
                     </div>
                   </div>
 
-                  <div className="rounded-md bg-blue-50 dark:bg-blue-950 p-3 text-sm text-blue-900 dark:text-blue-100">
-                    A recurring template will be created. This expense will be recorded once now,
-                    and the template will track future recurring entries.
-                  </div>
-                </div>
-              )}
+                  <div className="rounded-md bg-blue-50 dark:bg-blue-950 p-3 text-sm text-blue-900 dark:text-blue-100">A recurring expense will be created. This expense will be recorded once now, and the template will track future recurring entries.</div>
+                </div>}
             </div>
 
             {/* Recorded By */}
@@ -637,11 +556,9 @@ export function ExpenseModal({
           </div>
 
           <DialogFooter className="gap-2">
-            {mode === 'edit' && isOwner && (
-              <Button type="button" variant="destructive" onClick={() => setShowDeleteDialog(true)}>
+            {mode === 'edit' && isOwner && <Button type="button" variant="destructive" onClick={() => setShowDeleteDialog(true)}>
                 Delete
-              </Button>
-            )}
+              </Button>}
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
@@ -667,6 +584,5 @@ export function ExpenseModal({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
-  );
+    </>;
 }
