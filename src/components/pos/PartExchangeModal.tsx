@@ -376,10 +376,10 @@ export const PartExchangeModal = ({ isOpen, onClose, onAdd }: PartExchangeModalP
                 <div className="space-y-2">
                   <button
                     type="button"
-                    className="text-sm text-primary hover:underline"
+                    className="text-sm text-muted-foreground hover:text-primary hover:underline"
                     onClick={() => setQuickAddMode(!quickAddMode)}
                   >
-                    Or Quick add
+                    {quickAddMode ? 'Hide quick add' : 'Or quick add (no record created)'}
                   </button>
 
                   {quickAddMode && (
@@ -460,25 +460,25 @@ export const PartExchangeModal = ({ isOpen, onClose, onAdd }: PartExchangeModalP
         </form>
 
         {/* New Person Modal */}
-        {showNewPersonModal && (
-          <InlineSupplierAdd
-            onSupplierCreated={(supplierId) => {
-              const newPerson = suppliers?.find(s => s.id === supplierId);
-              if (newPerson) {
-                setSelectedPerson({
-                  id: newPerson.id,
-                  name: newPerson.name,
-                  type: tradeInSource,
-                });
-                setErrors(prev => ({ ...prev, source: '' }));
-              }
-              setShowNewPersonModal(false);
-            }}
-            defaultType={tradeInSource === 'supplier' ? 'registered' : 'customer'}
-            triggerLabel=""
-            lockType
-          />
-        )}
+        <InlineSupplierAdd
+          open={showNewPersonModal}
+          onOpenChange={setShowNewPersonModal}
+          hideTrigger
+          onSupplierCreated={(supplierId) => {
+            const newPerson = suppliers?.find(s => s.id === supplierId);
+            if (newPerson) {
+              setSelectedPerson({
+                id: newPerson.id,
+                name: newPerson.name,
+                type: tradeInSource,
+              });
+              setErrors(prev => ({ ...prev, source: '' }));
+            }
+            setShowNewPersonModal(false);
+          }}
+          defaultType={tradeInSource === 'supplier' ? 'registered' : 'customer'}
+          lockType
+        />
       </DialogContent>
     </Dialog>
   );
