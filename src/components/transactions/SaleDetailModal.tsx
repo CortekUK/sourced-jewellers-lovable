@@ -21,7 +21,7 @@ import { printHtml } from '@/utils/printUtils';
 import { EmailService } from '@/components/integrations/EmailService';
 import { VoidSaleModal } from './VoidSaleModal';
 import { EditSaleModal } from './EditSaleModal';
-import { usePermissions } from '@/hooks/usePermissions';
+import { usePermissions, CRM_MODULES } from '@/hooks/usePermissions';
 
 interface SaleDetailModalProps {
   saleId: number | null;
@@ -37,7 +37,9 @@ export function SaleDetailModal({ saleId, open, onClose, focusLineItemId }: Sale
   const navigate = useNavigate();
   const { settings } = useSettings();
   const { theme } = useTheme();
-  const { isOwner } = usePermissions();
+  const { canEdit, canDelete } = usePermissions();
+  const canEditSales = canEdit(CRM_MODULES.SALES);
+  const canVoidSales = canDelete(CRM_MODULES.SALES);
   const { data, isLoading, error, refetch } = useTransactionDetails(saleId || undefined);
   const focusedItemRef = useRef<HTMLDivElement>(null);
   const [settlementModalOpen, setSettlementModalOpen] = useState<boolean>(false);
@@ -525,27 +527,27 @@ export function SaleDetailModal({ saleId, open, onClose, focusLineItemId }: Sale
               <Button variant="outline" onClick={onClose} aria-label="Close dialog">
                 Close
               </Button>
-              {/* Void and Edit buttons - Owner only, not for voided sales */}
-              {isOwner && !sale?.is_voided && (
-                <>
-                  <Button
-                    variant="outline"
-                    onClick={() => setEditModalOpen(true)}
-                    aria-label="Edit sale"
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setVoidModalOpen(true)}
-                    className="text-destructive hover:text-destructive"
-                    aria-label="Void sale"
-                  >
-                    <Ban className="h-4 w-4 mr-2" />
-                    Void
-                  </Button>
-                </>
+              {/* Void and Edit buttons - Owners and Managers, not for voided sales */}
+              {canEditSales && !sale?.is_voided && (
+                <Button
+                  variant="outline"
+                  onClick={() => setEditModalOpen(true)}
+                  aria-label="Edit sale"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+              )}
+              {canVoidSales && !sale?.is_voided && (
+                <Button
+                  variant="outline"
+                  onClick={() => setVoidModalOpen(true)}
+                  className="text-destructive hover:text-destructive"
+                  aria-label="Void sale"
+                >
+                  <Ban className="h-4 w-4 mr-2" />
+                  Void
+                </Button>
               )}
             </div>
             <div className="flex gap-2 flex-wrap">
