@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ProductDetailModal } from '@/components/modals/ProductDetailModal';
 import { SimpleTable, Column } from '@/components/ui/simple-table';
@@ -35,6 +36,7 @@ import {
 export default function Consignments() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('active');
+  const [supplierTypeFilter, setSupplierTypeFilter] = useState('all');
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
@@ -53,6 +55,22 @@ export default function Consignments() {
 
   const soldUnsettledSettlements = settlements.filter(s => !s.paid_at);
   const settledSettlements = settlements.filter(s => s.paid_at);
+
+  // Filter by supplier type
+  const filteredActiveProducts = activeProducts.filter(p => 
+    supplierTypeFilter === 'all' || 
+    p.consignment_supplier?.supplier_type === supplierTypeFilter
+  );
+
+  const filteredUnsettledSettlements = soldUnsettledSettlements.filter(s =>
+    supplierTypeFilter === 'all' || 
+    s.supplier?.supplier_type === supplierTypeFilter
+  );
+
+  const filteredSettledSettlements = settledSettlements.filter(s =>
+    supplierTypeFilter === 'all' || 
+    s.supplier?.supplier_type === supplierTypeFilter
+  );
 
   const totalUnsettled = soldUnsettledSettlements.reduce((sum, s) => 
     sum + (Number(s.payout_amount) || 0), 0
@@ -124,7 +142,12 @@ export default function Consignments() {
             }
           }}
         >
-          <div className="font-medium">{product.consignment_supplier?.name || '-'}</div>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{product.consignment_supplier?.name || '-'}</span>
+            {product.consignment_supplier?.supplier_type === 'customer' && (
+              <Badge variant="secondary" className="text-xs">Individual</Badge>
+            )}
+          </div>
           {product.consignment_supplier?.email && (
             <div className="text-xs text-muted-foreground">{product.consignment_supplier.email}</div>
           )}
@@ -254,7 +277,12 @@ export default function Consignments() {
             }
           }}
         >
-          <div className="font-medium">{settlement.supplier?.name || '-'}</div>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{settlement.supplier?.name || '-'}</span>
+            {settlement.supplier?.supplier_type === 'customer' && (
+              <Badge variant="secondary" className="text-xs">Individual</Badge>
+            )}
+          </div>
         </div>
       )
     },
@@ -374,7 +402,12 @@ export default function Consignments() {
             }
           }}
         >
-          <div className="font-medium">{settlement.supplier?.name || '-'}</div>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{settlement.supplier?.name || '-'}</span>
+            {settlement.supplier?.supplier_type === 'customer' && (
+              <Badge variant="secondary" className="text-xs">Individual</Badge>
+            )}
+          </div>
         </div>
       )
     },
@@ -523,25 +556,41 @@ export default function Consignments() {
         </div>
 
         {/* Main Content */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+            <TabsList className="w-full h-auto flex flex-wrap gap-1 p-1">
+              <TabsTrigger value="active" className="flex-1 min-w-[90px] text-xs sm:text-sm">Active Stock</TabsTrigger>
+              <TabsTrigger value="sold_unsettled" className="flex-1 min-w-[90px] text-xs sm:text-sm">
+                <span className="hidden sm:inline">Sold & Unsettled</span>
+                <span className="sm:hidden">Unsettled</span>
+                {soldUnsettledSettlements.length > 0 && (
+                  <Badge variant="secondary" className="ml-1 sm:ml-2">
+                    {soldUnsettledSettlements.length}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="settled" className="flex-1 min-w-[90px] text-xs sm:text-sm">Settled</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          
+          <Select value={supplierTypeFilter} onValueChange={setSupplierTypeFilter}>
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Supplier Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Supplier Types</SelectItem>
+              <SelectItem value="registered">Registered Suppliers</SelectItem>
+              <SelectItem value="customer">Individual Suppliers</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full h-auto flex flex-wrap gap-1 p-1">
-            <TabsTrigger value="active" className="flex-1 min-w-[90px] text-xs sm:text-sm">Active Stock</TabsTrigger>
-            <TabsTrigger value="sold_unsettled" className="flex-1 min-w-[90px] text-xs sm:text-sm">
-              <span className="hidden sm:inline">Sold & Unsettled</span>
-              <span className="sm:hidden">Unsettled</span>
-              {soldUnsettledSettlements.length > 0 && (
-                <Badge variant="secondary" className="ml-1 sm:ml-2">
-                  {soldUnsettledSettlements.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="settled" className="flex-1 min-w-[90px] text-xs sm:text-sm">Settled</TabsTrigger>
-          </TabsList>
 
           <TabsContent value="active" className="space-y-4">
             <div className="flex justify-between items-center mb-4">
               <div className="text-sm text-muted-foreground">
-                Showing {activeProducts.length} items
+                Showing {filteredActiveProducts.length} items
               </div>
               <Button variant="outline" size="sm" onClick={handleExportActiveStock}>
                 <Download className="h-4 w-4 mr-2" />
@@ -549,7 +598,7 @@ export default function Consignments() {
               </Button>
             </div>
             <SimpleTable
-              data={activeProducts}
+              data={filteredActiveProducts}
               columns={activeStockColumns}
               loading={productsLoading}
               emptyMessage="No active consignment stock. Add a consignment item →"
@@ -561,7 +610,7 @@ export default function Consignments() {
           <TabsContent value="sold_unsettled" className="space-y-4">
             <div className="flex justify-between items-center mb-4">
               <div className="text-sm text-muted-foreground">
-                Showing {soldUnsettledSettlements.length} items
+                Showing {filteredUnsettledSettlements.length} items
               </div>
               <Button variant="outline" size="sm" onClick={handleExportUnsettled}>
                 <Download className="h-4 w-4 mr-2" />
@@ -569,7 +618,7 @@ export default function Consignments() {
               </Button>
             </div>
             <SimpleTable
-              data={soldUnsettledSettlements}
+              data={filteredUnsettledSettlements}
               columns={unsettledColumns}
               loading={settlementsLoading}
               emptyMessage="No unsettled sales. All payments are up to date."
@@ -581,7 +630,7 @@ export default function Consignments() {
           <TabsContent value="settled" className="space-y-4">
             <div className="flex justify-between items-center mb-4">
               <div className="text-sm text-muted-foreground">
-                Showing {settledSettlements.length} items
+                Showing {filteredSettledSettlements.length} items
               </div>
               <Button variant="outline" size="sm" onClick={handleExportSettled}>
                 <Download className="h-4 w-4 mr-2" />
@@ -589,7 +638,7 @@ export default function Consignments() {
               </Button>
             </div>
             <SimpleTable
-              data={settledSettlements}
+              data={filteredSettledSettlements}
               columns={settledColumns}
               loading={settlementsLoading}
               emptyMessage="No settlement history yet."

@@ -24,7 +24,7 @@ export const useConsignmentProducts = () => {
         .select(`
           *,
           supplier:suppliers!supplier_id(name),
-          consignment_supplier:suppliers!consignment_supplier_id(id, name, email, phone)
+          consignment_supplier:suppliers!consignment_supplier_id(id, name, email, phone, supplier_type)
         `)
         .eq('is_consignment', true)
         .not('consignment_supplier_id', 'is', null)
@@ -99,7 +99,7 @@ export const useConsignmentSettlements = (filter?: ConsignmentFilter) => {
         .select(`
           *,
           product:products(name, sku, internal_sku),
-          supplier:suppliers(name, email, phone),
+          supplier:suppliers(name, email, phone, supplier_type),
           sale:sales(sold_at, payment)
         `)
         .order('created_at', { ascending: false });
