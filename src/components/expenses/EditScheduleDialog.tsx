@@ -42,9 +42,9 @@ export function EditScheduleDialog({ open, onOpenChange, template }: EditSchedul
   const [nextDueDate, setNextDueDate] = useState<Date | undefined>();
 
   useEffect(() => {
-    if (template) {
+    if (template && template.amount !== undefined) {
       setAmount(template.amount.toString());
-      setFrequency(template.frequency);
+      setFrequency(template.frequency || 'monthly');
       setNextDueDate(template.next_due_date ? new Date(template.next_due_date) : undefined);
     }
   }, [template]);
