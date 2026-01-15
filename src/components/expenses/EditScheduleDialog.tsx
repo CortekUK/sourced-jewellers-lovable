@@ -27,6 +27,7 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useExpenseTemplates, ExpenseTemplate } from '@/hooks/useExpenseTemplates';
+import { useAllExpenseCategories, formatCategoryDisplay } from '@/hooks/useCustomCategories';
 
 interface EditScheduleDialogProps {
   open: boolean;
@@ -36,16 +37,19 @@ interface EditScheduleDialogProps {
 
 export function EditScheduleDialog({ open, onOpenChange, template }: EditScheduleDialogProps) {
   const { updateTemplate, isUpdating } = useExpenseTemplates();
+  const { all: allCategories = [] } = useAllExpenseCategories();
   
   const [amount, setAmount] = useState('');
   const [frequency, setFrequency] = useState<string>('monthly');
   const [nextDueDate, setNextDueDate] = useState<Date | undefined>();
+  const [category, setCategory] = useState<string>('other');
 
   useEffect(() => {
     if (template && template.amount !== undefined) {
       setAmount(template.amount.toString());
       setFrequency(template.frequency || 'monthly');
       setNextDueDate(template.next_due_date ? new Date(template.next_due_date) : undefined);
+      setCategory(template.category || 'other');
     }
   }, [template]);
 
@@ -58,6 +62,7 @@ export function EditScheduleDialog({ open, onOpenChange, template }: EditSchedul
         amount: parseFloat(amount),
         frequency: frequency as 'weekly' | 'monthly' | 'quarterly' | 'annually',
         next_due_date: nextDueDate.toISOString().split('T')[0],
+        category,
       }
     });
     
@@ -77,6 +82,22 @@ export function EditScheduleDialog({ open, onOpenChange, template }: EditSchedul
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {allCategories.map((cat: string) => (
+                  <SelectItem key={cat} value={cat}>
+                    {formatCategoryDisplay(cat)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label>Amount</Label>
             <div className="relative">

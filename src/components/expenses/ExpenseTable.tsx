@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Edit, Trash2, Check, X, ArrowUpDown, ChevronLeft, ChevronRight, RefreshCw, Pause, Play, Settings, XCircle } from 'lucide-react';
+import { Edit, Trash2, Check, X, ArrowUpDown, ChevronLeft, ChevronRight, RefreshCw, Pause, Play, Settings } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useUpdateExpense, useDeleteExpense } from '@/hooks/useDatabase';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -219,14 +219,6 @@ const ExpenseRow = memo(({
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onOpenModal(expense)}
-                        className="h-8 px-2 text-xs"
-                      >
-                        Full Edit
-                      </Button>
                       {hasTemplate ? (
                         <>
                           <TooltipProvider>
@@ -263,21 +255,6 @@ const ExpenseRow = memo(({
                               <TooltipContent>
                                 {expense.template.is_active ? 'Pause Schedule' : 'Resume Schedule'}
                               </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => onStopRecurring(expense.template)}
-                                  className="h-8 w-8 p-0"
-                                >
-                                  <XCircle className="h-4 w-4 text-destructive" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Stop Recurring</TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
                         </>
