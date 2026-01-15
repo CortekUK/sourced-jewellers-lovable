@@ -12,16 +12,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { FlyoutSubmenu } from './FlyoutSubmenu';
 import { useState } from 'react';
+interface SubNavigationItem {
+  title: string;
+  url: string;
+  icon: LucideIcon;
+  module?: CRMModule;
+}
+
 interface NavigationItem {
   title: string;
   url: string;
   icon: LucideIcon;
   module?: CRMModule;
-  subItems?: Array<{
-    title: string;
-    url: string;
-    icon: LucideIcon;
-  }>;
+  subItems?: SubNavigationItem[];
 }
 // Core Operations: Dashboard, Products, Suppliers, Customers, Consignments
 const coreOperationsItems: NavigationItem[] = [
@@ -72,7 +75,7 @@ const salesItems: NavigationItem[] = [
       { title: 'POS', url: '/sales', icon: CreditCard },
       { title: 'My Sales', url: '/sales/my-sales', icon: User },
       { title: 'Sold Items', url: '/sales/items', icon: Package },
-      { title: 'Transactions', url: '/sales/transactions', icon: ReceiptPoundSterling }
+      { title: 'Transactions', url: '/sales/transactions', icon: ReceiptPoundSterling, module: CRM_MODULES.REPORTS }
     ]
   }
 ];
@@ -168,11 +171,17 @@ export function AppSidebar() {
                   // Handle expandable menu items (like Sales and Products)
                   const isExpanded = item.title === 'Sales' ? salesExpanded : productsExpanded;
                   const setExpanded = item.title === 'Sales' ? setSalesExpanded : setProductsExpanded;
-                  const hasActiveChild = item.subItems.some(sub => isActive(sub.url));
+                  // Filter sub-items based on permissions
+                  const visibleSubItems = item.subItems.filter(sub => !sub.module || canAccess(sub.module));
+                  const hasActiveChild = visibleSubItems.some(sub => isActive(sub.url));
+                  
+                  // Don't render if no sub-items are visible
+                  if (visibleSubItems.length === 0) return null;
+                  
                   if (isCollapsed) {
                     // Collapsed: show flyout on hover
                     return <SidebarMenuItem key={item.title} className="flex justify-center">
-                          <FlyoutSubmenu title={item.title} icon={item.icon} subItems={item.subItems} isActive={isActive} />
+                          <FlyoutSubmenu title={item.title} icon={item.icon} subItems={visibleSubItems} isActive={isActive} />
                         </SidebarMenuItem>;
                   }
                   return <Collapsible key={item.title} open={isExpanded} onOpenChange={setExpanded} className="group/collapsible">
@@ -186,7 +195,7 @@ export function AppSidebar() {
                           </CollapsibleTrigger>
                           <CollapsibleContent>
                             <SidebarMenuSub className="ml-0 border-0">
-                              {item.subItems.map(subItem => <SidebarMenuSubItem key={subItem.title}>
+                              {visibleSubItems.map(subItem => <SidebarMenuSubItem key={subItem.title}>
                                   <NavLink to={subItem.url} end className={getNavClass}>
                                     {({
                                 isActive
