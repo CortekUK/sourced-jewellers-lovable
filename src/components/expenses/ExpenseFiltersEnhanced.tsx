@@ -224,11 +224,11 @@ export function ExpenseFiltersEnhanced({
                 <div className="space-y-2">
                   <Label>Supplier</Label>
                   <Select
-                    value={filters.suppliers?.[0]?.toString() || ''}
+                    value={filters.suppliers?.[0]?.toString() || 'all'}
                     onValueChange={(value) =>
                       onFiltersChange({
                         ...filters,
-                        suppliers: value ? [Number(value)] : undefined,
+                        suppliers: value === 'all' ? undefined : [Number(value)],
                       })
                     }
                   >
@@ -236,7 +236,7 @@ export function ExpenseFiltersEnhanced({
                       <SelectValue placeholder="All suppliers" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All suppliers</SelectItem>
+                      <SelectItem value="all">All suppliers</SelectItem>
                       {suppliers.map(supplier => (
                         <SelectItem key={supplier.id} value={supplier.id.toString()}>
                           {supplier.name}
@@ -252,11 +252,11 @@ export function ExpenseFiltersEnhanced({
                 <div className="space-y-2">
                   <Label>Staff Member</Label>
                   <Select
-                    value={filters.staffMembers?.[0] || ''}
+                    value={filters.staffMembers?.[0] || 'all'}
                     onValueChange={(value) =>
                       onFiltersChange({
                         ...filters,
-                        staffMembers: value ? [value] : undefined,
+                        staffMembers: value === 'all' ? undefined : [value],
                       })
                     }
                   >
@@ -264,7 +264,7 @@ export function ExpenseFiltersEnhanced({
                       <SelectValue placeholder="All staff" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All staff</SelectItem>
+                      <SelectItem value="all">All staff</SelectItem>
                       {staffMembers.map(staff => (
                         <SelectItem key={staff.user_id} value={staff.user_id}>
                           {staff.full_name}
