@@ -32,8 +32,13 @@ import {
   FileText,
   Search,
   Mail,
-  ExternalLink
+  ExternalLink,
+  Edit,
+  Ban
 } from 'lucide-react';
+import { usePermissions, CRM_MODULES } from '@/hooks/usePermissions';
+import { VoidSaleModal } from '@/components/transactions/VoidSaleModal';
+import { EditSaleModal } from '@/components/transactions/EditSaleModal';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import type { DateRange } from '@/types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -52,6 +57,9 @@ export default function Transactions() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: transactionsData = [], isLoading } = useTransactions();
+  const { canEdit, canDelete } = usePermissions();
+  const canEditSales = canEdit(CRM_MODULES.SALES);
+  const canVoidSales = canDelete(CRM_MODULES.SALES);
   
   const [filters, setFilters] = useState<TransactionsFilters>({
     dateRange: { from: '', to: '' },
@@ -62,6 +70,8 @@ export default function Transactions() {
 
   const [expandedSales, setExpandedSales] = useState<Set<number>>(new Set());
   const [selectedSaleId, setSelectedSaleId] = useState<number | null>(null);
+  const [editingSaleId, setEditingSaleId] = useState<number | null>(null);
+  const [voidingSaleId, setVoidingSaleId] = useState<number | null>(null);
 
   // Handle opening modal from URL query parameter
   useEffect(() => {
@@ -347,6 +357,7 @@ export default function Transactions() {
     {
       key: 'actions',
       title: 'Actions',
+      width: 200,
       render: (value, row, index) => (
         <div className="flex gap-1">
           <Button
@@ -382,6 +393,37 @@ export default function Transactions() {
           >
             <Mail className="h-3 w-3" />
           </Button>
+          
+          {/* Edit button - Owners and Managers */}
+          {canEditSales && !row.is_voided && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditingSaleId(row.id);
+              }}
+              title="Edit Sale"
+            >
+              <Edit className="h-3 w-3" />
+            </Button>
+          )}
+          
+          {/* Void button - Owners and Managers */}
+          {canVoidSales && !row.is_voided && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setVoidingSaleId(row.id);
+              }}
+              title="Void Sale"
+              className="text-destructive hover:text-destructive"
+            >
+              <Ban className="h-3 w-3" />
+            </Button>
+          )}
         </div>
       )
     }
@@ -647,6 +689,41 @@ export default function Transactions() {
           onClose={() => setSelectedSaleId(null)}
         />
       )}
+      
+      {/* Edit Sale Modal */}
+      {editingSaleId && (() => {
+        const editingSale = transactionsData.find((t: any) => t.id === editingSaleId);
+        if (!editingSale?.sale_items?.length) return null;
+        return (
+          <EditSaleModal
+            open={!!editingSaleId}
+            onOpenChange={(open) => !open && setEditingSaleId(null)}
+            saleId={editingSaleId}
+            items={editingSale.sale_items as any}
+            onSuccess={async () => {
+              setEditingSaleId(null);
+              await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            }}
+          />
+        );
+      })()}
+      
+      {/* Void Sale Modal */}
+      {voidingSaleId && (() => {
+        const voidingSale = transactionsData.find((t: any) => t.id === voidingSaleId);
+        return voidingSale ? (
+          <VoidSaleModal
+            open={!!voidingSaleId}
+            onOpenChange={(open) => !open && setVoidingSaleId(null)}
+            saleId={voidingSaleId}
+            saleTotal={voidingSale.total}
+            onSuccess={async () => {
+              setVoidingSaleId(null);
+              await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            }}
+          />
+        ) : null;
+      })()}
     </AppLayout>
   );
 }
