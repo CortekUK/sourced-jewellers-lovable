@@ -33,7 +33,14 @@ export function CustomerSearchInput({
 }: CustomerSearchInputProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
+  // Keep local input state in sync with parent state (e.g., after completing a sale)
+  useEffect(() => {
+    if (!selectedCustomerId && customerName !== searchQuery) {
+      setSearchQuery(customerName);
+    }
+  }, [customerName, selectedCustomerId, searchQuery]);
+
   const { data: searchResults = [], isLoading } = useCustomerSearch(searchQuery);
 
   // When user types, update both local search and parent state
