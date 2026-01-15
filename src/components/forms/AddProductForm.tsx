@@ -534,7 +534,7 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
                         <div className="flex items-center gap-2">
                           {supplier.name}
                           {supplier.supplier_type === 'customer' && (
-                            <span className="text-xs text-blue-600">(Customer)</span>
+                            <span className="text-xs text-blue-600">(Individual)</span>
                           )}
                         </div>
                       </SelectItem>
