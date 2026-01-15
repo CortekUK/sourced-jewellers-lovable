@@ -25,7 +25,8 @@ import {
   CheckCircle,
   TrendingUp,
   AlertTriangle,
-  Download
+  Download,
+  Eye
 } from 'lucide-react';
 import {
   exportAllActiveStockCSV,
@@ -243,6 +244,27 @@ export default function Consignments() {
           </div>
         );
       }
+    },
+    {
+      key: 'actions',
+      title: 'Actions',
+      width: 140,
+      align: 'right',
+      render: (_, product) => (
+        <Button
+          size="sm"
+          variant="ghost"
+          className="gap-1.5"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedProduct(product);
+            setViewModalOpen(true);
+          }}
+        >
+          <Eye className="h-4 w-4" />
+          View Details
+        </Button>
+      )
     }
   ];
 
