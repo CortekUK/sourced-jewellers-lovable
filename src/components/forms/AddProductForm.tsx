@@ -362,8 +362,8 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
                               Find existing customer...
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-[350px] p-0" align="start">
-                            <Command>
+                          <PopoverContent className="w-[350px] p-0 border border-border" align="start">
+                            <Command className="rounded-lg">
                               <CommandInput placeholder="Search by name, phone, or email..." />
                               <CommandList>
                                 <CommandEmpty>
