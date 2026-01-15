@@ -339,7 +339,7 @@ export function ExpenseTable({ expenses, onEdit }: ExpenseTableProps) {
   const canEditExpenses = canEdit('expenses');
   const canDeleteExpenses = canDelete('expenses');
   const canManageExpenses = canEditExpenses || canDeleteExpenses;
-  const { all: allCategories } = useAllExpenseCategories();
+  const { all: allCategories = [] } = useAllExpenseCategories();
   const { createTemplate, updateTemplate, deleteTemplate } = useExpenseTemplates();
   // Pagination
   const totalPages = Math.ceil(expenses.length / pageSize);
@@ -522,6 +522,7 @@ export function ExpenseTable({ expenses, onEdit }: ExpenseTableProps) {
                   onStopRecurring={setStopRecurringTemplate}
                   canEditExpenses={canEditExpenses}
                   canDeleteExpenses={canDeleteExpenses}
+                  allCategories={allCategories}
                 />
               ))}
             </TableBody>
