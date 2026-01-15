@@ -13,7 +13,8 @@ import {
   Search, 
   Plus,
   Package,
-  AlertTriangle
+  AlertTriangle,
+  Check
 } from 'lucide-react';
 
 interface ProductSearchResult extends Product {
@@ -82,6 +83,19 @@ export function ProductSearch({ onAddToCart, cartItems }: ProductSearchProps) {
     const cartQuantity = getCartQuantity(product.id);
     const available = stockOnHand - cartQuantity;
     
+    // Product is in cart and no more available
+    if (available <= 0 && cartQuantity > 0) {
+      if (cartQuantity === 1) {
+        return 'Last one selected';
+      }
+      return `All ${cartQuantity} selected`;
+    }
+    
+    // Truly out of stock (nothing in cart, nothing available)
+    if (available <= 0) {
+      return 'Out of stock';
+    }
+    
     return `${available} available`;
   };
   
@@ -92,8 +106,15 @@ export function ProductSearch({ onAddToCart, cartItems }: ProductSearchProps) {
     const cartQuantity = getCartQuantity(product.id);
     const available = stockOnHand - cartQuantity;
     
+    // In cart - use secondary instead of destructive
+    if (available <= 0 && cartQuantity > 0) return 'secondary';
+    
+    // Truly out of stock
     if (available <= 0) return 'destructive';
+    
+    // Low stock warning
     if (available <= 5) return 'secondary';
+    
     return 'default';
   };
 
@@ -181,10 +202,17 @@ export function ProductSearch({ onAddToCart, cartItems }: ProductSearchProps) {
                       disabled={!canAdd}
                     >
                       {!canAdd && product.track_stock ? (
-                        <>
-                          <AlertTriangle className="h-4 w-4 mr-1" />
-                          Out of Stock
-                        </>
+                        getCartQuantity(product.id) > 0 ? (
+                          <>
+                            <Check className="h-4 w-4 mr-1" />
+                            Added
+                          </>
+                        ) : (
+                          <>
+                            <AlertTriangle className="h-4 w-4 mr-1" />
+                            Out of Stock
+                          </>
+                        )
                       ) : (
                         <>
                           <Plus className="h-4 w-4 mr-1" />
