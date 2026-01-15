@@ -4,7 +4,8 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Package, TrendingDown, Eye, Edit, Image as ImageIcon, AlertTriangle, PoundSterling, Award, Repeat, Copy, MapPin, Search } from 'lucide-react';
+import { Plus, Package, TrendingDown, Eye, Edit, Image as ImageIcon, AlertTriangle, PoundSterling, Award, Repeat, Copy, MapPin, Search, LayoutList, LayoutGrid } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useSuppliers, useCreateProduct, useStockAdjustment } from '@/hooks/useDatabase';
 import { useLocations } from '@/hooks/useLocations';
 import { supabase } from '@/integrations/supabase/client';
@@ -41,6 +42,7 @@ import { TradeInBadge } from '@/components/ui/trade-in-badge';
 import { useProductTradeInStatus } from '@/hooks/useProductTradeInStatus';
 import { DuplicateProductModal } from '@/components/modals/DuplicateProductModal';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ProductTable } from '@/components/products/ProductTable';
 
 const ProductCard = ({
   product,
@@ -270,6 +272,7 @@ export default function Products() {
   const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
   const [productToDuplicate, setProductToDuplicate] = useState(null);
   const [highlightedProductId, setHighlightedProductId] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -593,6 +596,19 @@ export default function Products() {
                 <SelectItem value="margin_low">Margin (Low-High)</SelectItem>
               </SelectContent>
             </Select>
+            <ToggleGroup
+              type="single"
+              value={viewMode}
+              onValueChange={(value) => value && setViewMode(value as 'list' | 'grid')}
+              className="border rounded-md"
+            >
+              <ToggleGroupItem value="list" aria-label="List view" className="px-3">
+                <LayoutList className="h-4 w-4" />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="grid" aria-label="Grid view" className="px-3">
+                <LayoutGrid className="h-4 w-4" />
+              </ToggleGroupItem>
+            </ToggleGroup>
             {canCreate(CRM_MODULES.PRODUCTS) && (
               <Button variant="premium" onClick={() => setShowAddProduct(true)}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -691,35 +707,51 @@ export default function Products() {
           </CardContent>
         </Card>
 
-        {/* Products Grid */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredProducts.map((product) => {
-            const stockStatus = stockStatusMap?.get(product.id);
-            const stockBadge = getStockBadge(stockStatus);
-            const pxInfo = product.is_trade_in ? partExchangeMap[product.id] : null;
-            
-            return (
-              <div
-                key={product.id}
-                data-product-id={product.id}
-                className={highlightedProductId === product.id ? 'animate-pulse' : ''}
-              >
-                <ProductCard 
-                  product={product}
-                  stockStatus={stockBadge}
-                  partExchangeInfo={pxInfo}
-                  onView={() => handleViewProduct(product)}
-                  onEdit={() => handleEditProduct(product)}
-                  onDuplicate={() => {
-                    setProductToDuplicate(product);
-                    setDuplicateModalOpen(true);
-                  }}
-                  onImageClick={() => handleImageClick(product)}
-                />
-              </div>
-            );
-          })}
-        </div>
+        {/* Products List/Grid View */}
+        {viewMode === 'list' ? (
+          <ProductTable
+            products={filteredProducts}
+            onView={handleViewProduct}
+            onEdit={handleEditProduct}
+            onDuplicate={(product) => {
+              setProductToDuplicate(product);
+              setDuplicateModalOpen(true);
+            }}
+            onImageClick={handleImageClick}
+            stockStatusMap={stockStatusMap}
+            partExchangeMap={partExchangeMap}
+            highlightedProductId={highlightedProductId}
+          />
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {filteredProducts.map((product) => {
+              const stockStatus = stockStatusMap?.get(product.id);
+              const stockBadge = getStockBadge(stockStatus);
+              const pxInfo = product.is_trade_in ? partExchangeMap[product.id] : null;
+              
+              return (
+                <div
+                  key={product.id}
+                  data-product-id={product.id}
+                  className={highlightedProductId === product.id ? 'animate-pulse' : ''}
+                >
+                  <ProductCard 
+                    product={product}
+                    stockStatus={stockBadge}
+                    partExchangeInfo={pxInfo}
+                    onView={() => handleViewProduct(product)}
+                    onEdit={() => handleEditProduct(product)}
+                    onDuplicate={() => {
+                      setProductToDuplicate(product);
+                      setDuplicateModalOpen(true);
+                    }}
+                    onImageClick={() => handleImageClick(product)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {filteredProducts.length === 0 && !isLoading && (
           <Card className="shadow-card">
