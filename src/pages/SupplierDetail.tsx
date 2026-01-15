@@ -114,41 +114,17 @@ export default function SupplierDetail() {
     >
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
             <Button variant="outline" onClick={() => navigate('/suppliers')} className="shrink-0">
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-2">
               {supplier.supplier_type === 'customer' ? (
-                <User className="h-5 w-5 text-muted-foreground mt-1" />
+                <User className="h-5 w-5 text-muted-foreground" />
               ) : (
-                <Building2 className="h-5 w-5 text-muted-foreground mt-1" />
+                <Building2 className="h-5 w-5 text-muted-foreground" />
               )}
-              <div>
-                <h1 className="text-xl font-luxury font-bold">{supplier.name}</h1>
-                {/* Inline contact info */}
-                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-sm text-muted-foreground">
-                  {supplier.email && (
-                    <a href={`mailto:${supplier.email}`} className="flex items-center gap-1.5 hover:text-primary transition-colors">
-                      <Mail className="h-3.5 w-3.5" />
-                      {supplier.email}
-                    </a>
-                  )}
-                  {supplier.phone && (
-                    <a href={`tel:${supplier.phone}`} className="flex items-center gap-1.5 hover:text-primary transition-colors">
-                      <Phone className="h-3.5 w-3.5" />
-                      {supplier.phone}
-                    </a>
-                  )}
-                  {supplier.address && (
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5" />
-                      <span className="truncate max-w-[200px]">{supplier.address.split('\n')[0]}</span>
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
