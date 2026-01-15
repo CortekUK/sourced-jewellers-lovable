@@ -13,6 +13,7 @@ export interface ExpenseFilters {
   minAmount?: number;
   maxAmount?: number;
   isCogs?: boolean;
+  scheduleType?: 'recurring' | 'one-time';
 }
 
 export const useFilteredExpenses = (filters?: ExpenseFilters) => {
@@ -63,6 +64,12 @@ export const useFilteredExpenses = (filters?: ExpenseFilters) => {
 
       if (filters?.isCogs !== undefined) {
         query = query.eq('is_cogs', filters.isCogs);
+      }
+
+      if (filters?.scheduleType === 'recurring') {
+        query = query.not('template_id', 'is', null);
+      } else if (filters?.scheduleType === 'one-time') {
+        query = query.is('template_id', null);
       }
 
       const { data, error } = await query;
