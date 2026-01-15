@@ -158,15 +158,16 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         {product.category} • <span className="font-mono text-xs">{product.internal_sku || 'N/A'}</span>
                       </p>
                     </div>
-                    {!soldInfo && (
-                      <Badge variant={stockStatus.variant} className="shrink-0 px-3 py-1">
+                  </div>
+                  
+                  {/* Product Type & Status Badges */}
+                  <div className="flex flex-wrap items-center gap-2 mt-3">
+                    {!soldInfo && stock < 5 && (
+                      <Badge variant={stockStatus.variant} className="font-medium px-2.5 py-0.5">
+                        <Package className="h-3 w-3 mr-1.5" />
                         {stockStatus.text}
                       </Badge>
                     )}
-                  </div>
-                  
-                  {/* Product Type Badges */}
-                  <div className="flex flex-wrap items-center gap-2 mt-3">
                     {(product as any).is_registered && (
                       <Badge className="bg-primary/10 text-primary border-primary/20 font-medium px-2.5 py-0.5">
                         <Award className="h-3 w-3 mr-1.5" />
@@ -640,10 +641,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
           {/* Action Buttons - Hide when viewing sold items */}
           {!soldInfo && (
             <div className="px-6 pb-6">
-              <div className="flex gap-3 pt-5 border-t border-border/50">
-                <Button variant="ghost" onClick={() => onOpenChange(false)} className="flex-1">
-                  Close
-                </Button>
+              <div className="flex gap-3 pt-5 border-t border-border/50 justify-end">
                 {isOwner && (
                   <>
                     {onDuplicateClick && (
@@ -666,7 +664,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         </Tooltip>
                       </TooltipProvider>
                     )}
-                    <Button variant="premium" onClick={onEditClick} className="flex-1 min-w-[140px]">
+                    <Button variant="premium" onClick={onEditClick} className="min-w-[140px]">
                       Edit Product
                     </Button>
                   </>
