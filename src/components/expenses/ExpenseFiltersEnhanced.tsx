@@ -21,12 +21,12 @@ interface ExpenseFiltersEnhancedProps {
 }
 
 const CATEGORY_OPTIONS = [
-  { value: 'rent', label: 'Rent & Utilities' },
+  { value: 'rent', label: 'Rent' },
   { value: 'utilities', label: 'Utilities' },
   { value: 'marketing', label: 'Marketing' },
   { value: 'fees', label: 'Fees' },
-  { value: 'wages', label: 'Wages & Salaries' },
-  { value: 'repairs', label: 'Repairs & Maintenance' },
+  { value: 'wages', label: 'Wages' },
+  { value: 'repairs', label: 'Repairs' },
   { value: 'other', label: 'Other' },
 ];
 
