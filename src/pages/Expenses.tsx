@@ -75,7 +75,8 @@ export default function Expenses() {
   const handleSave = async (data: { expense: any; recurring: boolean; template: any }) => {
     try {
       if (editingExpense) {
-        await updateExpense.mutateAsync(data.expense);
+        const { id, ...updates } = data.expense;
+        await updateExpense.mutateAsync({ id, updates });
         toast({ title: 'Expense updated successfully' });
       } else {
         const createdExpense = await createExpense.mutateAsync(data.expense);
