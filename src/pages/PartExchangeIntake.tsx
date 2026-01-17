@@ -46,7 +46,7 @@ export default function PartExchangeIntake() {
   const isOwner = useOwnerGuard();
   
   // View and filter state
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
   const [searchQuery, setSearchQuery] = useState('');
   const [dateFilter, setDateFilter] = useState<'7d' | '30d' | 'all'>('30d');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
