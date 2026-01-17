@@ -208,64 +208,48 @@ export default function PartExchangeIntake() {
       subtitle="Review and convert trade-ins into sellable inventory"
     >
       <div className="space-y-6">
-        {/* Summary Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="pt-4 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Package className="h-5 w-5 text-primary" />
-                </div>
-                <div>
+        {/* Summary Stats - matching Products page design */}
+        <Card>
+          <CardContent className="py-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-border">
+              <div className="pb-4 md:pb-0 md:pr-6">
+                <div className="flex items-start justify-between">
                   <p className="text-sm text-muted-foreground">Pending Items</p>
-                  <p className="text-2xl font-semibold">{summaryStats.count}</p>
+                  <Package className="h-4 w-4 text-muted-foreground" />
                 </div>
+                <p className="text-2xl font-semibold mt-1">{summaryStats.count}</p>
+                <p className="text-xs text-muted-foreground">Awaiting conversion</p>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-4 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#D4AF37]/10">
-                  <TrendingUp className="h-5 w-5 text-[#D4AF37]" />
-                </div>
-                <div>
+              
+              <div className="py-4 md:py-0 md:px-6">
+                <div className="flex items-start justify-between">
                   <p className="text-sm text-muted-foreground">Total Value</p>
-                  <p className="text-2xl font-semibold">{formatCurrency(summaryStats.totalValue)}</p>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 </div>
+                <p className="text-2xl font-semibold mt-1">{formatCurrency(summaryStats.totalValue)}</p>
+                <p className="text-xs text-muted-foreground">Trade-in allowances</p>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-4 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-destructive/10">
-                  <Clock className="h-5 w-5 text-destructive" />
-                </div>
-                <div>
+              
+              <div className="py-4 md:py-0 md:px-6">
+                <div className="flex items-start justify-between">
                   <p className="text-sm text-muted-foreground">Oldest Item</p>
-                  <p className="text-2xl font-semibold">{summaryStats.oldestDays} days</p>
+                  <Clock className="h-4 w-4 text-muted-foreground" />
                 </div>
+                <p className="text-2xl font-semibold mt-1">{summaryStats.oldestDays} days</p>
+                <p className="text-xs text-muted-foreground">Needs attention</p>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="pt-4 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-muted">
-                  <Calendar className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <div>
+              
+              <div className="pt-4 md:pt-0 md:pl-6">
+                <div className="flex items-start justify-between">
                   <p className="text-sm text-muted-foreground">Avg. Days Pending</p>
-                  <p className="text-2xl font-semibold">{summaryStats.avgDays}</p>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
                 </div>
+                <p className="text-2xl font-semibold mt-1">{summaryStats.avgDays}</p>
+                <p className="text-xs text-muted-foreground">Queue turnaround</p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Search, Filters, and View Toggle */}
         <Card>
