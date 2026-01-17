@@ -136,22 +136,26 @@ export default function SaleDetail() {
 
   const handleEmailReceipt = () => {
     if (!receiptData) return;
-    
+
     EmailService.sendReceipt({
       saleId: id || '',
       customerName: receiptData.sale.customer_name || receiptData.sale.customer_email,
       items: receiptData.items.map((item: any) => ({
         product: { name: item.products?.name || 'Unknown' },
         quantity: item.quantity,
-        unit_price: item.unit_price
+        unit_price: item.unit_price,
       })),
       total: receiptData.sale.total,
       soldAt: receiptData.sale.sold_at,
       paymentMethod: receiptData.sale.payment,
-      notes: receiptData.sale.notes
+      notes: receiptData.sale.notes,
     });
   };
 
+  const isStaff = userRole === 'staff';
+  const backPath = isStaff ? '/sales/my-sales' : '/sales/transactions';
+  const backLabel = isStaff ? 'Back to My Sales' : 'Back to Sales History';
+  const handleBack = () => navigate(backPath);
 
   if (isLoading) {
     return (
@@ -176,9 +180,9 @@ export default function SaleDetail() {
             <p className="text-muted-foreground mb-4">
               The sale you're looking for doesn't exist or you don't have permission to view it.
             </p>
-            <Button onClick={() => navigate('/sales')}>
+            <Button onClick={handleBack}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Sales
+              {backLabel}
             </Button>
           </div>
         </div>
@@ -199,10 +203,10 @@ export default function SaleDetail() {
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
-            onClick={() => navigate('/sales')}
+            onClick={handleBack}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Sales
+            {backLabel}
           </Button>
           
           <div className="flex gap-2">
