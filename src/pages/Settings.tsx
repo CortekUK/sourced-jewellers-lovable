@@ -571,34 +571,34 @@ export default function Settings() {
       <div className="p-4 md:p-6 lg:p-8">
         <div className="max-w-5xl mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full h-auto flex flex-wrap gap-1 p-1.5 mb-6 bg-muted/50">
-              <TabsTrigger value="account" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <User className="h-4 w-4" />
-                <span className="hidden sm:inline">Account</span>
+            <TabsList className="w-full h-auto grid grid-cols-2 gap-1 p-1.5 mb-6 bg-muted/50 sm:flex sm:flex-wrap">
+              <TabsTrigger value="account" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2">
+                <User className="h-4 w-4 shrink-0" />
+                <span>Account</span>
               </TabsTrigger>
-              <TabsTrigger value="team" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <Shield className="h-4 w-4" />
-                <span className="hidden sm:inline">Team</span>
+              <TabsTrigger value="team" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2">
+                <Shield className="h-4 w-4 shrink-0" />
+                <span>Team</span>
               </TabsTrigger>
-              <TabsTrigger value="business" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <Building className="h-4 w-4" />
-                <span className="hidden sm:inline">Business</span>
+              <TabsTrigger value="business" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2">
+                <Building className="h-4 w-4 shrink-0" />
+                <span>Business</span>
               </TabsTrigger>
-              <TabsTrigger value="application" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <SettingsIcon className="h-4 w-4" />
-                <span className="hidden sm:inline">App</span>
+              <TabsTrigger value="application" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2">
+                <SettingsIcon className="h-4 w-4 shrink-0" />
+                <span>App</span>
               </TabsTrigger>
-              <TabsTrigger value="sales" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <Crown className="h-4 w-4" />
-                <span className="hidden sm:inline">Sales</span>
+              <TabsTrigger value="sales" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2">
+                <Crown className="h-4 w-4 shrink-0" />
+                <span>Sales</span>
               </TabsTrigger>
-              <TabsTrigger value="customize" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <Filter className="h-4 w-4" />
-                <span className="hidden sm:inline">Customise</span>
+              <TabsTrigger value="customize" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2">
+                <Filter className="h-4 w-4 shrink-0" />
+                <span>Customise</span>
               </TabsTrigger>
-              <TabsTrigger value="data" className="flex items-center gap-2 flex-1 min-w-[70px] px-3 py-2">
-                <Database className="h-4 w-4" />
-                <span className="hidden sm:inline">Data</span>
+              <TabsTrigger value="data" className="flex items-center justify-center gap-2 flex-1 min-w-[70px] px-3 py-2 max-sm:col-span-2">
+                <Database className="h-4 w-4 shrink-0" />
+                <span>Data</span>
               </TabsTrigger>
             </TabsList>
 

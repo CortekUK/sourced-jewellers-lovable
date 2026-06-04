@@ -646,21 +646,21 @@ export function ExpenseModal({
 
           {/* Footer */}
           <DialogFooter className="px-6 py-4 bg-muted/30 shrink-0">
-            <div className="flex items-center justify-between w-full gap-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>Recording as:</span>
-                <Badge variant="outline" className="font-normal">{user?.email}</Badge>
+            <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+                <span className="shrink-0">Recording as:</span>
+                <Badge variant="outline" className="font-normal truncate max-w-full">{user?.email}</Badge>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex w-full items-center gap-2 sm:w-auto sm:justify-end">
                 {mode === 'edit' && isOwner && (
-                  <Button type="button" variant="destructive" size="sm" onClick={() => setShowDeleteDialog(true)}>
+                  <Button type="button" variant="destructive" size="sm" className="flex-1 sm:flex-none" onClick={() => setShowDeleteDialog(true)}>
                     Delete
                   </Button>
                 )}
-                <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                <Button type="button" variant="outline" className="flex-1 sm:flex-none" onClick={() => onOpenChange(false)}>
                   Cancel
                 </Button>
-                <Button type="button" onClick={handleSave} disabled={!isValid} className="gap-2">
+                <Button type="button" onClick={handleSave} disabled={!isValid} className="flex-1 gap-2 sm:flex-none">
                   <Plus className="h-4 w-4" />
                   {mode === 'create' ? 'Record Expense' : 'Update Expense'}
                 </Button>

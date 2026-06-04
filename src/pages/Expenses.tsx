@@ -348,10 +348,10 @@ export default function Expenses() {
           </div>
 
           {/* Right group: Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                   <Download className="mr-2 h-4 w-4" />
                   Export
                 </Button>
@@ -374,7 +374,7 @@ export default function Expenses() {
             </DropdownMenu>
 
             {canCreateExpenses && (
-              <Button variant="premium" size="sm" onClick={() => { setShowModal(true); setEditingExpense(null); }}>
+              <Button variant="premium" size="sm" className="flex-1 sm:flex-none" onClick={() => { setShowModal(true); setEditingExpense(null); }}>
                 <Plus className="mr-2 h-4 w-4" />
                 Record Expense
               </Button>

@@ -57,7 +57,7 @@ export default function EnhancedAnalytics() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="w-full h-auto flex flex-wrap gap-1 p-1">
+          <TabsList className="w-full h-auto grid grid-cols-3 gap-1 p-1 sm:flex sm:flex-wrap">
             <TabsTrigger value="overview" className="flex items-center gap-1 sm:gap-2 flex-1 min-w-[80px] text-xs sm:text-sm">
               <TrendingUp className="h-4 w-4" />
               <span className="hidden sm:inline">Overview</span>

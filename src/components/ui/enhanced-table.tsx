@@ -136,8 +136,8 @@ export function EnhancedTable<T>({
   if (sortedData.length === 0) {
     return (
       <div className={cn('border rounded-lg', className)}>
-        <div className="flex items-center justify-center h-32">
-          <div className="text-muted-foreground">{emptyMessage}</div>
+        <div className="flex items-center justify-center min-h-32 px-6 py-8">
+          <div className="text-muted-foreground text-center">{emptyMessage}</div>
         </div>
       </div>
     );

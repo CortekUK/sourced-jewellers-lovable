@@ -289,9 +289,9 @@ export function AuditLogViewer({ className }: AuditLogViewerProps) {
       {/* Header and Filters */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <CardTitle>Audit Trail</CardTitle>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isFetching}>
                 <RefreshCw className={`h-4 w-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
                 Refresh

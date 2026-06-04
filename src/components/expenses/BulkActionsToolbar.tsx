@@ -53,8 +53,8 @@ export function BulkActionsToolbar({
 
   return (
     <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
-        <div className="bg-card/95 backdrop-blur-md border border-border shadow-lg rounded-xl px-4 py-3 flex items-center gap-3">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in w-[calc(100vw-1.5rem)] max-w-fit">
+        <div className="bg-card/95 backdrop-blur-md border border-border shadow-lg rounded-xl px-4 py-3 flex flex-wrap items-center justify-center gap-3">
           {/* Selection indicator */}
           <div className="flex items-center gap-2 pr-3 border-r border-border">
             <Badge variant="default" className="font-semibold px-3 py-1">

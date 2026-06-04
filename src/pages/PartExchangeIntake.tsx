@@ -369,12 +369,12 @@ export default function PartExchangeIntake() {
               <p className="text-sm text-muted-foreground mt-1 text-center max-w-sm">
                 Trade-ins from point of sale will appear here for review and conversion to inventory
               </p>
-              <div className="flex gap-3 mt-6">
-                <Button onClick={() => navigate('/sales')}>
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 mt-6 w-full max-w-md sm:max-w-none">
+                <Button className="w-full sm:w-auto" onClick={() => navigate('/sales')}>
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Go to Point of Sale
                 </Button>
-                <Button variant="outline" onClick={() => navigate('/products?filter=trade-in')}>
+                <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate('/products?filter=trade-in')}>
                   View Converted Trade-ins
                 </Button>
               </div>

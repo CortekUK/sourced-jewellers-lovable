@@ -175,8 +175,8 @@ export function ProductTable({
   return (
     <Card className="shadow-card">
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-semibold">Product Inventory</CardTitle>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <CardTitle className="text-xl sm:text-2xl font-semibold">Product Inventory</CardTitle>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{products.length} products</span>
             <label className="flex items-center gap-2 text-sm">

@@ -443,7 +443,7 @@ export default function DepositOrders() {
             className="pl-10"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <ToggleGroup type="single" value={viewMode} onValueChange={(v) => v && setViewMode(v as 'list' | 'grid')}>
             <ToggleGroupItem value="list" aria-label="List view">
               <LayoutList className="h-4 w-4" />
@@ -452,10 +452,10 @@ export default function DepositOrders() {
               <LayoutGrid className="h-4 w-4" />
             </ToggleGroupItem>
           </ToggleGroup>
-          <Button variant="outline" size="icon" onClick={() => refetch()}>
+          <Button variant="outline" size="icon" onClick={() => refetch()} className="shrink-0">
             <RefreshCw className="h-4 w-4" />
           </Button>
-          <Button onClick={() => navigate('/sales?mode=deposit')}>
+          <Button onClick={() => navigate('/sales?mode=deposit')} className="flex-1 sm:flex-none">
             <Plus className="h-4 w-4 mr-2" />
             New Deposit Order
           </Button>
@@ -464,23 +464,23 @@ export default function DepositOrders() {
 
       {/* Tabs and Content */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-        <TabsList className="mb-4 w-full">
-          <TabsTrigger value="active" className="flex-1 flex items-center justify-center gap-1.5">
-            <Clock className="h-4 w-4" />
+        <TabsList className="mb-4 w-full h-auto flex flex-wrap gap-1 p-1">
+          <TabsTrigger value="active" className="flex-1 min-w-[80px] flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+            <Clock className="h-4 w-4 shrink-0" />
             Active
             {stats?.pending.count ? (
               <Badge variant="secondary" className="ml-1">{stats.pending.count}</Badge>
             ) : null}
           </TabsTrigger>
-          <TabsTrigger value="completed" className="flex-1 flex items-center justify-center gap-1.5">
-            <CheckCircle2 className="h-4 w-4" />
+          <TabsTrigger value="completed" className="flex-1 min-w-[80px] flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
             Completed
           </TabsTrigger>
-          <TabsTrigger value="voided" className="flex-1 flex items-center justify-center gap-1.5">
-            <Ban className="h-4 w-4" />
+          <TabsTrigger value="voided" className="flex-1 min-w-[80px] flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+            <Ban className="h-4 w-4 shrink-0" />
             Voided
           </TabsTrigger>
-          <TabsTrigger value="all" className="flex-1">All Orders</TabsTrigger>
+          <TabsTrigger value="all" className="flex-1 min-w-[80px] text-xs sm:text-sm">All Orders</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-0">

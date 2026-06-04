@@ -268,8 +268,7 @@ export function QuickFilters({
       {/* Quick Filter Pills */}
       <div className="flex items-center gap-2 w-full">
         <div className="flex-1 min-w-0 overflow-hidden">
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
-               style={{ width: '100%', maxWidth: 'calc(100vw - 8rem)' }}>
+          <div className="flex w-max max-w-full gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
             {activePresets.map((preset) => {
               const isActive = isPresetActive(preset);
               const Icon = preset.icon;

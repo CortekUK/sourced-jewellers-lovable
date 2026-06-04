@@ -438,7 +438,7 @@ export function EditExpenseModal({ open, onOpenChange, expense, onSave, onDelete
             </div>
           </div>
 
-          <DialogFooter className="flex justify-between">
+          <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
             <div>
               {isOwner && (
                 <Button

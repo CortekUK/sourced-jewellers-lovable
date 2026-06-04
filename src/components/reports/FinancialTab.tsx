@@ -104,7 +104,7 @@ export function FinancialTab() {
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <DateRangePicker
           dateRange={{ 
             from: dateRange.from ? format(dateRange.from, 'yyyy-MM-dd') : '',
@@ -115,19 +115,19 @@ export function FinancialTab() {
             to: range.to ? new Date(range.to) : undefined 
           })}
         />
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <Button
+            variant="outline"
+            className="flex flex-1 items-center justify-center gap-2 sm:flex-none"
             onClick={() => handleExport('csv')}
             disabled={isExporting}
           >
             <Download className="h-4 w-4" />
             Export CSV
           </Button>
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
+          <Button
+            variant="outline"
+            className="flex flex-1 items-center justify-center gap-2 sm:flex-none"
             onClick={() => handleExport('pdf')}
             disabled={isExporting}
           >

@@ -1188,8 +1188,8 @@ export default function Suppliers() {
         </div>
 
         {/* Search, Filters and Add Button */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+          <div className="flex-1 min-w-[200px] relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search suppliers by name, contact, or product..."

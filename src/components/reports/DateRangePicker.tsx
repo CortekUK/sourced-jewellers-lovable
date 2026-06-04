@@ -92,9 +92,9 @@ export function DateRangePicker({ dateRange, onDateRangeChange }: DateRangePicke
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex w-full items-center gap-2 sm:w-auto">
       <Select onValueChange={handlePresetChange}>
-        <SelectTrigger className="w-40">
+        <SelectTrigger className="flex-1 sm:w-40 sm:flex-none">
           <SelectValue placeholder={formatDateRange()} />
         </SelectTrigger>
         <SelectContent>
@@ -108,9 +108,9 @@ export function DateRangePicker({ dateRange, onDateRangeChange }: DateRangePicke
 
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="justify-start text-left font-normal">
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {formatDateRange()}
+          <Button variant="outline" className="flex-1 justify-start text-left font-normal sm:flex-none">
+            <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
+            <span className="truncate">{formatDateRange()}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

@@ -177,6 +177,15 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
   };
 
   const handleFocus = () => {
+    // On mobile the results live inside a Sheet, so open it on focus
+    // regardless of recent searches (the input is in the header, not the sheet).
+    if (isMobile) {
+      setIsOpen(true);
+      if (!query.trim() && recentSearches.length > 0) {
+        setShowRecents(true);
+      }
+      return;
+    }
     if (!query.trim() && recentSearches.length > 0) {
       setShowRecents(true);
       setIsOpen(true);
@@ -184,6 +193,11 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
   };
 
   const handleBlur = (e: React.FocusEvent) => {
+    // On mobile the Sheet is portaled outside this wrapper, so focusing it
+    // would fire this blur and immediately close the Sheet (the "blink" bug).
+    // The Sheet manages its own open/close state, so skip blur-handling here.
+    if (isMobile) return;
+
     // Only close if focus is leaving the component entirely
     if (!e.currentTarget.contains(e.relatedTarget)) {
       setTimeout(() => {
@@ -319,41 +333,47 @@ export const GlobalSearchInput: React.FC<GlobalSearchInputProps> = ({
     <div className={cn("relative max-w-sm", className)} onBlur={handleBlur}>
       {isMobile ? (
         <>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              ref={inputRef}
-              type="search"
-              placeholder="Quick search..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={handleFocus}
-              onClick={() => setIsOpen(true)}
-              role="combobox"
-              aria-expanded={isOpen}
-              aria-controls={showRecents ? "search-recents-listbox" : "search-results-listbox"}
-              aria-autocomplete="list"
-              aria-activedescendant={activeIndex >= 0 ? (showRecents ? `search-recent-${activeIndex}` : `search-result-${activeIndex}`) : undefined}
-              className="pl-9 pr-12 focus-visible:ring-2 focus-visible:ring-[hsl(var(--sidebar-primary))] focus-visible:ring-offset-1"
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onOpenCommandPalette}
-              className="absolute right-1 top-1/2 h-7 w-8 -translate-y-1/2 p-0 text-muted-foreground hover:text-foreground"
-              title="Open command palette (Ctrl+K)"
-            >
-              <Command className="h-3 w-3" />
-            </Button>
-          </div>
-          
-          <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
-            <SheetContent side="top" className="h-[90vh]">
-              <SheetHeader>
+          {/* On mobile the header only shows a trigger; the real input lives
+              inside the Sheet so it stays visible and typeable when open. */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            aria-label="Open search"
+            className="relative flex h-9 w-full items-center gap-2 rounded-md border border-input bg-background px-3 text-sm text-muted-foreground"
+          >
+            <Search className="h-4 w-4 shrink-0" />
+            <span className="truncate">Quick search...</span>
+          </button>
+
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetContent side="top" className="flex h-[90vh] flex-col gap-0 p-0">
+              <SheetHeader className="px-4 pt-4 pb-2 text-left">
                 <SheetTitle>Search</SheetTitle>
               </SheetHeader>
-              {renderContent()}
+              <div className="px-4 pb-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    ref={inputRef}
+                    type="search"
+                    autoFocus
+                    placeholder="Search products, serials, suppliers, sales..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    onFocus={handleFocus}
+                    role="combobox"
+                    aria-expanded={isOpen}
+                    aria-controls={showRecents ? "search-recents-listbox" : "search-results-listbox"}
+                    aria-autocomplete="list"
+                    aria-activedescendant={activeIndex >= 0 ? (showRecents ? `search-recent-${activeIndex}` : `search-result-${activeIndex}`) : undefined}
+                    className="pl-9 focus-visible:ring-2 focus-visible:ring-[hsl(var(--sidebar-primary))] focus-visible:ring-offset-1"
+                  />
+                </div>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                {renderContent()}
+              </div>
             </SheetContent>
           </Sheet>
         </>

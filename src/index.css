@@ -142,6 +142,15 @@
     text-wrap: balance;
   }
 
+  /* Hide scrollbar while keeping horizontal scroll (used by overflowing toolbars/tabs) */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .login-logo {
     display: block;
     margin: 0 auto;

@@ -22,7 +22,7 @@ export default function ConsolidatedReports() {
       <div className="space-y-6">
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="w-full h-auto flex flex-wrap gap-1 p-1">
+          <TabsList className="w-full h-auto grid grid-cols-3 gap-1 p-1 sm:flex sm:flex-wrap">
             {/* Financial tab - Owner only */}
             {isOwner && (
               <TabsTrigger value="financial" className="flex items-center gap-2 flex-1 min-w-[100px]">

@@ -689,7 +689,7 @@ export default function Products() {
           </div>
 
           {/* Controls grouped together */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex flex-wrap items-center gap-2 sm:flex-shrink-0">
             <EnhancedProductFilters
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -732,7 +732,7 @@ export default function Products() {
               </ToggleGroupItem>
             </ToggleGroup>
             {canCreate(CRM_MODULES.PRODUCTS) && (
-              <Button variant="premium" onClick={() => setShowAddProduct(true)}>
+              <Button variant="premium" onClick={() => setShowAddProduct(true)} className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Product
               </Button>
@@ -741,8 +741,8 @@ export default function Products() {
         </div>
 
 {/* Row 2: Quick Filters + Archive Link */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex-1 min-w-0 overflow-hidden">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="w-full min-w-0 overflow-hidden sm:flex-1">
             {filterOptions && (
               <QuickFilters
                 filters={filters}
@@ -775,7 +775,7 @@ export default function Products() {
             variant="outline"
             size="sm"
             onClick={() => navigate('/sales/items')}
-            className="gap-2 shrink-0"
+            className="gap-2 shrink-0 w-full sm:w-auto"
           >
             <Archive className="h-4 w-4" />
             View Sold Items Archive
