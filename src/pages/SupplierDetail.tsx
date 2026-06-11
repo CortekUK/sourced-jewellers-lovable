@@ -7,6 +7,7 @@ import { useFilteredExpenses } from '@/hooks/useExpenseAnalytics';
 import { useSupplierDocuments, useUploadSupplierDocument, useDeleteSupplierDocument } from '@/hooks/useSupplierDocuments';
 import { useBusinessFinancialKPIs } from '@/hooks/useBusinessFinancials';
 import { usePermissions, CRM_MODULES } from '@/hooks/usePermissions';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -64,6 +65,7 @@ export default function SupplierDetail() {
   const { data: supplierExpenses = [] } = useFilteredExpenses({ suppliers: [supplierId] });
 
   const { canEdit } = usePermissions();
+  const canViewCost = useManagerOrAboveGuard();
   const canEditSuppliers = canEdit(CRM_MODULES.SUPPLIERS);
 
   const uploadMutation = useUploadSupplierDocument();
@@ -367,13 +369,13 @@ export default function SupplierDetail() {
                               <th className="text-left py-2">Product Name</th>
                               <th className="text-left py-2">SKU</th>
                               <th className="text-left py-2">Category</th>
-                              <th className="text-right py-2">Cost</th>
+                              {canViewCost && <th className="text-right py-2">Cost</th>}
                               <th className="text-center py-2">Type</th>
                               {inventoryFilter === 'sold' ? (
                                 <>
                                   <th className="text-left py-2">Sold Date</th>
                                   <th className="text-right py-2">Sale Price</th>
-                                  <th className="text-right py-2">Margin</th>
+                                  {canViewCost && <th className="text-right py-2">Margin</th>}
                                 </>
                               ) : (
                                 <th className="text-center py-2">Stock</th>
@@ -398,7 +400,7 @@ export default function SupplierDetail() {
                                   </td>
                                   <td className="py-2 font-mono text-xs">{product.internal_sku}</td>
                                   <td className="py-2">{product.category || '-'}</td>
-                                  <td className="py-2 text-right font-mono">£{(product.unit_cost || 0).toLocaleString()}</td>
+                                  {canViewCost && <td className="py-2 text-right font-mono">£{(product.unit_cost || 0).toLocaleString()}</td>}
                                   <td className="py-2 text-center">
                                     {product.is_consignment ? (
                                       <Badge variant="outline">Consignment</Badge>
@@ -420,6 +422,7 @@ export default function SupplierDetail() {
                                           ? `£${product.lastSale.sale_price.toLocaleString()}`
                                           : '-'}
                                       </td>
+                                      {canViewCost && (
                                       <td className="py-2 text-right font-mono">
                                         {margin !== null ? (
                                           <span className={margin >= 0 ? 'text-green-600' : 'text-red-600'}>
@@ -427,6 +430,7 @@ export default function SupplierDetail() {
                                           </span>
                                         ) : '-'}
                                       </td>
+                                      )}
                                     </>
                                   ) : (
                                     <td className="py-2 text-center">
@@ -512,6 +516,7 @@ export default function SupplierDetail() {
                         <div className="text-xs text-muted-foreground">Jan - Dec</div>
                       </CardContent>
                     </Card>
+                    {canViewCost && (
                     <Card>
                       <CardContent className="p-4">
                         <div className="text-sm text-muted-foreground">Avg Unit Cost</div>
@@ -524,6 +529,7 @@ export default function SupplierDetail() {
                         <div className="text-xs text-muted-foreground">Per product</div>
                       </CardContent>
                     </Card>
+                    )}
                     <Card>
                       <CardContent className="p-4">
                         <div className="text-sm text-muted-foreground">% of Total Spend</div>

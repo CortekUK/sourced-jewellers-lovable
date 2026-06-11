@@ -403,12 +403,14 @@ export default function SaleDetail() {
                         <div className="font-mono font-bold">£{lineTotal.toFixed(2)}</div>
                       </div>
                       
+                      {!isStaff && (
                       <div>
                         <span className="text-muted-foreground">Gross Profit:</span>
                         <div className={`font-mono font-bold ${lineProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
                           £{lineProfit.toFixed(2)}
                         </div>
                       </div>
+                      )}
                     </div>
                     
                     {/* Product metadata */}

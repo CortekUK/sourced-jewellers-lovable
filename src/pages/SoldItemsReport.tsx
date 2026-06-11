@@ -16,6 +16,7 @@ import { useSoldItemsReport, useProducts } from '@/hooks/useDatabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 import { useAllStaffRateHistory, getRateForSaleDate } from '@/hooks/useStaffCommissionRateHistory';
 import { exportSoldItemsCSV } from '@/utils/csvExport';
 import { getDateRange } from '@/lib/utils';
@@ -64,6 +65,7 @@ export default function SoldItemsReport() {
   const [searchParams] = useSearchParams();
   const { userRole } = useAuth();
   const { isOwner } = usePermissions();
+  const canViewCost = useManagerOrAboveGuard();
   const { settings } = useSettings();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -329,7 +331,7 @@ export default function SoldItemsReport() {
         <span className="font-mono text-sm">{row.serial || '-'}</span>
       )
     },
-    {
+    ...(canViewCost ? [{
       key: 'unit_cost',
       title: 'Unit Cost',
       sortable: true,
@@ -337,7 +339,7 @@ export default function SoldItemsReport() {
       render: (value: any, row: any, index: number) => (
         <span className="font-mono">£{(row.unit_cost || 0).toFixed(2)}</span>
       )
-    },
+    }] : []),
     {
       key: 'line_revenue',
       title: 'Revenue',
@@ -352,7 +354,7 @@ export default function SoldItemsReport() {
         );
       }
     },
-    {
+    ...(canViewCost ? [{
       key: 'margin',
       title: 'Markup %',
       sortable: true,
@@ -365,7 +367,7 @@ export default function SoldItemsReport() {
           </span>
         );
       }
-    },
+    }] : []),
     {
       key: 'staff',
       title: 'Staff',
@@ -540,11 +542,11 @@ export default function SoldItemsReport() {
       >
       <div className="space-y-8">
         {/* Summary Cards */}
-        <div className={`grid grid-cols-1 ${isOwner ? 'md:grid-cols-5' : 'md:grid-cols-4'} gap-6`} role="region" aria-label="Summary statistics">
+        <div className={`grid grid-cols-1 ${isOwner ? 'md:grid-cols-5' : canViewCost ? 'md:grid-cols-4' : 'md:grid-cols-2'} gap-6`} role="region" aria-label="Summary statistics">
           {isLoading ? (
             // Loading skeletons
             <>
-              {[1, 2, 3, 4, ...(isOwner ? [5] : [])].map((i) => (
+              {[1, 2, ...(canViewCost ? [3, 4] : []), ...(isOwner ? [5] : [])].map((i) => (
                 <Card key={i} className="shadow-card">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <div className="h-4 w-24 bg-muted/50 animate-pulse rounded" />
@@ -586,6 +588,7 @@ export default function SoldItemsReport() {
             </CardContent>
           </Card>
           
+          {canViewCost && (
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total COGS</CardTitle>
@@ -596,7 +599,9 @@ export default function SoldItemsReport() {
               <p className="text-xs text-muted-foreground mt-1">cost of goods sold</p>
             </CardContent>
           </Card>
-          
+          )}
+
+          {canViewCost && (
           <Card className="shadow-card hover:shadow-elegant transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Gross Profit</CardTitle>
@@ -611,7 +616,8 @@ export default function SoldItemsReport() {
               </p>
             </CardContent>
           </Card>
-          
+          )}
+
           {/* Commission Card - Owner Only */}
           {isOwner && (
             <Card className="shadow-card hover:shadow-elegant transition-all duration-300">

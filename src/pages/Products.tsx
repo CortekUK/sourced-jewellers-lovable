@@ -13,6 +13,7 @@ import { useEnhancedProducts } from '@/hooks/useEnhancedProducts';
 import { useFilterOptions } from '@/hooks/useFilterOptions';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions, CRM_MODULES, ACTIONS } from '@/hooks/usePermissions';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 import { PermissionGate } from '@/components/ui/PermissionGate';
 import { EnhancedProductFilters } from '@/components/filters/EnhancedProductFilters';
 import { QuickFilters } from '@/components/filters/QuickFilters';
@@ -63,6 +64,7 @@ const ProductCard = ({
 }) => {
   const { user } = useAuth();
   const { canEdit } = usePermissions();
+  const canViewCost = useManagerOrAboveGuard();
   const { hasAgreements } = useConsignmentAgreements(product.id);
   
   const stock = product.qty_on_hand || 0;
@@ -243,27 +245,31 @@ const ProductCard = ({
             <p className="text-xs text-muted-foreground mb-1">Sell Price</p>
             <p className="font-luxury text-xl font-bold text-primary">£{Number(product.unit_price).toFixed(2)}</p>
           </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Cost</p>
-            <p className="text-lg text-muted-foreground">£{Number(product.unit_cost).toFixed(2)}</p>
-          </div>
+          {canViewCost && (
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">Cost</p>
+              <p className="text-lg text-muted-foreground">£{Number(product.unit_cost).toFixed(2)}</p>
+            </div>
+          )}
         </div>
-        
+
         {/* Profit Section */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Profit</p>
-            <p className={`font-medium ${Number(profit) > 0 ? 'text-success' : 'text-muted-foreground'}`}>
-              £{profit}
-            </p>
+        {canViewCost && (
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">Profit</p>
+              <p className={`font-medium ${Number(profit) > 0 ? 'text-success' : 'text-muted-foreground'}`}>
+                £{profit}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">Markup</p>
+              <p className={`font-medium ${Number(markup) >= 50 ? 'text-success' : Number(markup) >= 25 ? 'text-foreground' : 'text-warning'}`}>
+                {markup}%
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Markup</p>
-            <p className={`font-medium ${Number(markup) >= 50 ? 'text-success' : Number(markup) >= 25 ? 'text-foreground' : 'text-warning'}`}>
-              {markup}%
-            </p>
-          </div>
-        </div>
+        )}
         
         {/* Metal/Gemstone Info */}
         {product.metal && (

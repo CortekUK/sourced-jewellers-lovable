@@ -28,22 +28,22 @@ interface AllSettledItem {
   settlement_date?: string;
 }
 
-export function exportAllActiveStockCSV(data: AllActiveStockItem[]) {
+export function exportAllActiveStockCSV(data: AllActiveStockItem[], includeCost: boolean = true) {
   const headers = [
     'Supplier',
     'Product Name',
     'SKU',
-    'Cost',
+    ...(includeCost ? ['Cost'] : []),
     'Agreed Sell Price',
     'Start Date',
     'Status'
   ];
-  
+
   const rows = data.map(item => [
     item.supplier_name,
     item.product_name,
     item.internal_sku,
-    `£${item.cost.toFixed(2)}`,
+    ...(includeCost ? [`£${item.cost.toFixed(2)}`] : []),
     `£${item.agreed_price.toFixed(2)}`,
     item.start_date ? new Date(item.start_date).toLocaleDateString() : '-',
     item.status,

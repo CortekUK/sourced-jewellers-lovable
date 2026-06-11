@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sourced Jewellers CRM — User Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#B8860B;
+    --gold-light:#E5C158;
+    --gold-soft:#f7eed6;
+    --charcoal:#262626;
+    --charcoal-2:#3a3a3a;
+    --ink:#2e2e2e;
+    --muted:#6b6f76;
+    --line:#e7e3d8;
+    --bg:#ffffff;
+    --paper:#faf9f6;
+    --success:#2f7d32;
+    --danger:#c0392b;
+    --blue:#2563a8;
+    --amber:#b8860b;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.65;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    max-width:900px;
+    margin:0 auto;
+    background:var(--bg);
+    padding:64px 72px;
+    box-shadow:0 1px 40px rgba(0,0,0,.06);
+  }
+  h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;color:var(--charcoal);font-weight:700;letter-spacing:-.01em;}
+  h2{font-size:30px;margin:0 0 4px;}
+  h3{font-size:21px;margin:34px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--gold-soft);}
+  h4{font-size:16.5px;font-family:'Montserrat',sans-serif;font-weight:700;color:var(--charcoal);margin:24px 0 8px;letter-spacing:.01em;}
+  p{margin:10px 0;}
+  a{color:var(--gold);text-decoration:none;}
+  strong{color:var(--charcoal);font-weight:600;}
+  code{background:var(--gold-soft);color:#7a5a06;padding:1.5px 6px;border-radius:4px;font-size:.85em;font-family:'SFMono-Regular',Consolas,monospace;}
+  ul,ol{margin:10px 0;padding-left:22px;}
+  li{margin:5px 0;}
+
+  /* ============ COVER ============ */
+  .cover{
+    background:linear-gradient(150deg,#1c1c1c 0%,#2e2e2e 55%,#1a1a1a 100%);
+    color:#fff;
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;
+    padding:60px;
+    position:relative;
+    overflow:hidden;
+  }
+  .cover::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(184,134,11,.22), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(229,193,88,.10), transparent 40%);
+  }
+  .cover-inner{position:relative;z-index:2;max-width:640px;}
+  .cover img{width:330px;max-width:74%;margin-bottom:8px;filter:drop-shadow(0 4px 18px rgba(0,0,0,.4));}
+  .cover .eyebrow{
+    font-family:'Montserrat',sans-serif;letter-spacing:.42em;text-transform:uppercase;
+    font-size:12px;color:var(--gold-light);margin:30px 0 12px;font-weight:600;
+  }
+  .cover h1{
+    font-size:60px;color:#fff;line-height:1.05;margin:0 0 18px;font-weight:800;
+  }
+  .cover h1 .accent{
+    background:linear-gradient(90deg,var(--gold),var(--gold-light));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .cover .sub{font-size:18px;color:#cfcfcf;font-weight:300;max-width:520px;margin:0 auto;font-family:'Inter',sans-serif;}
+  .cover .rule{width:70px;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));margin:30px auto;border-radius:2px;}
+  .cover .meta{
+    margin-top:54px;display:flex;gap:42px;justify-content:center;flex-wrap:wrap;
+    font-family:'Montserrat',sans-serif;
+  }
+  .cover .meta div{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9a9a9a;}
+  .cover .meta strong{display:block;color:#fff;font-size:15px;letter-spacing:.04em;margin-top:5px;font-weight:600;}
+  .cover .footer-note{position:absolute;bottom:34px;left:0;right:0;text-align:center;font-size:11px;color:#777;letter-spacing:.2em;text-transform:uppercase;z-index:2;}
+
+  /* ============ HEADER BAND ============ */
+  .band{
+    display:flex;align-items:center;gap:14px;
+    border-left:5px solid var(--gold);
+    padding:4px 0 4px 18px;margin-bottom:26px;
+  }
+  .band .num{
+    font-family:'Playfair Display',serif;font-size:46px;font-weight:800;
+    color:var(--gold-soft);line-height:1;
+  }
+  .band .ttl .k{font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:600;}
+
+  /* ============ TOC ============ */
+  .toc{columns:2;column-gap:48px;margin-top:24px;}
+  .toc a{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:8px 0;border-bottom:1px dotted var(--line);color:var(--ink);
+    break-inside:avoid;font-size:14px;
+  }
+  .toc a:hover{color:var(--gold);}
+  .toc a .n{font-family:'Montserrat',sans-serif;color:var(--gold);font-weight:600;font-size:12px;margin-right:10px;min-width:24px;}
+  .toc a span.t{flex:1;}
+
+  /* ============ CALLOUTS ============ */
+  .note,.tip,.warn{
+    border-radius:8px;padding:14px 18px;margin:18px 0;font-size:14px;
+    border:1px solid var(--line);background:var(--paper);
+  }
+  .note{border-left:4px solid var(--blue);background:#f5f8fc;}
+  .tip{border-left:4px solid var(--success);background:#f4faf5;}
+  .warn{border-left:4px solid var(--gold);background:#fdf9ef;}
+  .note .lab,.tip .lab,.warn .lab{
+    font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;display:block;margin-bottom:4px;
+  }
+  .note .lab{color:var(--blue);} .tip .lab{color:var(--success);} .warn .lab{color:#9a6c06;}
+
+  /* ============ TABLES ============ */
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:13.5px;}
+  th{
+    background:var(--charcoal);color:#fff;text-align:left;padding:10px 14px;
+    font-family:'Montserrat',sans-serif;font-weight:600;font-size:12px;letter-spacing:.04em;
+  }
+  td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:nth-child(even) td{background:var(--paper);}
+  .center{text-align:center;}
+  .yes{color:var(--success);font-weight:700;}
+  .no{color:#c9c9c9;font-weight:700;}
+  .part{color:var(--gold);font-weight:700;}
+
+  /* ============ FLOW DIAGRAMS ============ */
+  .flow{
+    display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:22px 0;
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px 18px;
+  }
+  .flow .step{
+    flex:1;min-width:120px;text-align:center;position:relative;padding:0 8px;
+  }
+  .flow .step .dot{
+    width:46px;height:46px;border-radius:50%;margin:0 auto 10px;
+    background:linear-gradient(145deg,var(--gold),var(--gold-light));
+    color:#fff;font-family:'Playfair Display',serif;font-weight:700;font-size:20px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 12px rgba(184,134,11,.3);
+  }
+  .flow .step .st{font-family:'Montserrat',sans-serif;font-weight:600;font-size:12.5px;color:var(--charcoal);margin-bottom:3px;}
+  .flow .step .sd{font-size:11.5px;color:var(--muted);line-height:1.4;}
+  .flow .step:not(:last-child)::after{
+    content:"›";position:absolute;top:12px;right:-7px;color:var(--gold);font-size:30px;font-weight:700;line-height:1;
+  }
+  .flow.vert{flex-direction:column;align-items:stretch;gap:0;}
+  .flow.vert .step{display:flex;text-align:left;align-items:flex-start;gap:14px;padding:10px 4px;min-width:0;}
+  .flow.vert .step .dot{margin:0;flex-shrink:0;width:40px;height:40px;font-size:17px;}
+  .flow.vert .step:not(:last-child)::after{content:"";position:absolute;left:19px;top:50px;bottom:-2px;width:2px;height:auto;background:var(--gold-soft);right:auto;font-size:0;}
+  .flow.vert .step .body{padding-top:7px;}
+
+  /* nav map */
+  .navmap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:22px 0;}
+  .navmap .grp{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+  .navmap .grp h5{
+    margin:0;background:var(--charcoal);color:var(--gold-light);
+    font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    padding:9px 14px;font-weight:600;
+  }
+  .navmap .grp ul{list-style:none;margin:0;padding:8px 0;}
+  .navmap .grp li{padding:5px 14px;font-size:13px;color:var(--ink);display:flex;align-items:center;gap:8px;}
+  .navmap .grp li .ic{color:var(--gold);font-weight:700;}
+  .navmap .grp li small{color:var(--muted);font-size:11px;}
+
+  /* role cards */
+  .roles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:22px 0;}
+  .rolecard{border:1px solid var(--line);border-radius:12px;padding:20px;background:#fff;position:relative;overflow:hidden;}
+  .rolecard::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;}
+  .rolecard.owner::before{background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+  .rolecard.manager::before{background:#7d8590;}
+  .rolecard.staff::before{background:#b9bfc7;}
+  .rolecard h4{margin:6px 0 4px;font-family:'Playfair Display',serif;font-size:19px;}
+  .rolecard .who{font-size:11.5px;color:var(--muted);font-style:italic;margin-bottom:10px;}
+  .rolecard ul{padding-left:18px;font-size:12.5px;margin:6px 0;}
+
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0;}
+  .kpi{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:8px;padding:12px 16px;background:#fff;}
+  .kpi .t{font-family:'Montserrat',sans-serif;font-weight:600;font-size:13px;color:var(--charcoal);}
+  .kpi .d{font-size:12.5px;color:var(--muted);}
+
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;font-family:'Montserrat',sans-serif;letter-spacing:.02em;}
+  .pill.gold{background:var(--gold-soft);color:#7a5a06;}
+  .pill.blue{background:#e7f0fa;color:var(--blue);}
+  .pill.green{background:#e8f5e9;color:var(--success);}
+  .pill.amber{background:#fff3df;color:#9a6c06;}
+  .pill.grey{background:#eee;color:#555;}
+  .pill.red{background:#fbeae8;color:var(--danger);}
+
+  .kbd{display:inline-block;background:#fff;border:1px solid #ccc;border-bottom-width:2px;border-radius:5px;padding:1px 8px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;color:var(--charcoal);}
+
+  /* section wrapper / running header */
+  section{padding-top:8px;}
+  .secfoot{margin-top:46px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:11px;color:#b3b3b3;font-family:'Montserrat',sans-serif;letter-spacing:.08em;text-transform:uppercase;}
+
+  .lead{font-size:16.5px;color:var(--muted);font-weight:300;line-height:1.7;margin:6px 0 20px;}
+  hr.soft{border:0;border-top:1px solid var(--line);margin:40px 0;}
+
+  /* ============ PRINT ============ */
+  @media print{
+    body{background:#fff;font-size:11.5px;}
+    .page{box-shadow:none;max-width:none;padding:0 14mm;margin:0;}
+    .cover{min-height:auto;height:100vh;page-break-after:always;}
+    section{page-break-before:always;}
+    #top{page-break-before:avoid;}
+    .band{page-break-inside:avoid;page-break-after:avoid;}
+    h2.secstart{padding-top:4mm;}
+    hr.soft{display:none;}
+    .flow,table,.navmap,.roles,.rolecard,.note,.tip,.warn,.kpi,.flow .step,h3,h4{page-break-inside:avoid;}
+    h3,h4{page-break-after:avoid;}
+    a{color:var(--ink);}
+    .noprint{display:none;}
+  }
+  @media (max-width:680px){
+    .page{padding:34px 22px;}
+    .toc,.navmap,.roles,.kpis{columns:1;grid-template-columns:1fr;}
+    .cover h1{font-size:40px;}
+    .flow{flex-direction:column;}
+    .flow .step:not(:last-child)::after{content:"";}
+  }
+  .backtop{font-size:11px;color:var(--muted);font-family:'Montserrat',sans-serif;letter-spacing:.06em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER ===================== -->
+<div class="cover">
+  <div class="cover-inner">
+    <img src="data:image/png;base64,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" alt="Sourced Jewellers" />
+    <div class="eyebrow">Jewellers &nbsp;·&nbsp; Management System</div>
+    <h1>User <span class="accent">Manual</span></h1>
+    <div class="rule"></div>
+    <p class="sub">Your complete day-to-day guide to running the shop — inventory, point of sale, customers, consignments, reporting and admin — all in one place.</p>
+    <div class="meta">
+      <div>Product<strong>Sourced CRM</strong></div>
+      <div>Edition<strong>Handover v1.0</strong></div>
+      <div>Audience<strong>Owner · Manager · Staff</strong></div>
+    </div>
+  </div>
+  <div class="footer-note">Prepared for product handover — Sourced Jewellers</div>
+</div>
+
+<div class="page">
+
+<!-- ===================== TOC ===================== -->
+<section id="top">
+  <div class="band">
+    <div class="num">i</div>
+    <div class="ttl"><div class="k">Start Here</div><h2>Contents</h2></div>
+  </div>
+  <p class="lead">This manual is organised in the same order you'll use the system — from logging in, through your daily selling and stock work, to the owner-only reporting and settings. Each section is self-contained, so you can jump straight to what you need.</p>
+  <div class="toc">
+    <a href="#welcome"><span><span class="n">01</span><span class="t">Welcome &amp; Overview</span></span></a>
+    <a href="#start"><span><span class="n">02</span><span class="t">Getting Started &amp; Login</span></span></a>
+    <a href="#nav"><span><span class="n">03</span><span class="t">Finding Your Way Around</span></span></a>
+    <a href="#roles"><span><span class="n">04</span><span class="t">Roles &amp; Who Can Do What</span></span></a>
+    <a href="#dashboard"><span><span class="n">05</span><span class="t">The Dashboard</span></span></a>
+    <a href="#products"><span><span class="n">06</span><span class="t">Products &amp; Inventory</span></span></a>
+    <a href="#suppliers"><span><span class="n">07</span><span class="t">Suppliers</span></span></a>
+    <a href="#consignments"><span><span class="n">08</span><span class="t">Consignments</span></span></a>
+    <a href="#customers"><span><span class="n">09</span><span class="t">Customers (CRM)</span></span></a>
+    <a href="#pos"><span><span class="n">10</span><span class="t">Point of Sale (Selling)</span></span></a>
+    <a href="#tradein"><span><span class="n">11</span><span class="t">Trade-Ins / Part Exchange</span></span></a>
+    <a href="#deposits"><span><span class="n">12</span><span class="t">Deposit Orders (Layaway)</span></span></a>
+    <a href="#receipts"><span><span class="n">13</span><span class="t">Receipts</span></span></a>
+    <a href="#commission"><span><span class="n">14</span><span class="t">Commission</span></span></a>
+    <a href="#expenses"><span><span class="n">15</span><span class="t">Expenses</span></span></a>
+    <a href="#reports"><span><span class="n">16</span><span class="t">Reports &amp; P&amp;L</span></span></a>
+    <a href="#analytics"><span><span class="n">17</span><span class="t">Analytics, AI &amp; Audit</span></span></a>
+    <a href="#cash"><span><span class="n">18</span><span class="t">Cash Drawer</span></span></a>
+    <a href="#settings"><span><span class="n">19</span><span class="t">Settings &amp; Admin</span></span></a>
+    <a href="#shortcuts"><span><span class="n">20</span><span class="t">Shortcuts &amp; Offline</span></span></a>
+    <a href="#glossary"><span><span class="n">21</span><span class="t">Glossary</span></span></a>
+  </div>
+</section>
+
+<hr class="soft" />
+
+<!-- ===================== 01 WELCOME ===================== -->
+<section id="welcome">
+  <div class="band">
+    <div class="num">01</div>
+    <div class="ttl"><div class="k">Introduction</div><h2 class="secstart">Welcome &amp; Overview</h2></div>
+  </div>
+  <p class="lead">Sourced Jewellers CRM is the all-in-one system that runs your shop — it replaces separate spreadsheets, till systems and notebooks with one connected platform.</p>
+
+  <p>Everything in the business is linked together. When you ring up a sale, the system automatically reduces your stock, records the customer's purchase history, updates the day's takings, calculates staff commission, and — if the item was on consignment — flags that the supplier now needs paying. You enter information once and it flows everywhere it's needed.</p>
+
+  <h4>What the system handles</h4>
+  <div class="navmap">
+    <div class="grp">
+      <h5>Sell &amp; Serve</h5>
+      <ul>
+        <li><span class="ic">·</span> Point of Sale checkout</li>
+        <li><span class="ic">·</span> Deposit / layaway orders</li>
+        <li><span class="ic">·</span> Trade-ins &amp; part-exchange</li>
+        <li><span class="ic">·</span> Printed &amp; emailed receipts</li>
+        <li><span class="ic">·</span> Customer profiles &amp; VIP tiers</li>
+      </ul>
+    </div>
+    <div class="grp">
+      <h5>Stock &amp; Source</h5>
+      <ul>
+        <li><span class="ic">·</span> Product inventory</li>
+        <li><span class="ic">·</span> Barcode scanning</li>
+        <li><span class="ic">·</span> Suppliers &amp; spend tracking</li>
+        <li><span class="ic">·</span> Consignment management</li>
+        <li><span class="ic">·</span> Documents &amp; certificates</li>
+      </ul>
+    </div>
+    <div class="grp">
+      <h5>Run &amp; Report</h5>
+      <ul>
+        <li><span class="ic">·</span> Profit &amp; Loss reporting</li>
+        <li><span class="ic">·</span> Commission &amp; payroll</li>
+        <li><span class="ic">·</span> Expenses &amp; cash drawer</li>
+        <li><span class="ic">·</span> Analytics &amp; AI assistant</li>
+        <li><span class="ic">·</span> Full audit trail</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">
+    <span class="lab">The golden thread</span>
+    A single sale touches <strong>stock, the customer record, the day's figures, commission, and consignment settlements</strong> — all automatically. That's the core idea behind the whole system: record it once, and it's everywhere.
+  </div>
+
+  <h4>Works on any device</h4>
+  <p>The system runs in any web browser on a computer, tablet or phone. It can also be <strong>installed as an app</strong> on a device's home screen for quick access (see §20). The layout adapts to the screen size — the side menu collapses to icons on smaller screens.</p>
+</section>
+
+<!-- ===================== 02 GETTING STARTED ===================== -->
+<section id="start">
+  <div class="band">
+    <div class="num">02</div>
+    <div class="ttl"><div class="k">First Steps</div><h2 class="secstart">Getting Started &amp; Login</h2></div>
+  </div>
+  <p class="lead">Every team member has their own login. The system always knows who is signed in, so every sale, edit and payment is recorded against the right person.</p>
+
+  <h3>Signing in</h3>
+  <div class="flow">
+    <div class="step"><div class="dot">1</div><div class="st">Open the app</div><div class="sd">Visit the web address, or tap the installed app icon</div></div>
+    <div class="step"><div class="dot">2</div><div class="st">Enter email</div><div class="sd">Your work email address</div></div>
+    <div class="step"><div class="dot">3</div><div class="st">Enter password</div><div class="sd">Tick "Remember me" on your own device only</div></div>
+    <div class="step"><div class="dot">4</div><div class="st">Sign In</div><div class="sd">You land on the Dashboard</div></div>
+  </div>
+
+  <div class="warn">
+    <span class="lab">Security</span>
+    Passwords are at least 6 characters. After <strong>5 failed attempts</strong> the account locks for <strong>5 minutes</strong>. Don't tick "Remember me" on a shared shop computer.
+  </div>
+
+  <h3>Changing your password</h3>
+  <p>Open the <strong>user menu</strong> at the bottom of the side menu (your email and role badge), then choose <strong>Change Password</strong> — or go to <strong>Settings → Account → Change Password</strong>. Enter the new password twice (minimum 8 characters) and click <strong>Update Password</strong>. It takes effect immediately.</p>
+
+  <h3>Light &amp; dark mode</h3>
+  <p>From the same user menu you can switch between <strong>Light Mode</strong> and <strong>Dark Mode</strong> to suit the lighting in the shop. Your choice is remembered on that device.</p>
+
+  <div class="note">
+    <span class="lab">First-time tour</span>
+    New users are greeted with a short <strong>Welcome tour</strong> and a <strong>Quick Start guide</strong>. You can replay either of these any time from <strong>Settings → Data → Onboarding</strong> — handy when training a new starter.
+  </div>
+</section>
+
+<!-- ===================== 03 NAVIGATION ===================== -->
+<section id="nav">
+  <div class="band">
+    <div class="num">03</div>
+    <div class="ttl"><div class="k">Orientation</div><h2 class="secstart">Finding Your Way Around</h2></div>
+  </div>
+  <p class="lead">Everything is reached from the menu down the left side of the screen. It's grouped into Core Operations, Sales, Financial and Admin. You only see the items your role is allowed to use.</p>
+
+  <div class="navmap">
+    <div class="grp">
+      <h5>Core Operations</h5>
+      <ul>
+        <li><span class="ic">▦</span> Dashboard</li>
+        <li><span class="ic">◈</span> Products <small>· incl. PX Intake</small></li>
+        <li><span class="ic">⛟</span> Suppliers</li>
+        <li><span class="ic">👤</span> Customers</li>
+        <li><span class="ic">🤝</span> Consignments</li>
+        <li><span class="ic">💳</span> Deposits</li>
+      </ul>
+    </div>
+    <div class="grp">
+      <h5>Sales</h5>
+      <ul>
+        <li><span class="ic">🛒</span> POS <small>(Point of Sale)</small></li>
+        <li><span class="ic">·</span> My Sales</li>
+        <li><span class="ic">·</span> My Commission</li>
+        <li><span class="ic">·</span> Sold Items</li>
+        <li><span class="ic">·</span> Transactions <small>· mgr+</small></li>
+      </ul>
+    </div>
+    <div class="grp">
+      <h5>Financial &amp; Admin</h5>
+      <ul>
+        <li><span class="ic">£</span> Expenses</li>
+        <li><span class="ic">📊</span> Reports <small>· owner</small></li>
+        <li><span class="ic">📈</span> Analytics <small>· owner</small></li>
+        <li><span class="ic">⚙</span> Settings <small>· owner</small></li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Global search — find anything, fast</h4>
+  <p>At the top of the screen is a <strong>search bar</strong> that looks across customers, products, serial numbers, suppliers and sales at once. For power users, press <span class="kbd">Ctrl</span>+<span class="kbd">K</span> (or <span class="kbd">⌘</span>+<span class="kbd">K</span> on Mac) to open the <strong>Command Palette</strong>, which supports search shortcuts like <code>sku:00142</code> or <code>metal:gold</code>. Your recent searches are remembered for quick re-use.</p>
+
+  <div class="tip">
+    <span class="lab">Tip</span>
+    Almost every <strong>customer name, product name and sale number</strong> in the system is clickable — click it to jump straight to the full record.
+  </div>
+</section>
+
+<!-- ===================== 04 ROLES ===================== -->
+<section id="roles">
+  <div class="band">
+    <div class="num">04</div>
+    <div class="ttl"><div class="k">Permissions</div><h2 class="secstart">Roles &amp; Who Can Do What</h2></div>
+  </div>
+  <p class="lead">There are three roles. They control which menus appear and what each person can create, edit or delete. The Owner can fine-tune Manager and Staff permissions in Settings.</p>
+
+  <div class="roles">
+    <div class="rolecard owner">
+      <span class="pill gold">Owner</span>
+      <h4>Owner</h4>
+      <div class="who">Shop owner / administrator</div>
+      <ul>
+        <li>Full access to everything</li>
+        <li>Reports, Analytics &amp; P&amp;L</li>
+        <li>Settings &amp; user management</li>
+        <li>Pay commission, set rates</li>
+        <li>Approve negative-balance sales</li>
+      </ul>
+    </div>
+    <div class="rolecard manager">
+      <span class="pill grey">Manager</span>
+      <h4>Manager</h4>
+      <div class="who">Store / operations manager</div>
+      <ul>
+        <li>Full day-to-day operations</li>
+        <li>Create, edit &amp; delete stock, customers, sales</li>
+        <li>Void &amp; edit sales</li>
+        <li>Manage expenses &amp; consignments</li>
+        <li>No Settings or Reports*</li>
+      </ul>
+    </div>
+    <div class="rolecard staff">
+      <span class="pill grey">Staff</span>
+      <h4>Staff</h4>
+      <div class="who">Sales associate / cashier</div>
+      <ul>
+        <li>View stock &amp; create sales</li>
+        <li>Add &amp; create customers</li>
+        <li>Add products</li>
+        <li>Cannot delete or void</li>
+        <li>No Reports, Settings or admin</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Detailed permission matrix</h4>
+  <table>
+    <thead><tr><th>Area</th><th class="center">Owner</th><th class="center">Manager</th><th class="center">Staff</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard</td><td class="center"><span class="yes">View</span></td><td class="center"><span class="yes">View</span></td><td class="center"><span class="yes">View</span></td></tr>
+      <tr><td>Products</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="part">Add / Edit</span></td></tr>
+      <tr><td>Suppliers</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="part">View only</span></td></tr>
+      <tr><td>Customers</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="part">View / Add</span></td></tr>
+      <tr><td>Sales / POS</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="part">View / Create</span></td></tr>
+      <tr><td>Consignments</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="part">View only</span></td></tr>
+      <tr><td>Expenses</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="part">View only</span></td></tr>
+      <tr><td>Reports &amp; P&amp;L</td><td class="center"><span class="yes">View</span></td><td class="center"><span class="no">—</span></td><td class="center"><span class="no">—</span></td></tr>
+      <tr><td>Analytics</td><td class="center"><span class="yes">View</span></td><td class="center"><span class="no">—</span></td><td class="center"><span class="no">—</span></td></tr>
+      <tr><td>Settings &amp; Users</td><td class="center"><span class="yes">Full</span></td><td class="center"><span class="no">—</span></td><td class="center"><span class="no">—</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px;color:var(--muted);">*The Owner can override Manager and Staff permissions per area (e.g. grant a Manager access to Reports) under <strong>Settings → Team → Role Permissions</strong>.</p>
+</section>
+
+<!-- ===================== 05 DASHBOARD ===================== -->
+<section id="dashboard">
+  <div class="band">
+    <div class="num">05</div>
+    <div class="ttl"><div class="k">Daily Hub</div><h2 class="secstart">The Dashboard</h2></div>
+  </div>
+  <p class="lead">The Dashboard is the first screen after login — your business at a glance. What you see depends on your role; owners see profit figures, staff see a simpler view.</p>
+
+  <h4>Quick actions</h4>
+  <p>Buttons across the top start the most common tasks in one click: <span class="pill gold">New Sale</span> <span class="pill gold">Add Customer</span> <span class="pill gold">Log Expense</span> — plus <strong>Add Product</strong>, <strong>Add Supplier</strong> (managers/owners) and <strong>View Reports</strong> (owners).</p>
+
+  <h4>What the cards show</h4>
+  <div class="kpis">
+    <div class="kpi"><div class="t">Today's Sales &amp; Transactions</div><div class="d">Total takings today and the number of sales made.</div></div>
+    <div class="kpi"><div class="t">Gross Profit Today <span class="pill gold">owner</span></div><div class="d">Profit after the cost of goods sold.</div></div>
+    <div class="kpi"><div class="t">Items Sold &amp; Inventory Value</div><div class="d">Pieces sold today and the total worth of stock on hand.</div></div>
+    <div class="kpi"><div class="t">Recent Sales Feed</div><div class="d">Your last few sales — item, payment type, time, amount. Click to open.</div></div>
+    <div class="kpi"><div class="t">Reserved Items</div><div class="d">Stock held for deposit orders, with pickup dates. Red badge = overdue.</div></div>
+    <div class="kpi"><div class="t">Pending Trade-Ins</div><div class="d">Traded-in items waiting to be processed into stock.</div></div>
+    <div class="kpi"><div class="t">Revenue &amp; Profit Trends <span class="pill gold">mgr+</span></div><div class="d">A 7 / 30 / 90-day line chart of revenue vs gross profit.</div></div>
+    <div class="kpi"><div class="t">Purchasing Snapshot</div><div class="d">Stock bought this month, inventory age (green/amber/red) and buy-vs-sell.</div></div>
+  </div>
+
+  <div class="tip">
+    <span class="lab">Inventory age colours</span>
+    <span class="pill green">0–30 days · Fresh</span> &nbsp; <span class="pill amber">31–90 days · Aging</span> &nbsp; <span class="pill red">90+ days · Needs moving</span> — a quick visual cue for slow stock.
+  </div>
+</section>
+
+<!-- ===================== 06 PRODUCTS ===================== -->
+<section id="products">
+  <div class="band">
+    <div class="num">06</div>
+    <div class="ttl"><div class="k">Inventory</div><h2 class="secstart">Products &amp; Inventory</h2></div>
+  </div>
+  <p class="lead">The Products area is your complete stock catalogue. Each product carries its price, cost, supplier, photos, documents and live stock count — and the system tracks profit and ageing automatically.</p>
+
+  <h3>Adding a product</h3>
+  <div class="flow vert">
+    <div class="step"><div class="dot">1</div><div class="body"><div class="st">Click "Add Product"</div><div class="sd">Top-right of the Products page. A form opens with collapsible sections.</div></div></div>
+    <div class="step"><div class="dot">2</div><div class="body"><div class="st">Basic details</div><div class="sd">Name (required), barcode, description, category, metal, karat, gemstone. The system suggests names as you type.</div></div></div>
+    <div class="step"><div class="dot">3</div><div class="body"><div class="st">Supplier &amp; source</div><div class="sd">Choose a Registered supplier (a business) or an Individual (a walk-in seller). You can add a supplier inline.</div></div></div>
+    <div class="step"><div class="dot">4</div><div class="body"><div class="st">Pricing &amp; stock</div><div class="sd">Cost price, sell price, reorder threshold (low-stock alert level) and the opening quantity.</div></div></div>
+    <div class="step"><div class="dot">5</div><div class="body"><div class="st">Extras</div><div class="sd">Location, photos/videos, registered-watch document, consignment terms, and any certificates.</div></div></div>
+    <div class="step"><div class="dot">6</div><div class="body"><div class="st">Save</div><div class="sd">The system auto-generates a SKU and the item is instantly searchable and sellable.</div></div></div>
+  </div>
+
+  <h3>Viewing &amp; managing stock</h3>
+  <p>Switch between <strong>List view</strong> (table) and <strong>Grid view</strong> (cards). Use the <strong>search bar</strong> (name, SKU or barcode), the <strong>sort menu</strong> (newest, name, price, margin) and the <strong>Filters</strong> panel (category, metal, karat, gemstone, supplier, location, price/margin range, age, reservation status). Quick-filter chips below the search bar narrow results in one tap.</p>
+
+  <p>Click <strong>View Details</strong> on any product to see stock, pricing, profit and markup, ageing status, reservation info, trade-in origin, photos, documents and consignment terms. From there you can <strong>Edit</strong>, <strong>Duplicate</strong> (copy a similar item), <strong>Adjust Stock</strong>, or jump to <strong>Sell</strong>.</p>
+
+  <h4>Adjusting stock</h4>
+  <p>Inside a product, click <strong>Adjust Stock</strong> and choose <strong>Add</strong> (delivery arrived), <strong>Remove</strong> (damage/loss) or <strong>Set exact amount</strong> (after a physical count). Enter the quantity and an optional note — a live preview shows <em>current → adjustment → new</em>. Always add a note so the reason is on record.</p>
+
+  <h4>Barcode scanning</h4>
+  <p>On screens with a <strong>Scan</strong> button, allow camera access and point it at the barcode — the system reads it automatically (or type it manually). Scanning is the fastest, most accurate way to find items at the till.</p>
+
+  <h4>Status badges you'll see</h4>
+  <p>
+    <span class="pill green">In Stock</span>
+    <span class="pill amber">Low Stock</span>
+    <span class="pill grey">Out of Stock</span>
+    <span class="pill blue">Reserved</span>
+    <span class="pill amber">Consignment</span>
+    <span class="pill blue">Trade-In / PX</span>
+    <span class="pill grey">Aged Stock</span>
+  </p>
+
+  <div class="warn">
+    <span class="lab">Good to know</span>
+    Barcodes must be unique — the system won't let you reuse one. You can't delete a product that has been sold or has active reservations/consignments; that protects your history.
+  </div>
+</section>
+
+<!-- ===================== 07 SUPPLIERS ===================== -->
+<section id="suppliers">
+  <div class="band">
+    <div class="num">07</div>
+    <div class="ttl"><div class="k">Sourcing</div><h2 class="secstart">Suppliers</h2></div>
+  </div>
+  <p class="lead">A supplier is anyone you source stock from. The system tracks every product, purchase and consignment per supplier, and shows your total spend over time.</p>
+
+  <h4>Two types of supplier</h4>
+  <ul>
+    <li><strong>Registered Supplier</strong> — a business (wholesaler, distributor, jeweller) with full contact details. Appears in dropdowns while marked Active.</li>
+    <li><strong>Individual Supplier</strong> — a walk-in person selling or trading in an item; name-only, no ongoing account.</li>
+  </ul>
+
+  <h4>Adding a supplier</h4>
+  <p>Click <strong>Add Supplier</strong> and complete the tabbed form: <strong>Details</strong> (type, name, contact person), <strong>Contact</strong> (email, phone, address) and <strong>Extras</strong> (Active toggle, tags, notes). Tags such as <span class="pill gold">Wholesale</span> <span class="pill gold">Local</span> <span class="pill gold">Premium</span> help you organise and filter suppliers.</p>
+
+  <h4>The supplier profile</h4>
+  <p>Click <strong>View Detail</strong> to open a full profile with tabs:</p>
+  <table>
+    <thead><tr><th>Tab</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Overview</strong></td><td>Contact details, spend trend, recent activity, consignment summary.</td></tr>
+      <tr><td><strong>Inventory</strong></td><td>Every product from this supplier (filter In Stock / Sold / All).</td></tr>
+      <tr><td><strong>Financials</strong></td><td>Total spend this year (purchases + expenses) with a monthly chart.</td></tr>
+      <tr><td><strong>PX History</strong></td><td>For individuals — items this person has traded in and the allowances given.</td></tr>
+      <tr><td><strong>Consignments</strong></td><td>Active stock, sold-but-unsettled items, and settled payouts.</td></tr>
+      <tr><td><strong>Documents</strong></td><td>Contracts and account agreements attached to the supplier.</td></tr>
+    </tbody>
+  </table>
+  <p>The Suppliers list itself can be searched, sorted (name, recently added, highest spend, most products) and filtered by type, status and tags, in card or table view.</p>
+</section>
+
+<!-- ===================== 08 CONSIGNMENTS ===================== -->
+<section id="consignments">
+  <div class="band">
+    <div class="num">08</div>
+    <div class="ttl"><div class="k">Sell on Behalf</div><h2 class="secstart">Consignments</h2></div>
+  </div>
+  <p class="lead">A consignment item is stock you hold but don't own. You sell it, keep your agreed margin, and pay the supplier (the consignor) only once it sells. The system tracks the whole lifecycle — from intake to settlement.</p>
+
+  <div class="flow">
+    <div class="step"><div class="dot">1</div><div class="st">Take in</div><div class="sd">Add the product, mark it Consignment, set the consignor &amp; terms</div></div>
+    <div class="step"><div class="dot">2</div><div class="st">Hold &amp; display</div><div class="sd">Shows under "Active Stock". You owe nothing yet</div></div>
+    <div class="step"><div class="dot">3</div><div class="st">It sells</div><div class="sd">Moves to "Sold &amp; Unsettled" — payout now due</div></div>
+    <div class="step"><div class="dot">4</div><div class="st">Pay out</div><div class="sd">Record Payout to the consignor</div></div>
+    <div class="step"><div class="dot">5</div><div class="st">Settled</div><div class="sd">Logged in "Settled" with a reference</div></div>
+  </div>
+
+  <h4>Setting up a consignment item</h4>
+  <p>When adding the product, switch on <strong>Consignment Item</strong>, choose the <strong>consignment supplier</strong>, set the <strong>start</strong> and <strong>end</strong> dates, enter the <strong>terms</strong> (e.g. "50/50 split" or "supplier gets £x"), and upload the signed <strong>agreement</strong>.</p>
+
+  <h4>The Consignments page</h4>
+  <p>Summary cards show Active Stock, Unsettled Sales, Pending Payouts (£ owed), Total Consignment Value and Total Settled. Three tabs organise the work:</p>
+  <table>
+    <thead><tr><th>Tab</th><th>Contains</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill green">Active Stock</span></td><td>Items held now, with status (Active, Expiring Soon, Out of Stock).</td><td>View · Export</td></tr>
+      <tr><td><span class="pill amber">Sold &amp; Unsettled</span></td><td>Sold items awaiting payout; flagged Overdue after 30 days.</td><td><strong>Record Payout</strong></td></tr>
+      <tr><td><span class="pill grey">Settled</span></td><td>Completed payouts with date and reference.</td><td>View · Export</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Recording a payout</h4>
+  <p>On an unsettled sale, click <strong>Record Payout</strong>. The dialog shows the sale price, your margin and the amount owed. Confirm or adjust the payout amount, choose the <strong>payment date</strong>, add a <strong>settlement reference</strong> (e.g. bank transfer ID) and click <strong>Record Payment</strong>. The item moves to <strong>Settled</strong>.</p>
+
+  <div class="note">
+    <span class="lab">Why it matters</span>
+    The Reports area warns you of any <strong>unsettled consignments</strong> so you never lose track of money owed to a consignor. Settle promptly to keep relationships and records clean.
+  </div>
+</section>
+
+<!-- ===================== 09 CUSTOMERS ===================== -->
+<section id="customers">
+  <div class="band">
+    <div class="num">09</div>
+    <div class="ttl"><div class="k">Relationships</div><h2 class="secstart">Customers (CRM)</h2></div>
+  </div>
+  <p class="lead">Build a profile for every customer. The system tracks their spend, purchase history, sizes and preferences, and automatically promotes them through VIP tiers — so you can give personal, informed service.</p>
+
+  <h4>Adding a customer</h4>
+  <p>Click <strong>Add Customer</strong> and complete three tabs: <strong>Basic Info</strong> (name required; email, phone, address, notes), <strong>Special Dates</strong> (birthday, anniversary — these trigger dashboard reminders), and <strong>Preferences</strong> (ring/bracelet/necklace sizes, metal and style preferences). You're taken straight to their profile.</p>
+
+  <h4>The customer profile</h4>
+  <p>Each profile shows four headline stats — <strong>Lifetime Spend</strong>, <strong>Total Purchases</strong>, <strong>Average Order Value</strong> and <strong>Member Since</strong> — plus a progress bar toward the next VIP tier, and three tabs: <strong>Overview</strong> (contact &amp; dates &amp; quick notes), <strong>Purchases</strong> (full transaction history) and <strong>Preferences</strong>.</p>
+
+  <h4>VIP tiers — set automatically by lifetime spend</h4>
+  <table>
+    <thead><tr><th>Tier</th><th>Typical threshold*</th><th>Use it to…</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill grey">Standard</span></td><td>£0 – £499</td><td>Everyday customers</td></tr>
+      <tr><td><span class="pill grey">Silver</span></td><td>£500 – £1,999</td><td>Recognise returning customers</td></tr>
+      <tr><td><span class="pill gold">Gold</span></td><td>£2,000 – £4,999</td><td>Offer premium service</td></tr>
+      <tr><td><span class="pill gold">Platinum</span></td><td>£5,000+</td><td>Invite to VIP events</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px;color:var(--muted);">*Thresholds are set by the Owner under Settings → Sales. Tiers update automatically — they are never set by hand.</p>
+
+  <h4>Finding &amp; filtering</h4>
+  <p>The Customers page shows totals plus upcoming <strong>birthdays</strong> and <strong>anniversaries</strong>. Filter by VIP tier, lifetime spend, purchase count, metal preference, upcoming events, or whether they have an email/phone. Archive (rather than delete) old customers — their purchase history is always preserved.</p>
+
+  <div class="tip">
+    <span class="lab">Service in action</span>
+    Filter by "Birthday in next 30 days", open the customer, tap their phone number to call, and suggest a piece in their preferred metal and size — all from one screen.
+  </div>
+</section>
+
+<!-- ===================== 10 POS ===================== -->
+<section id="pos">
+  <div class="band">
+    <div class="num">10</div>
+    <div class="ttl"><div class="k">Selling</div><h2 class="secstart">Point of Sale (Selling)</h2></div>
+  </div>
+  <p class="lead">The POS is where you complete a sale. It has three panels — Product Search (left), Shopping Cart (middle) and Checkout (right) — and two modes at the top: <strong>Complete Sale</strong> and <strong>Deposit Order</strong>.</p>
+
+  <h3>The standard sale flow</h3>
+  <div class="flow">
+    <div class="step"><div class="dot">1</div><div class="st">Add items</div><div class="sd">Search or scan, then click + to add to the cart</div></div>
+    <div class="step"><div class="dot">2</div><div class="st">Adjust cart</div><div class="sd">Change quantity, edit price, or add a trade-in</div></div>
+    <div class="step"><div class="dot">3</div><div class="st">Customer</div><div class="sd">Enter or look up the customer (or "Walk-in")</div></div>
+    <div class="step"><div class="dot">4</div><div class="st">Payment</div><div class="sd">Discount if any, then choose payment method</div></div>
+    <div class="step"><div class="dot">5</div><div class="st">Complete</div><div class="sd">Click Complete Sale → print or email the receipt</div></div>
+  </div>
+
+  <h4>Adding &amp; editing items</h4>
+  <p>Search by name, SKU or internal SKU and click <strong>+</strong>. The cart shows stock status (Available, Reserved, Last one, Out of stock). In the cart you can change quantity with <strong>+/−</strong>, edit the unit price with the <strong>pencil</strong> (green = lower than catalogue, red = higher), remove a line with the <strong>bin</strong>, or click the name for details.</p>
+
+  <h4>Discounts</h4>
+  <p>In the Checkout panel, set a discount as a <strong>percentage (%)</strong> or a <strong>fixed amount (£)</strong>. Discounts are spread across the items and applied before tax. Trade-in allowances are never reduced by a discount.</p>
+
+  <h4>Cart totals explained</h4>
+  <table>
+    <thead><tr><th>Line</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td>Subtotal</td><td>All items × quantity at their unit prices.</td></tr>
+      <tr><td>Discount</td><td>Amount taken off (see above).</td></tr>
+      <tr><td>Tax</td><td>Calculated on (subtotal − discount).</td></tr>
+      <tr><td><strong>Net Total</strong></td><td>Subtotal − discount + tax − trade-in allowances = what the customer pays.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Customer, payment &amp; staff</h4>
+  <p>Enter a customer name (look up an existing customer to auto-fill, or just type "Walk-in"). Choose a <strong>payment method</strong> — Cash, Card, Bank Transfer or Other; cash is recorded in the <strong>Cash Drawer</strong> automatically. The sale is recorded against you (<em>Processed By</em>) for commission and reporting.</p>
+
+  <h4>Shop location</h4>
+  <p>Once you add an item, the sale locks to that item's <strong>location</strong> — you can't mix products from two locations in one sale. To sell from another location, finish the current sale first.</p>
+
+  <h4>Optional: signature</h4>
+  <p>For high-value sales or store policy, click <strong>Capture Signature</strong>, have the customer sign on screen, and <strong>Accept</strong>. The signature is stored with the receipt.</p>
+
+  <div class="warn">
+    <span class="lab">Owner approval</span>
+    If a trade-in allowance is larger than the sale (a <strong>negative balance</strong> — you pay the customer), <strong>Staff</strong> cannot complete it; the screen shows "Requires Owner Approval". A Manager or Owner must approve.
+  </div>
+
+  <h3>After the sale — and reviewing it</h3>
+  <p>A confirmation appears with the sale number and options to <strong>Print Receipt</strong>, <strong>Email Receipt</strong>, <strong>Download PDF</strong> or start a <strong>New Sale</strong> (the location is kept for convenience). You can revisit your own sales any time under <strong>My Sales</strong>; managers see all sales under <strong>Transactions</strong>.</p>
+
+  <h4>Editing &amp; voiding (Manager+)</h4>
+  <p>From <strong>Transactions</strong>, managers can <strong>Edit</strong> a sale or <strong>Void</strong> it (with a reason). Voiding reverses the revenue, returns the stock and reverses commission — the sale is kept on record, marked VOID, never deleted.</p>
+
+  <h4>Sales views at a glance</h4>
+  <table>
+    <thead><tr><th>View</th><th>Shows</th><th>Who</th></tr></thead>
+    <tbody>
+      <tr><td><strong>My Sales</strong></td><td>Your own sales, revenue &amp; estimated commission.</td><td>Everyone</td></tr>
+      <tr><td><strong>Transactions</strong></td><td>All sales from all staff, with edit/void/export.</td><td>Manager+</td></tr>
+      <tr><td><strong>Sold Items</strong></td><td>Every individual item line sold, with profit &amp; commission.</td><td>Manager+</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 11 TRADE-IN ===================== -->
+<section id="tradein">
+  <div class="band">
+    <div class="num">11</div>
+    <div class="ttl"><div class="k">Part Exchange</div><h2 class="secstart">Trade-Ins / Part Exchange</h2></div>
+  </div>
+  <p class="lead">A trade-in (part exchange) is when a customer hands over an old item for credit against a purchase. The system records the item, deducts the allowance from the sale, and then lets you process it into saleable stock.</p>
+
+  <h4>Taking a trade-in at the till</h4>
+  <p>In the cart, click <strong>Add Trade-In</strong> and record: item name (required), category, description, serial number, the <strong>allowance</strong> (the credit given — required), the customer's details, notes and photos. It appears in a blue "Trade-Ins" section and is <strong>subtracted from the sale total</strong>. Example: £1,200 sale − £500 trade-in = <strong>£700</strong> to pay.</p>
+
+  <h3>Processing trade-ins into stock</h3>
+  <p>Traded-in items wait in the <strong>PX Intake</strong> queue (Products → PX Intake, Manager+). From there:</p>
+  <div class="flow vert">
+    <div class="step"><div class="dot">1</div><div class="body"><div class="st">Review the queue</div><div class="sd">See all pending trade-ins with value and age.</div></div></div>
+    <div class="step"><div class="dot">2</div><div class="body"><div class="st">Decide</div><div class="sd"><strong>Convert</strong> to inventory, <strong>Edit</strong> the details, or place <strong>On Hold</strong> (needs servicing, authentication, cleaning, valuation, etc.).</div></div></div>
+    <div class="step"><div class="dot">3</div><div class="body"><div class="st">Convert to product</div><div class="sd">Set the selling price, category, SKU and condition notes, optionally link a supplier, then Create Product.</div></div></div>
+    <div class="step"><div class="dot">4</div><div class="body"><div class="st">Now sellable</div><div class="sd">The item joins your inventory, ready to sell — carrying its trade-in origin.</div></div></div>
+  </div>
+  <div class="tip">
+    <span class="lab">Best practice</span>
+    Always photograph trade-ins and record <strong>serial numbers</strong> on watches and high-value pieces. Check with a manager before offering a large allowance.
+  </div>
+</section>
+
+<!-- ===================== 12 DEPOSITS ===================== -->
+<section id="deposits">
+  <div class="band">
+    <div class="num">12</div>
+    <div class="ttl"><div class="k">Layaway</div><h2 class="secstart">Deposit Orders (Layaway)</h2></div>
+  </div>
+  <p class="lead">A Deposit Order lets a customer reserve items and pay in instalments. The stock is held aside so it can't be sold to anyone else until they've paid in full and collected.</p>
+
+  <h3>Creating a deposit order</h3>
+  <div class="flow">
+    <div class="step"><div class="dot">1</div><div class="st">Deposit mode</div><div class="sd">Switch to the "Deposit Order" tab in POS</div></div>
+    <div class="step"><div class="dot">2</div><div class="st">Add items</div><div class="sd">Stock items, plus custom/special-order items</div></div>
+    <div class="step"><div class="dot">3</div><div class="st">Initial payment</div><div class="sd">Enter today's payment; balance is calculated</div></div>
+    <div class="step"><div class="dot">4</div><div class="st">Create order</div><div class="sd">Stock is reserved; order opens as Active</div></div>
+  </div>
+  <p>In deposit mode you can also <strong>Add Custom Item</strong> (name, quantity, price, tax rate) for bespoke pieces not in the catalogue. Discounts are not used on deposit orders. Enter the customer, the <strong>initial payment</strong> (the screen shows total, deposit % and balance due), the payment method, location and any notes, then <strong>Create Deposit Order</strong>.</p>
+
+  <h3>Taking later payments &amp; completing</h3>
+  <p>On the <strong>Deposits</strong> page, find the order and use the row actions: <strong>Record Payment</strong> (£ icon) for each instalment, <strong>Edit</strong> (change items, customer or pickup date), <strong>Complete</strong> (✓ — only once fully paid; converts it into a finished sale), or <strong>Void</strong> (releases the reserved stock).</p>
+
+  <h4>Deposit order statuses</h4>
+  <p>
+    <span class="pill blue">Active</span> not yet fully paid &nbsp;
+    <span class="pill green">Completed</span> paid &amp; converted to a sale &nbsp;
+    <span class="pill grey">Cancelled</span> &nbsp;
+    <span class="pill red">Voided</span> &nbsp;
+    <span class="pill amber">Expired</span>
+  </p>
+  <p>Each order shows a payment progress bar, balance due, expected pickup date and overdue warnings. Switch between List and Grid views and search by customer or order number.</p>
+</section>
+
+<!-- ===================== 13 RECEIPTS ===================== -->
+<section id="receipts">
+  <div class="band">
+    <div class="num">13</div>
+    <div class="ttl"><div class="k">Proof of Purchase</div><h2 class="secstart">Receipts</h2></div>
+  </div>
+  <p class="lead">A receipt is created automatically for every sale. It carries your store branding and full transaction detail, and can be printed, emailed or saved as a PDF.</p>
+
+  <h4>Three ways to deliver a receipt</h4>
+  <div class="navmap">
+    <div class="grp"><h5>Print</h5><ul><li>Click <strong>Print Receipt</strong></li><li>Formatted for thermal or A4</li><li>Hand to the customer at the till</li></ul></div>
+    <div class="grp"><h5>Email</h5><ul><li>Click <strong>Email Receipt</strong></li><li>Confirm the address</li><li>Add an optional message &amp; Send</li></ul></div>
+    <div class="grp"><h5>PDF</h5><ul><li>Click <strong>Download PDF</strong></li><li>Saved to the device</li><li>For archiving or later sending</li></ul></div>
+  </div>
+  <p>Receipts are reachable from the post-sale confirmation, and from the printer/envelope icons on <strong>My Sales</strong> and <strong>Transactions</strong>. Each receipt shows the store details, sale number, date, items, subtotal, discount, tax, any trade-ins, the total paid, payment method, customer, the staff member, notes and any captured signature.</p>
+  <div class="note">
+    <span class="lab">Default behaviour</span>
+    The Owner can set, under <strong>Settings → App → POS</strong>, whether the print dialog opens automatically after checkout and whether an emailed receipt is offered by default.
+  </div>
+</section>
+
+<!-- ===================== 14 COMMISSION ===================== -->
+<section id="commission">
+  <div class="band">
+    <div class="num">14</div>
+    <div class="ttl"><div class="k">Rewarding Sales</div><h2 class="secstart">Commission</h2></div>
+  </div>
+  <p class="lead">When commission tracking is switched on, the system calculates what each staff member earns on their sales, tracks what's been paid, and lets the Owner record payments.</p>
+
+  <h4>How it's calculated</h4>
+  <p>Commission is a percentage of either <strong>revenue</strong> (the sale total) or <strong>profit</strong> (sale minus cost), at a rate set by the Owner. Individual staff can have their own override rate.</p>
+  <table>
+    <thead><tr><th>Basis</th><th>Example</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Revenue @ 5%</td><td>£1,000 of sales</td><td>£50 commission</td></tr>
+      <tr><td>Profit @ 10%</td><td>£500 sale, £300 cost → £200 profit</td><td>£20 commission</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Staff view — My Commission</h4>
+  <p>Each person sees their own monthly breakdown — sales count, revenue, commission owed, and how much is <span class="pill green">Paid</span> / <span class="pill amber">Partial</span> / <span class="pill grey">Unpaid</span>. "View Sales" opens the underlying sales for that month.</p>
+
+  <h4>Owner view — paying commission</h4>
+  <p>Under <strong>Reports → Commission</strong>, expand a month to see each staff member's figures. Click <strong>Pay Commission</strong> to record a payment (amount, method, notes), or <strong>Pay All</strong> for the whole month. Set the default rate and basis, and per-staff overrides, via the <strong>Settings</strong> (gear) icon. A <strong>History</strong> view lists every past payment, and the data can be exported to CSV.</p>
+</section>
+
+<!-- ===================== 15 EXPENSES ===================== -->
+<section id="expenses">
+  <div class="band">
+    <div class="num">15</div>
+    <div class="ttl"><div class="k">Outgoings</div><h2 class="secstart">Expenses</h2></div>
+  </div>
+  <p class="lead">Record every business cost — rent, utilities, wages, marketing, repairs and stock purchases — attach receipts, and let recurring costs create themselves automatically.</p>
+
+  <h4>Recording an expense</h4>
+  <p>Click <strong>Record Expense</strong> and enter the description, amount, date, category, optional supplier, payment method and notes. If VAT-registered, tick <strong>Include VAT</strong> and pick the rate (0/5/20%) — the system splits out the tax automatically (or enter a manual VAT amount). Tick <strong>Mark as COGS</strong> if the cost is directly part of stock you sell (this affects profit). Drag in up to five receipt files, then <strong>Save</strong>.</p>
+
+  <h4>Recurring expenses</h4>
+  <p>For regular bills, tick <strong>Make Recurring</strong> and choose the frequency (weekly, monthly, quarterly, annually) and next due date. The system then creates each copy automatically. Recurring rows show a <span class="pill gold">Recurring</span> badge with pause, resume, edit and stop controls.</p>
+
+  <h4>Finding &amp; exporting</h4>
+  <p>Filter by date range, category, supplier, staff member, payment method, amount range, or COGS/recurring only. Summary figures show this month, this year, total records, monthly average and year-on-year change. <strong>Export</strong> any period to CSV or PDF, and review the built-in category and monthly-trend charts.</p>
+
+  <div class="note">
+    <span class="lab">COGS vs operating cost</span>
+    <strong>COGS</strong> (cost of goods sold) reduces <em>gross</em> profit; <strong>operating expenses</strong> (rent, marketing, wages) reduce <em>net</em> profit. Marking expenses correctly keeps your P&amp;L accurate.
+  </div>
+</section>
+
+<!-- ===================== 16 REPORTS ===================== -->
+<section id="reports">
+  <div class="band">
+    <div class="num">16</div>
+    <div class="ttl"><div class="k">Owner Insight</div><h2 class="secstart">Reports &amp; P&amp;L</h2></div>
+  </div>
+  <p class="lead">The Reports area (Owner) is the financial heart of the business — a live Profit &amp; Loss statement plus commission, product, supplier and consignment reporting, all filterable by date and exportable.</p>
+
+  <h4>The Profit &amp; Loss statement</h4>
+  <div class="flow vert">
+    <div class="step"><div class="dot">+</div><div class="body"><div class="st">Revenue</div><div class="sd">All sales after discounts.</div></div></div>
+    <div class="step"><div class="dot">−</div><div class="body"><div class="st">COGS (cost of goods sold)</div><div class="sd">What the items cost — wholesale price, trade-in allowance, or consignment payout.</div></div></div>
+    <div class="step"><div class="dot">=</div><div class="body"><div class="st">Gross Profit</div><div class="sd">Revenue − COGS. Shown with Gross Margin %.</div></div></div>
+    <div class="step"><div class="dot">−</div><div class="body"><div class="st">Operating Expenses</div><div class="sd">Rent, utilities, wages, marketing — every non-COGS cost.</div></div></div>
+    <div class="step"><div class="dot">=</div><div class="body"><div class="st">Net Profit</div><div class="sd">The bottom line — what the business actually keeps. Shown with Net Margin %.</div></div></div>
+  </div>
+  <p>Pick a date range, review the KPI cards and the revenue-vs-profit chart, expand the expense breakdown by category, and <strong>Export CSV/PDF</strong> for your accountant. A banner alerts you to any unsettled consignments.</p>
+
+  <h4>The other report tabs</h4>
+  <table>
+    <thead><tr><th>Tab</th><th>Answers</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Commission</strong></td><td>What each staff member has earned and been paid (see §14).</td></tr>
+      <tr><td><strong>Products</strong></td><td>Best and worst sellers, units sold, by period.</td></tr>
+      <tr><td><strong>Suppliers</strong></td><td>Total spend and order count per supplier.</td></tr>
+      <tr><td><strong>PX &amp; Consignment</strong></td><td>Pending settlements and settlement history.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== 17 ANALYTICS / AI / AUDIT ===================== -->
+<section id="analytics">
+  <div class="band">
+    <div class="num">17</div>
+    <div class="ttl"><div class="k">Deeper Insight</div><h2 class="secstart">Analytics, AI &amp; Audit</h2></div>
+  </div>
+  <p class="lead">Beyond reports, the system offers deeper analytics, a built-in AI assistant you can simply ask questions, and a complete audit trail of every change.</p>
+
+  <h4>Enhanced Analytics (Owner)</h4>
+  <p>Tabs cover an <strong>Overview</strong> (product performance, supplier analysis, system activity, stock health), <strong>Product Mix</strong> (profitability by product), <strong>Suppliers</strong> (in-depth spend analysis), <strong>Audit Trail</strong>, and <strong>Alerts</strong> (out-of-stock and low-stock items).</p>
+
+  <h4>The AI assistant</h4>
+  <p>Click the <strong>chat bubble</strong> in the bottom-right corner and ask plain-English questions about your business — it pulls live data and can show mini-charts. For example:</p>
+  <ul>
+    <li>"How much did I spend on marketing this month?"</li>
+    <li>"Which product is our best seller?"</li>
+    <li>"What's my profit margin this year?"</li>
+    <li>"How many items are out of stock?"</li>
+  </ul>
+  <p>Be specific for the best answers, and ask follow-up questions in the same conversation.</p>
+
+  <h4>Audit trail</h4>
+  <p>Every create, edit and delete is logged with <strong>who, when, what changed</strong>, and the old &amp; new values. Filter by area, action, person or date, toggle <strong>financial changes only</strong> to spot price edits, click any row for the full before/after, and export to CSV. This is your safeguard for accountability and accuracy.</p>
+</section>
+
+<!-- ===================== 18 CASH DRAWER ===================== -->
+<section id="cash">
+  <div class="band">
+    <div class="num">18</div>
+    <div class="ttl"><div class="k">Till Reconciliation</div><h2 class="secstart">Cash Drawer</h2></div>
+  </div>
+  <p class="lead">The Cash Drawer tracks physical cash per location, so you can reconcile the till at the end of the day. Cash sales feed in automatically.</p>
+
+  <h4>Daily use</h4>
+  <ul>
+    <li><strong>Set Float</strong> (Owner) — set the expected opening balance at the start of the day, e.g. £200.</li>
+    <li><strong>Add</strong> — record cash put in (petty-cash top-up, cash back from the bank).</li>
+    <li><strong>Remove</strong> — record cash taken out; a <strong>reason is required</strong> (bank deposit, petty-cash spend).</li>
+    <li><strong>History</strong> — a full timeline of every movement with amounts and notes, for reconciliation.</li>
+  </ul>
+  <p>Each shop location has its own drawer card showing the current expected balance and when it was last updated.</p>
+</section>
+
+<!-- ===================== 19 SETTINGS ===================== -->
+<section id="settings">
+  <div class="band">
+    <div class="num">19</div>
+    <div class="ttl"><div class="k">Administration</div><h2 class="secstart">Settings &amp; Admin</h2></div>
+  </div>
+  <p class="lead">Settings is the Owner's control centre. It's organised into tabs — Account, Team, Business, App, Sales, Customise and Data.</p>
+
+  <table>
+    <thead><tr><th>Tab</th><th>What you control</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Account</strong></td><td>Your name, bio, profile picture and password. <span class="pill grey">All users</span></td></tr>
+      <tr><td><strong>Team</strong></td><td>Add / edit / remove users, set their roles, and customise Manager &amp; Staff permissions.</td></tr>
+      <tr><td><strong>Business</strong></td><td>Store name, tagline, address, phone, email (shown on receipts) and store locations.</td></tr>
+      <tr><td><strong>App</strong></td><td>Currency, timezone, low-stock threshold, stock-tracking rules, and POS defaults (payment method, receipt behaviour).</td></tr>
+      <tr><td><strong>Sales</strong></td><td>VIP tier thresholds and commission settings (rate, basis, per-staff overrides).</td></tr>
+      <tr><td><strong>Customise</strong></td><td>Quick-filter presets, custom filters, and supplier tags.</td></tr>
+      <tr><td><strong>Data</strong></td><td>Import / export (products, suppliers, expenses), install the app, replay onboarding.</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Managing the team</h4>
+  <div class="flow vert">
+    <div class="step"><div class="dot">1</div><div class="body"><div class="st">Add User</div><div class="sd">Settings → Team → Add User. Enter name, email, password (or Generate one) and a role.</div></div></div>
+    <div class="step"><div class="dot">2</div><div class="body"><div class="st">Share the login</div><div class="sd">Note the email &amp; password shown — the password is only displayed once. Give it to the team member securely.</div></div></div>
+    <div class="step"><div class="dot">3</div><div class="body"><div class="st">Adjust later</div><div class="sd">Edit the name, change the role (with confirmation), or remove access entirely — all from the user table.</div></div></div>
+  </div>
+
+  <h4>Customising role permissions</h4>
+  <p>Under <strong>Team → Role Permissions</strong>, pick the <strong>Manager</strong> or <strong>Staff</strong> tab and toggle View / Create / Edit / Delete per area. A yellow dot marks a custom override; <strong>Reset to Defaults</strong> restores the standard rules. Owner permissions can't be reduced.</p>
+
+  <h4>Multiple locations</h4>
+  <p>Under <strong>Business → Store Locations</strong>, add each shop or stockroom (name, address, active toggle). Stock, cash and sales are then tracked per location.</p>
+</section>
+
+<!-- ===================== 20 SHORTCUTS / OFFLINE ===================== -->
+<section id="shortcuts">
+  <div class="band">
+    <div class="num">20</div>
+    <div class="ttl"><div class="k">Power &amp; Resilience</div><h2 class="secstart">Shortcuts, Install &amp; Offline</h2></div>
+  </div>
+
+  <h4>Keyboard shortcuts</h4>
+  <table>
+    <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><span class="kbd">Ctrl</span>/<span class="kbd">⌘</span> + <span class="kbd">N</span></td><td>New Sale</td></tr>
+      <tr><td><span class="kbd">Ctrl</span> + <span class="kbd">Alt</span> + <span class="kbd">P</span></td><td>New Product</td></tr>
+      <tr><td><span class="kbd">Ctrl</span>/<span class="kbd">⌘</span> + <span class="kbd">K</span></td><td>Search / Command Palette</td></tr>
+      <tr><td><span class="kbd">Ctrl</span>/<span class="kbd">⌘</span> + <span class="kbd">S</span></td><td>Save</td></tr>
+      <tr><td><span class="kbd">Enter</span> / <span class="kbd">Esc</span></td><td>Confirm / cancel an inline edit</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Install as an app (PWA)</h4>
+  <p>Under <strong>Settings → Data → Install App</strong>, click <strong>Install</strong> to add Sourced CRM to a device's home screen or desktop. It then launches in its own window, loads faster and works like a native app — ideal for a shop tablet.</p>
+
+  <h4>Working offline</h4>
+  <p>If the internet drops, an indicator appears bottom-right: previously loaded data stays viewable, but <strong>checkout and live syncing are disabled</strong>. When the connection returns, the app reconnects and syncs automatically.</p>
+  <div class="warn">
+    <span class="lab">During an outage</span>
+    You can still look up products, customers and past sales, but you <strong>cannot complete a sale</strong> until you're back online. For a planned outage, take manual notes and enter the sales once reconnected.
+  </div>
+</section>
+
+<!-- ===================== 21 GLOSSARY ===================== -->
+<section id="glossary">
+  <div class="band">
+    <div class="num">21</div>
+    <div class="ttl"><div class="k">Reference</div><h2 class="secstart">Glossary</h2></div>
+  </div>
+  <table>
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SKU</strong></td><td>Stock Keeping Unit — the internal code auto-generated for each product.</td></tr>
+      <tr><td><strong>COGS</strong></td><td>Cost of Goods Sold — what your stock cost you; reduces gross profit.</td></tr>
+      <tr><td><strong>Gross Profit</strong></td><td>Revenue minus COGS.</td></tr>
+      <tr><td><strong>Net Profit</strong></td><td>Gross profit minus operating expenses — the bottom line.</td></tr>
+      <tr><td><strong>Margin / Markup</strong></td><td>Margin = profit as a % of sell price. Markup = profit as a % of cost.</td></tr>
+      <tr><td><strong>Net Total</strong></td><td>The final amount a customer pays, after discount, tax and trade-ins.</td></tr>
+      <tr><td><strong>Part Exchange / PX / Trade-In</strong></td><td>An old item taken in for credit against a purchase.</td></tr>
+      <tr><td><strong>Allowance</strong></td><td>The credit value given for a trade-in.</td></tr>
+      <tr><td><strong>Consignment</strong></td><td>Stock you sell on behalf of someone, paying them only once it sells.</td></tr>
+      <tr><td><strong>Consignor</strong></td><td>The supplier who owns a consignment item until it's sold.</td></tr>
+      <tr><td><strong>Settlement / Payout</strong></td><td>Paying a consignor for a sold consignment item.</td></tr>
+      <tr><td><strong>Deposit Order</strong></td><td>A layaway order — items reserved and paid for in instalments.</td></tr>
+      <tr><td><strong>Reserved</strong></td><td>Stock held aside for a deposit order; not available for general sale.</td></tr>
+      <tr><td><strong>Void</strong></td><td>Reverse a completed sale — returns stock, removes revenue, reverses commission.</td></tr>
+      <tr><td><strong>Walk-in</strong></td><td>A customer with no saved profile.</td></tr>
+      <tr><td><strong>VIP Tier</strong></td><td>Standard / Silver / Gold / Platinum — set automatically by lifetime spend.</td></tr>
+      <tr><td><strong>Float</strong></td><td>The opening cash balance set in the till at the start of the day.</td></tr>
+      <tr><td><strong>PWA</strong></td><td>Progressive Web App — the system installed like a native app on a device.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="secfoot">
+    <span>Sourced Jewellers CRM — User Manual</span>
+    <span>Handover Edition v1.0</span>
+  </div>
+  <p style="text-align:center;margin-top:30px;"><a href="#top" class="backtop">↑ Back to top</a></p>
+</section>
+
+</div><!-- /page -->
+</body>
+</html>

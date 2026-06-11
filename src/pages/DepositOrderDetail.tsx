@@ -58,6 +58,7 @@ import { EditDepositOrderModal } from '@/components/deposits/EditDepositOrderMod
 import { SetCustomItemCostModal } from '@/components/deposits/SetCustomItemCostModal';
 import { format } from 'date-fns';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 
 const STATUS_CONFIG: Record<DepositOrderStatus, { label: string; variant: 'default' | 'secondary' | 'destructive'; icon: typeof Clock }> = {
   active: { label: 'Active', variant: 'default', icon: Clock },
@@ -85,6 +86,7 @@ export default function DepositOrderDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { role } = usePermissions();
+  const canViewCost = useManagerOrAboveGuard();
   const orderId = id ? parseInt(id, 10) : null;
   
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -362,7 +364,7 @@ export default function DepositOrderDetail() {
                             {item.product?.sku && (
                               <span>SKU: {item.product.sku}</span>
                             )}
-                            {item.is_custom_order && (
+                            {item.is_custom_order && canViewCost && (
                               <span className={hasCostWarning ? 'text-amber-600 dark:text-amber-400' : ''}>
                                 Cost: {item.unit_cost > 0 ? formatCurrency(item.unit_cost) : 'Not set'}
                               </span>

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Clock, Package, Receipt, TrendingUp } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 
 interface SupplierActivityFeedProps {
   supplierId: number;
@@ -17,6 +18,7 @@ interface Activity {
 }
 
 export function SupplierActivityFeed({ supplierId }: SupplierActivityFeedProps) {
+  const canViewCost = useManagerOrAboveGuard();
   const { data: activities, isLoading } = useQuery({
     queryKey: ['supplier-activity-feed', supplierId],
     queryFn: async () => {
@@ -179,7 +181,7 @@ export function SupplierActivityFeed({ supplierId }: SupplierActivityFeedProps) 
                     {formatDistanceToNow(new Date(activity.date), { addSuffix: true })}
                   </p>
                 </div>
-                {activity.amount !== undefined && activity.amount > 0 && (
+                {activity.amount !== undefined && activity.amount > 0 && (canViewCost || activity.type === 'expense') && (
                   <span className="text-sm font-mono text-muted-foreground">
                     £{activity.amount.toLocaleString(undefined, {
                       minimumFractionDigits: 0,

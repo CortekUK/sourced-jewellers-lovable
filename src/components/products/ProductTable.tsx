@@ -19,6 +19,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { usePermissions, CRM_MODULES } from '@/hooks/usePermissions';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 import { getSupplierDisplayName } from '@/lib/utils';
 
 interface ProductTableProps {
@@ -51,6 +52,7 @@ export function ProductTable({
   externalSort = false,
 }: ProductTableProps) {
   const { canEdit, canCreate } = usePermissions();
+  const canViewCost = useManagerOrAboveGuard();
   const canEditProducts = canEdit(CRM_MODULES.PRODUCTS);
   const canCreateProducts = canCreate(CRM_MODULES.PRODUCTS);
   const [sortField, setSortField] = useState<SortField>('name');
@@ -236,30 +238,34 @@ export function ProductTable({
                     Sell Price {getSortIcon('unit_price')}
                   </button>
                 </TableHead>
-                <TableHead className="min-w-[90px] text-right">
-                  <button
-                    onClick={() => handleSort('unit_cost')}
-                    className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto"
-                  >
-                    Cost {getSortIcon('unit_cost')}
-                  </button>
-                </TableHead>
-                <TableHead className="min-w-[90px] text-right">
-                  <button
-                    onClick={() => handleSort('profit')}
-                    className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto"
-                  >
-                    Profit {getSortIcon('profit')}
-                  </button>
-                </TableHead>
-                <TableHead className="min-w-[80px] text-right">
-                  <button
-                    onClick={() => handleSort('margin')}
-                    className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto"
-                  >
-                    Markup {getSortIcon('margin')}
-                  </button>
-                </TableHead>
+                {canViewCost && (
+                  <>
+                    <TableHead className="min-w-[90px] text-right">
+                      <button
+                        onClick={() => handleSort('unit_cost')}
+                        className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto"
+                      >
+                        Cost {getSortIcon('unit_cost')}
+                      </button>
+                    </TableHead>
+                    <TableHead className="min-w-[90px] text-right">
+                      <button
+                        onClick={() => handleSort('profit')}
+                        className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto"
+                      >
+                        Profit {getSortIcon('profit')}
+                      </button>
+                    </TableHead>
+                    <TableHead className="min-w-[80px] text-right">
+                      <button
+                        onClick={() => handleSort('margin')}
+                        className="flex items-center gap-1 hover:text-foreground transition-colors ml-auto"
+                      >
+                        Markup {getSortIcon('margin')}
+                      </button>
+                    </TableHead>
+                  </>
+                )}
                 <TableHead className="w-[100px]">Type</TableHead>
                 <TableHead className="w-[120px] text-right">Actions</TableHead>
               </TableRow>
@@ -380,24 +386,28 @@ export function ProductTable({
                       <span className="font-medium text-primary">£{Number(product.unit_price).toFixed(2)}</span>
                     </TableCell>
 
-                    {/* Cost */}
-                    <TableCell className={`${cellPadding} text-right`}>
-                      <span className="text-muted-foreground">£{Number(product.unit_cost).toFixed(2)}</span>
-                    </TableCell>
+                    {canViewCost && (
+                      <>
+                        {/* Cost */}
+                        <TableCell className={`${cellPadding} text-right`}>
+                          <span className="text-muted-foreground">£{Number(product.unit_cost).toFixed(2)}</span>
+                        </TableCell>
 
-                    {/* Profit */}
-                    <TableCell className={`${cellPadding} text-right`}>
-                      <span className={profit > 0 ? 'text-success font-medium' : 'text-muted-foreground'}>
-                        £{profit.toFixed(2)}
-                      </span>
-                    </TableCell>
+                        {/* Profit */}
+                        <TableCell className={`${cellPadding} text-right`}>
+                          <span className={profit > 0 ? 'text-success font-medium' : 'text-muted-foreground'}>
+                            £{profit.toFixed(2)}
+                          </span>
+                        </TableCell>
 
-                    {/* Markup */}
-                    <TableCell className={`${cellPadding} text-right`}>
-                      <span className={Number(markup) >= 50 ? 'text-success font-medium' : Number(markup) >= 25 ? 'text-foreground' : 'text-warning font-medium'}>
-                        {markup}%
-                      </span>
-                    </TableCell>
+                        {/* Markup */}
+                        <TableCell className={`${cellPadding} text-right`}>
+                          <span className={Number(markup) >= 50 ? 'text-success font-medium' : Number(markup) >= 25 ? 'text-foreground' : 'text-warning font-medium'}>
+                            {markup}%
+                          </span>
+                        </TableCell>
+                      </>
+                    )}
 
                     {/* Type Badges */}
                     <TableCell className={cellPadding}>

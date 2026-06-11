@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Package, Calendar, TrendingUp } from 'lucide-react';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 
 interface AtAGlanceCardProps {
   supplierId: number;
@@ -10,6 +11,7 @@ interface AtAGlanceCardProps {
 }
 
 export function AtAGlanceCard({ supplierId, tags }: AtAGlanceCardProps) {
+  const canViewCost = useManagerOrAboveGuard();
   // Fetch linked products count and inventory value
   const { data: inventoryData } = useQuery({
     queryKey: ['supplier-inventory-summary', supplierId],
@@ -153,7 +155,7 @@ export function AtAGlanceCard({ supplierId, tags }: AtAGlanceCardProps) {
         </div>
 
         {/* Top Margin Product Insight */}
-        {topMarginProduct && topMarginProduct.gross_profit > 0 && (
+        {canViewCost && topMarginProduct && topMarginProduct.gross_profit > 0 && (
           <div className="flex items-start gap-3 p-3 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/20">
             <div className="h-10 w-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center flex-shrink-0">
               <TrendingUp className="h-5 w-5 text-[#D4AF37]" />

@@ -12,6 +12,7 @@ import { CalendarIcon, Loader2, Package } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 
 interface CustomerInventoryTabsProps {
   supplierId: number;
@@ -21,6 +22,7 @@ export function CustomerInventoryTabs({ supplierId }: CustomerInventoryTabsProps
   const [statusFilter, setStatusFilter] = useState('all');
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
+  const canViewCost = useManagerOrAboveGuard();
 
   const { data: tradeIns, isLoading: tradeInsLoading } = useSupplierTradeIns(
     supplierId,
@@ -272,7 +274,7 @@ export function CustomerInventoryTabs({ supplierId }: CustomerInventoryTabsProps
                   <th className="text-left py-2">SKU</th>
                   <th className="text-left py-2">Internal SKU</th>
                   <th className="text-left py-2">Category</th>
-                  <th className="text-right py-2">Unit Cost</th>
+                  {canViewCost && <th className="text-right py-2">Unit Cost</th>}
                   <th className="text-right py-2">Unit Price</th>
                   <th className="text-center py-2">Actions</th>
                 </tr>
@@ -284,9 +286,11 @@ export function CustomerInventoryTabs({ supplierId }: CustomerInventoryTabsProps
                     <td className="py-2 font-mono text-xs">{product.sku || '—'}</td>
                     <td className="py-2 font-mono text-xs">{product.internal_sku}</td>
                     <td className="py-2">{product.category || '—'}</td>
+                    {canViewCost && (
                     <td className="py-2 text-right font-mono">
                       £{product.unit_cost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
+                    )}
                     <td className="py-2 text-right font-mono">
                       £{product.unit_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>

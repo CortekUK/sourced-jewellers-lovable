@@ -17,7 +17,7 @@ import { PartExchangeInfoTab } from '@/components/products/PartExchangeInfoTab';
 import { isVideoUrl } from '@/components/ui/multi-image-upload';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOwnerGuard } from '@/hooks/useOwnerGuard';
+import { useOwnerGuard, useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 import { useToast } from '@/hooks/use-toast';
 import { useProductTradeInStatus } from '@/hooks/useProductTradeInStatus';
 import { usePartExchangesByProduct } from '@/hooks/usePartExchanges';
@@ -49,6 +49,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
   const [isReleasing, setIsReleasing] = useState(false);
   const navigate = useNavigate();
   const isOwner = useOwnerGuard();
+  const canViewCost = useManagerOrAboveGuard();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -402,6 +403,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                 </CardContent>
               </Card>
               
+              {canViewCost && (
               <Card className="shadow-sm hover:shadow-md transition-shadow border-border/50 overflow-hidden">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -417,7 +419,9 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                   </div>
                 </CardContent>
               </Card>
-              
+              )}
+
+              {canViewCost && (
               <Card className="shadow-sm hover:shadow-md transition-shadow border-border/50 overflow-hidden">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -431,7 +435,8 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                   </div>
                 </CardContent>
               </Card>
-              
+              )}
+
               <Card className="shadow-sm hover:shadow-md transition-shadow border-border/50 overflow-hidden">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -498,6 +503,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         {agingStatus.text}
                       </Badge>
                     </div>
+                    {canViewCost && (
                     <div className="p-4 bg-muted/20 rounded-lg border border-border/30">
                       <p className="text-xs text-muted-foreground mb-1.5 uppercase tracking-wide">Cost vs. Value</p>
                       <div className="space-y-1.5">
@@ -511,6 +517,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         </div>
                       </div>
                     </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -751,10 +758,12 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                 <AccordionContent className="px-5 pb-5 bg-muted/10">
                   <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-border/50">
                     <div className="divide-y divide-border/50 sm:pr-5">
+                      {canViewCost && (
                       <div className="flex justify-between py-3 first:pt-0">
                         <span className="text-muted-foreground text-sm">Cost Price</span>
                         <span className="font-medium">£{Number(product.unit_cost).toFixed(2)}</span>
                       </div>
+                      )}
                       <div className="flex justify-between py-3">
                         <span className="text-muted-foreground text-sm">Sell Price</span>
                         <span className="font-medium">£{Number(product.unit_price).toFixed(2)}</span>
@@ -764,6 +773,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         <span className="font-medium">{Number(product.tax_rate || 0).toFixed(1)}%</span>
                       </div>
                     </div>
+                    {canViewCost && (
                     <div className="divide-y divide-border/50 sm:pl-5 sm:border-l border-border/50">
                       <div className="flex justify-between py-3 sm:first:pt-0">
                         <span className="text-muted-foreground text-sm">Profit per Unit</span>
@@ -774,6 +784,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         <span className={`font-medium ${Number(markup) >= 50 ? 'text-success' : Number(markup) >= 25 ? '' : 'text-warning'}`}>{markup}%</span>
                       </div>
                     </div>
+                    )}
                   </div>
                 </AccordionContent>
               </AccordionItem>

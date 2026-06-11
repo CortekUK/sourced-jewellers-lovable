@@ -17,6 +17,7 @@ import {
   isPaymentOverdue
 } from '@/hooks/useConsignments';
 import { usePermissions, CRM_MODULES } from '@/hooks/usePermissions';
+import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
 import { formatCurrency, cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import {
@@ -52,6 +53,7 @@ export default function Consignments() {
 
   const { canEdit } = usePermissions();
   const canEditConsignments = canEdit(CRM_MODULES.CONSIGNMENTS);
+  const canViewCost = useManagerOrAboveGuard();
 
   const { data: consignmentData, isLoading: productsLoading } = useConsignmentProducts();
   const { data: settlements = [], isLoading: settlementsLoading } = useConsignmentSettlements();
@@ -105,7 +107,7 @@ export default function Consignments() {
           ? 'Out of Stock' 
           : 'Active'
     }));
-    exportAllActiveStockCSV(exportData);
+    exportAllActiveStockCSV(exportData, canViewCost);
   };
 
   const handleExportUnsettled = () => {
@@ -184,18 +186,18 @@ export default function Consignments() {
         </div>
       )
     },
-    {
+    ...(canViewCost ? [{
       key: 'unit_cost',
       title: 'Cost',
       width: 120,
       sortable: true,
-      align: 'right',
+      align: 'right' as const,
       render: (_, product) => (
         <div className="font-medium text-muted-foreground">
           {formatCurrency(Number(product.unit_cost) || 0)}
         </div>
       )
-    },
+    }] : []),
     {
       key: 'unit_price',
       title: 'Agreed Sell Price',
