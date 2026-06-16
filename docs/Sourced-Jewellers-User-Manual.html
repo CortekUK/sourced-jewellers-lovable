@@ -80,8 +80,13 @@
     font-size:60px;color:#fff;line-height:1.05;margin:0 0 18px;font-weight:800;
   }
   .cover h1 .accent{
-    background:linear-gradient(90deg,var(--gold),var(--gold-light));
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    color:var(--gold-light);
+  }
+  @supports (-webkit-background-clip:text){
+    .cover h1 .accent{
+      background:linear-gradient(90deg,var(--gold),var(--gold-light));
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    }
   }
   .cover .sub{font-size:18px;color:#cfcfcf;font-weight:300;max-width:520px;margin:0 auto;font-family:'Inter',sans-serif;}
   .cover .rule{width:70px;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));margin:30px auto;border-radius:2px;}
@@ -229,6 +234,11 @@
     h3,h4{page-break-after:avoid;}
     a{color:var(--ink);}
     .noprint{display:none;}
+    /* Chrome's print-to-PDF renders box-shadow as a hard rectangle — disable on circles */
+    .flow .step .dot,.dot{box-shadow:none !important;}
+    .cover-inner img{filter:none !important;}
+    /* Solid gold title in print — gradient-clipped text leaves a faint box in PDF */
+    .cover h1 .accent{background:none !important;-webkit-text-fill-color:var(--gold-light) !important;color:var(--gold-light) !important;}
   }
   @media (max-width:680px){
     .page{padding:34px 22px;}

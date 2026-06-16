@@ -1206,6 +1206,7 @@ export type Database = {
           created_at: string
           demo_session_id: string | null
           description: string | null
+          diamond_type: string | null
           gemstone: string | null
           id: number
           image_url: string | null
@@ -1229,6 +1230,7 @@ export type Database = {
           unit_cost: number
           unit_price: number
           updated_at: string
+          weight: string | null
         }
         Insert: {
           barcode?: string | null
@@ -1240,6 +1242,7 @@ export type Database = {
           created_at?: string
           demo_session_id?: string | null
           description?: string | null
+          diamond_type?: string | null
           gemstone?: string | null
           id?: number
           image_url?: string | null
@@ -1263,6 +1266,7 @@ export type Database = {
           unit_cost?: number
           unit_price?: number
           updated_at?: string
+          weight?: string | null
         }
         Update: {
           barcode?: string | null
@@ -1274,6 +1278,7 @@ export type Database = {
           created_at?: string
           demo_session_id?: string | null
           description?: string | null
+          diamond_type?: string | null
           gemstone?: string | null
           id?: number
           image_url?: string | null
@@ -1297,6 +1302,7 @@ export type Database = {
           unit_cost?: number
           unit_price?: number
           updated_at?: string
+          weight?: string | null
         }
         Relationships: [
           {

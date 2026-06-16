@@ -59,6 +59,8 @@ interface FormData {
   metal: string;
   karat: string;
   gemstone: string;
+  diamond_type: string;
+  weight: string;
   supplier_type: 'registered' | 'individual';
   supplier_id: string;
   individual_name: string;
@@ -98,6 +100,8 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
     metal: initialData?.metal || '',
     karat: initialData?.karat || '',
     gemstone: initialData?.gemstone || '',
+    diamond_type: initialData?.diamond_type || '',
+    weight: initialData?.weight || '',
     supplier_type: (initialData?.supplier_type || 'registered') as 'registered' | 'individual',
     supplier_id: initialData?.supplier_id || '',
     individual_name: initialData?.individual_name || '',
@@ -929,6 +933,31 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
                     });
                     setUserEditedFields(prev => new Set([...prev, 'gemstone']));
                   }}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Diamond Type</Label>
+                <Select
+                  value={formData.diamond_type}
+                  onValueChange={(value) => setFormData({...formData, diamond_type: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select diamond type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Natural">Natural</SelectItem>
+                    <SelectItem value="Lab">Lab</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Weight</Label>
+                <Input
+                  placeholder="e.g. 1.5ct, 3.2g"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({...formData, weight: e.target.value})}
                 />
               </div>
             </div>

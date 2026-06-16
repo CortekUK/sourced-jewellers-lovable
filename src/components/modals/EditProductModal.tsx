@@ -107,6 +107,8 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
     metal: '',
     karat: '',
     gemstone: '',
+    diamond_type: '',
+    weight: '',
     supplier_type: 'registered' as 'registered' | 'individual',
     supplier_id: '',
     individual_name: '',
@@ -144,6 +146,8 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         metal: product.metal || '',
         karat: product.karat || '',
         gemstone: product.gemstone || '',
+        diamond_type: (product as any).diamond_type || '',
+        weight: (product as any).weight || '',
         supplier_type: isIndividual ? 'individual' : 'registered',
         supplier_id: product.supplier_id?.toString() || '',
         individual_name: individualName || '',
@@ -182,6 +186,8 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         metal: '',
         karat: '',
         gemstone: '',
+        diamond_type: '',
+        weight: '',
         supplier_type: 'registered',
         supplier_id: '',
         individual_name: '',
@@ -240,6 +246,8 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         metal: formData.metal.trim() || null,
         karat: formData.karat.trim() || null,
         gemstone: formData.gemstone.trim() || null,
+        diamond_type: formData.diamond_type || null,
+        weight: formData.weight.trim() || null,
         supplier_id: formData.supplier_type === 'registered' && formData.supplier_id ? parseInt(formData.supplier_id) : null,
         location_id: formData.location_id ? parseInt(formData.location_id) : null,
         unit_cost: parseFloat(formData.unit_cost) || 0,
@@ -379,6 +387,8 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
             metal: formData.metal.trim() || null,
             karat: formData.karat.trim() || null,
             gemstone: formData.gemstone.trim() || null,
+            diamond_type: formData.diamond_type || null,
+            weight: formData.weight.trim() || null,
             supplier_id: formData.supplier_type === 'registered' && formData.supplier_id ? parseInt(formData.supplier_id) : null,
             location_id: formData.location_id ? parseInt(formData.location_id) : null,
             unit_cost: parseFloat(formData.unit_cost) || 0,
@@ -926,14 +936,41 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
                   
                   <div className="space-y-2">
                     <Label>Gemstone</Label>
-                    <Input 
-                      placeholder="Diamond, Ruby, Sapphire..." 
+                    <Input
+                      placeholder="Diamond, Ruby, Sapphire..."
                       value={formData.gemstone}
                       onChange={(e) => setFormData({...formData, gemstone: e.target.value})}
                     />
                   </div>
                 </div>
-                
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                  <div className="space-y-2">
+                    <Label>Diamond Type</Label>
+                    <Select
+                      value={formData.diamond_type}
+                      onValueChange={(value) => setFormData({...formData, diamond_type: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select diamond type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Natural">Natural</SelectItem>
+                        <SelectItem value="Lab">Lab</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Weight</Label>
+                    <Input
+                      placeholder="e.g. 1.5ct, 3.2g"
+                      value={formData.weight}
+                      onChange={(e) => setFormData({...formData, weight: e.target.value})}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label>Purchase Date</Label>
                   <Input
