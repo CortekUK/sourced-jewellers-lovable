@@ -3,6 +3,7 @@ import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { compressImage } from '@/lib/imageCompression';
 
 interface ImageUploadProps {
   value?: string;
@@ -20,8 +21,11 @@ export function ImageUpload({ value, onChange, onRemove, disabled }: ImageUpload
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
+    // Validate file type (allow by extension too — some browsers report empty type for HEIC)
+    const isImage =
+      file.type.startsWith('image/') ||
+      /\.(jpe?g|png|gif|webp|heic|heif|bmp|tiff?)$/i.test(file.name);
+    if (!isImage) {
       toast({
         title: "Invalid file type",
         description: "Please select an image file",
@@ -30,11 +34,11 @@ export function ImageUpload({ value, onChange, onRemove, disabled }: ImageUpload
       return;
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Generous raw-input limit; images are compressed before upload
+    if (file.size > 30 * 1024 * 1024) {
       toast({
         title: "File too large",
-        description: "Please select an image smaller than 5MB",
+        description: "Please select an image smaller than 30MB",
         variant: "destructive"
       });
       return;
@@ -42,13 +46,15 @@ export function ImageUpload({ value, onChange, onRemove, disabled }: ImageUpload
 
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
+      // Downscale + convert HEIC → JPEG so large phone photos upload and render reliably
+      const uploadFile = await compressImage(file);
+      const fileExt = uploadFile.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `products/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file);
+        .upload(filePath, uploadFile);
 
       if (uploadError) throw uploadError;
 

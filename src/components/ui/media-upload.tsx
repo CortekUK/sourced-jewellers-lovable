@@ -3,6 +3,7 @@ import { Upload, X, Image as ImageIcon, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { compressImage } from '@/lib/imageCompression';
 
 interface MediaUploadProps {
   value?: string;
@@ -13,7 +14,7 @@ interface MediaUploadProps {
 
 const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
 const VIDEO_EXTENSIONS = ['mp4', 'mov', 'webm', 'avi', 'mkv'];
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB for images
+const MAX_IMAGE_SIZE = 30 * 1024 * 1024; // 30MB raw input — images are compressed before upload
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB for videos
 
 export function MediaUpload({ value, onChange, onRemove, disabled }: MediaUploadProps) {
@@ -54,12 +55,17 @@ export function MediaUpload({ value, onChange, onRemove, disabled }: MediaUpload
 
     setUploading(true);
     try {
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      // Compress/normalise images (downscale + convert HEIC → JPEG) so large phone
+      // photos upload reliably and actually render in the CRM. Videos pass through.
+      const uploadFile = isImage ? await compressImage(file) : file;
+      const uploadExt = uploadFile.name.split('.').pop()?.toLowerCase() || fileExt;
+
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${uploadExt}`;
       const filePath = `products/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file);
+        .upload(filePath, uploadFile);
 
       if (uploadError) throw uploadError;
 
@@ -172,7 +178,7 @@ export function MediaUpload({ value, onChange, onRemove, disabled }: MediaUpload
               </div>
               <Upload className="h-6 w-6" />
               <p className="text-sm font-medium">Click to upload image or video</p>
-              <p className="text-xs">Images: PNG, JPG, WEBP up to 5MB</p>
+              <p className="text-xs">Images: PNG, JPG, WEBP, HEIC (phone photos OK)</p>
               <p className="text-xs">Videos: MP4, MOV, WebM up to 50MB</p>
             </div>
           )}
