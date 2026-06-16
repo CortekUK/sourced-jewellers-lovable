@@ -225,16 +225,9 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
       return;
     }
     
-    // Validate supplier for non-trade-in products
-    if (formData.supplier_type === 'registered' && !formData.supplier_id) {
-      toast({
-        title: "Validation Error",
-        description: "Please select a supplier.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+    // Supplier is optional — items can be added without a registered supplier
+    // (e.g. trade-ins, walk-in purchases, or before suppliers are set up).
+
     try {
       // Create new product
       const hasRegistrationDoc = documents.some(doc => doc.doc_type === 'registration');
@@ -366,16 +359,8 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
       return;
     }
     
-    // Skip supplier validation for trade-in products
-    if (!isTradeIn && formData.supplier_type === 'registered' && !formData.supplier_id) {
-      toast({
-        title: "Validation Error",
-        description: "Please select a supplier.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+    // Supplier is optional — no longer block saving when none is selected.
+
     try {
       if (isEditMode && product) {
         // Update existing product
