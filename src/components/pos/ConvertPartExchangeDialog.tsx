@@ -48,6 +48,7 @@ export function ConvertPartExchangeDialog({ open, onOpenChange, partExchange }: 
         gemstone: formData.gemstone || null,
         diamond_type: formData.diamond_type || null,
         weight: formData.weight?.trim() || null,
+        year_of_production: formData.year_of_production?.trim() || null,
         supplier_id: formData.supplier_type === 'registered' && formData.supplier_id
           ? parseInt(formData.supplier_id) 
           : null,
@@ -295,6 +296,7 @@ export function ConvertPartExchangeDialog({ open, onOpenChange, partExchange }: 
       gemstone: '',
       diamond_type: '',
       weight: '',
+      year_of_production: '',
       supplier_type: partExchange.customer_supplier_id ? 'registered' as const : 'individual' as const,
       supplier_id: partExchange.customer_supplier_id?.toString() || '',
       individual_name: partExchange.customer_name || '',

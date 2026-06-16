@@ -61,6 +61,7 @@ interface FormData {
   gemstone: string;
   diamond_type: string;
   weight: string;
+  year_of_production: string;
   supplier_type: 'registered' | 'individual';
   supplier_id: string;
   individual_name: string;
@@ -102,6 +103,7 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
     gemstone: initialData?.gemstone || '',
     diamond_type: initialData?.diamond_type || '',
     weight: initialData?.weight || '',
+    year_of_production: initialData?.year_of_production || '',
     supplier_type: (initialData?.supplier_type || 'registered') as 'registered' | 'individual',
     supplier_id: initialData?.supplier_id || '',
     individual_name: initialData?.individual_name || '',
@@ -958,6 +960,15 @@ export function AddProductForm({ onSubmit, onCancel, isLoading = false, initialD
                   placeholder="e.g. 1.5ct, 3.2g"
                   value={formData.weight}
                   onChange={(e) => setFormData({...formData, weight: e.target.value})}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Year of Production</Label>
+                <Input
+                  placeholder="e.g. 2024 (watches)"
+                  value={formData.year_of_production}
+                  onChange={(e) => setFormData({...formData, year_of_production: e.target.value})}
                 />
               </div>
             </div>

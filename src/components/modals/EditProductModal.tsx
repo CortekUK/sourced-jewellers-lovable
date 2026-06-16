@@ -109,6 +109,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
     gemstone: '',
     diamond_type: '',
     weight: '',
+    year_of_production: '',
     supplier_type: 'registered' as 'registered' | 'individual',
     supplier_id: '',
     individual_name: '',
@@ -148,6 +149,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         gemstone: product.gemstone || '',
         diamond_type: (product as any).diamond_type || '',
         weight: (product as any).weight || '',
+        year_of_production: (product as any).year_of_production || '',
         supplier_type: isIndividual ? 'individual' : 'registered',
         supplier_id: product.supplier_id?.toString() || '',
         individual_name: individualName || '',
@@ -188,6 +190,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         gemstone: '',
         diamond_type: '',
         weight: '',
+        year_of_production: '',
         supplier_type: 'registered',
         supplier_id: '',
         individual_name: '',
@@ -248,6 +251,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         gemstone: formData.gemstone.trim() || null,
         diamond_type: formData.diamond_type || null,
         weight: formData.weight.trim() || null,
+        year_of_production: formData.year_of_production.trim() || null,
         supplier_id: formData.supplier_type === 'registered' && formData.supplier_id ? parseInt(formData.supplier_id) : null,
         location_id: formData.location_id ? parseInt(formData.location_id) : null,
         unit_cost: parseFloat(formData.unit_cost) || 0,
@@ -389,6 +393,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
             gemstone: formData.gemstone.trim() || null,
             diamond_type: formData.diamond_type || null,
             weight: formData.weight.trim() || null,
+            year_of_production: formData.year_of_production.trim() || null,
             supplier_id: formData.supplier_type === 'registered' && formData.supplier_id ? parseInt(formData.supplier_id) : null,
             location_id: formData.location_id ? parseInt(formData.location_id) : null,
             unit_cost: parseFloat(formData.unit_cost) || 0,
@@ -969,6 +974,15 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
                       onChange={(e) => setFormData({...formData, weight: e.target.value})}
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Year of Production</Label>
+                  <Input
+                    placeholder="e.g. 2024 (watches)"
+                    value={formData.year_of_production}
+                    onChange={(e) => setFormData({...formData, year_of_production: e.target.value})}
+                  />
                 </div>
 
                 <div className="space-y-2">

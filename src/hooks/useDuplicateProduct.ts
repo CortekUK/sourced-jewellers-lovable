@@ -87,6 +87,7 @@ export const useDuplicateProduct = () => {
         gemstone: sourceProduct.gemstone,
         diamond_type: (sourceProduct as any).diamond_type,
         weight: (sourceProduct as any).weight,
+        year_of_production: (sourceProduct as any).year_of_production,
 
         // Copy optional fields based on options
         description: options.copyOptions.description ? sourceProduct.description : null,

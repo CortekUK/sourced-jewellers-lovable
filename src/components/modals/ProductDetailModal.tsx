@@ -852,9 +852,15 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         </div>
                       )}
                       {(product as any).weight && (
-                        <div className="flex justify-between py-3 last:pb-0">
+                        <div className="flex justify-between py-3">
                           <span className="text-muted-foreground text-sm">Weight</span>
                           <span className="font-medium">{(product as any).weight}</span>
+                        </div>
+                      )}
+                      {(product as any).year_of_production && (
+                        <div className="flex justify-between py-3 last:pb-0">
+                          <span className="text-muted-foreground text-sm">Year of Production</span>
+                          <span className="font-medium">{(product as any).year_of_production}</span>
                         </div>
                       )}
                     </div>

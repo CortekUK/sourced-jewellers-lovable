@@ -1231,6 +1231,7 @@ export type Database = {
           unit_price: number
           updated_at: string
           weight: string | null
+          year_of_production: string | null
         }
         Insert: {
           barcode?: string | null
@@ -1267,6 +1268,7 @@ export type Database = {
           unit_price?: number
           updated_at?: string
           weight?: string | null
+          year_of_production?: string | null
         }
         Update: {
           barcode?: string | null
@@ -1303,6 +1305,7 @@ export type Database = {
           unit_price?: number
           updated_at?: string
           weight?: string | null
+          year_of_production?: string | null
         }
         Relationships: [
           {
