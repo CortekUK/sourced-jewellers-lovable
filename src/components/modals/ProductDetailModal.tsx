@@ -840,9 +840,21 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                         </div>
                       )}
                       {product.gemstone && (
-                        <div className="flex justify-between py-3 last:pb-0">
+                        <div className="flex justify-between py-3">
                           <span className="text-muted-foreground text-sm">Gemstone</span>
                           <span className="font-medium">{product.gemstone}</span>
+                        </div>
+                      )}
+                      {(product as any).diamond_type && (
+                        <div className="flex justify-between py-3">
+                          <span className="text-muted-foreground text-sm">Diamond Type</span>
+                          <span className="font-medium">{(product as any).diamond_type}</span>
+                        </div>
+                      )}
+                      {(product as any).weight && (
+                        <div className="flex justify-between py-3 last:pb-0">
+                          <span className="text-muted-foreground text-sm">Weight</span>
+                          <span className="font-medium">{(product as any).weight}</span>
                         </div>
                       )}
                     </div>

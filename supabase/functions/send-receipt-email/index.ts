@@ -6,6 +6,10 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const ADMIN_EMAIL = Deno.env.get("ADMIN_EMAIL") || "admin@example.com";
 // When true, sends to admin email instead of customer (test mode)
 const TEST_MODE = Deno.env.get("EMAIL_TEST_MODE") !== "false";
+// Sender address. Must be on a domain verified in Resend.
+// Change to receipts@sourcedjewellers.com once that domain is verified.
+const FROM_ADDRESS =
+  Deno.env.get("RESEND_FROM") || "Sourced Jewellers <receipts@drive-247.com>";
 
 interface ReceiptItem {
   name: string;
@@ -251,9 +255,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: TEST_MODE
-          ? "Sourced Jewellers <onboarding@resend.dev>"
-          : "Sourced Jewellers <receipts@yourdomain.com>",
+        from: FROM_ADDRESS,
         to: [actualRecipient],
         subject,
         html,

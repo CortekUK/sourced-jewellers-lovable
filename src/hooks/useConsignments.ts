@@ -101,7 +101,7 @@ export const useConsignmentSettlements = (filter?: ConsignmentFilter) => {
           product:products(
             id, name, sku, internal_sku, consignment_terms, 
             unit_cost, unit_price, tax_rate, category, description,
-            image_url, metal, karat, gemstone, barcode,
+            image_url, metal, karat, gemstone, diamond_type, weight, barcode,
             is_consignment, is_trade_in, is_registered,
             consignment_start_date, consignment_end_date,
             consignment_supplier_id, supplier_id, location_id,

@@ -46,7 +46,9 @@ export function ConvertPartExchangeDialog({ open, onOpenChange, partExchange }: 
         metal: formData.metal || null,
         karat: formData.karat || null,
         gemstone: formData.gemstone || null,
-        supplier_id: formData.supplier_type === 'registered' && formData.supplier_id 
+        diamond_type: formData.diamond_type || null,
+        weight: formData.weight?.trim() || null,
+        supplier_id: formData.supplier_type === 'registered' && formData.supplier_id
           ? parseInt(formData.supplier_id) 
           : null,
         unit_cost: parseFloat(formData.unit_cost) || partExchange.allowance,
@@ -291,6 +293,8 @@ export function ConvertPartExchangeDialog({ open, onOpenChange, partExchange }: 
       metal: '',
       karat: '',
       gemstone: '',
+      diamond_type: '',
+      weight: '',
       supplier_type: partExchange.customer_supplier_id ? 'registered' as const : 'individual' as const,
       supplier_id: partExchange.customer_supplier_id?.toString() || '',
       individual_name: partExchange.customer_name || '',
