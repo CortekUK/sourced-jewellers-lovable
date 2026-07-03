@@ -117,7 +117,7 @@ export function CashDrawerPanel() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {isAtLeast('manager') && (
+                  {isAtLeast('staff') && (
                     <>
                       <Button
                         variant="outline"

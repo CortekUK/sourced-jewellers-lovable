@@ -130,6 +130,84 @@ export type Database = {
           },
         ]
       }
+      repairs: {
+        Row: {
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          customer_id: number | null
+          customer_name: string | null
+          customer_phone: string | null
+          id: number
+          item_description: string
+          location_id: number | null
+          notes: string | null
+          promised_at: string | null
+          quoted_cost: number | null
+          received_at: string
+          repair_type: string
+          status: string
+          updated_at: string
+          work_details: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: number | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: never
+          item_description: string
+          location_id?: number | null
+          notes?: string | null
+          promised_at?: string | null
+          quoted_cost?: number | null
+          received_at?: string
+          repair_type?: string
+          status?: string
+          updated_at?: string
+          work_details?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          customer_id?: number | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          id?: never
+          item_description?: string
+          location_id?: number | null
+          notes?: string | null
+          promised_at?: string | null
+          quoted_cost?: number | null
+          received_at?: string
+          repair_type?: string
+          status?: string
+          updated_at?: string
+          work_details?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "repairs_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "repairs_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           content: string

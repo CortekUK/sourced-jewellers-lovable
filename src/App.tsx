@@ -33,6 +33,7 @@ import Expenses from "./pages/Expenses";
 import Reports from "./pages/Reports";
 import EnhancedAnalytics from "./pages/EnhancedAnalytics";
 import Consignments from "./pages/Consignments";
+import Repairs from "./pages/Repairs";
 import PartExchangeIntake from "./pages/PartExchangeIntake";
 import DepositOrders from "./pages/DepositOrders";
 import DepositOrderDetail from "./pages/DepositOrderDetail";
@@ -79,6 +80,7 @@ function AppInner() {
           <Route path="/customers" element={<ProtectedRoute module="customers"><Customers /></ProtectedRoute>} />
           <Route path="/customers/:id" element={<ProtectedRoute module="customers"><CustomerDetail /></ProtectedRoute>} />
           <Route path="/consignments" element={<ProtectedRoute module="consignments"><Consignments /></ProtectedRoute>} />
+          <Route path="/repairs" element={<ProtectedRoute module="repairs"><Repairs /></ProtectedRoute>} />
           <Route path="/deposits" element={<ProtectedRoute module="sales"><DepositOrders /></ProtectedRoute>} />
           <Route path="/deposits/:id" element={<ProtectedRoute module="sales"><DepositOrderDetail /></ProtectedRoute>} />
           <Route path="/sales" element={<ProtectedRoute module="sales"><EnhancedSales /></ProtectedRoute>} />
