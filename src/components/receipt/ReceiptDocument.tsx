@@ -53,11 +53,14 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
   // Use the new logo
   const logo = branding.logo || "/new-logo-cropped.png";
 
-  // Per-location address: if the sale was made at a location that has its own
-  // address set (e.g. Dubai), show that on the receipt. Otherwise fall back to
-  // the default store address so nothing is shown wrong before addresses are set.
+  // Per-location details: if the sale was made at a location with its own
+  // contact details (e.g. the Dubai entity), print those on the receipt.
+  // Fall back to the default store details when a location has none set.
   const saleLocation = locations?.find((loc) => loc.id === sale.location_id);
+  const receiptLegalName = saleLocation?.legal_name?.trim() || '';
   const receiptAddress = saleLocation?.address?.trim() || store.address;
+  const receiptPhone = saleLocation?.phone?.trim() || store.phone;
+  const receiptEmail = saleLocation?.email?.trim() || store.email;
   
   const handlePrint = () => {
     window.print();
@@ -167,8 +170,11 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
     <main className="receipt">
       <header className="rcpt-header">
         <img src={logo} alt={store.name} className="rcpt-logo" />
+        {receiptLegalName && (
+          <div className="rcpt-legal-name">{receiptLegalName}</div>
+        )}
         <div className="rcpt-meta">
-          {receiptAddress} • {store.phone} • {store.email}
+          {receiptAddress} • {receiptPhone} • {receiptEmail}
         </div>
       </header>
 

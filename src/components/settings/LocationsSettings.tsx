@@ -16,7 +16,10 @@ import type { Location } from '@/types';
 
 const locationSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  legal_name: z.string().max(150, "Legal name must be less than 150 characters").optional(),
   address: z.string().max(500, "Address must be less than 500 characters").optional(),
+  phone: z.string().max(50, "Phone must be less than 50 characters").optional(),
+  email: z.string().email("Enter a valid email").max(150).optional().or(z.literal('')),
   status: z.enum(["active", "inactive"])
 });
 
@@ -34,12 +37,15 @@ export function LocationsSettings() {
 
   const [formData, setFormData] = useState({
     name: '',
+    legal_name: '',
     address: '',
+    phone: '',
+    email: '',
     status: 'active' as 'active' | 'inactive'
   });
 
   const resetForm = () => {
-    setFormData({ name: '', address: '', status: 'active' });
+    setFormData({ name: '', legal_name: '', address: '', phone: '', email: '', status: 'active' });
     setValidationErrors({});
   };
 
@@ -52,7 +58,10 @@ export function LocationsSettings() {
     setSelectedLocation(location);
     setFormData({
       name: location.name,
+      legal_name: location.legal_name || '',
       address: location.address || '',
+      phone: location.phone || '',
+      email: location.email || '',
       status: location.status as 'active' | 'inactive'
     });
     setValidationErrors({});
@@ -161,6 +170,19 @@ export function LocationsSettings() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="legal_name">Legal / receipt name</Label>
+                  <Input
+                    id="legal_name"
+                    value={formData.legal_name}
+                    onChange={(e) => setFormData({ ...formData, legal_name: e.target.value })}
+                    placeholder="e.g. SOURCED WRISTS WATCHES TRADING LLC"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Printed on this location's receipts. Leave blank to use the default store name.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="address">Address</Label>
                   <AddressAutocomplete
                     value={formData.address}
@@ -173,6 +195,34 @@ export function LocationsSettings() {
                       {validationErrors.address}
                     </p>
                   )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+44 …"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="store@…"
+                    />
+                    {validationErrors.email && (
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {validationErrors.email}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -284,6 +334,19 @@ export function LocationsSettings() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="edit-legal_name">Legal / receipt name</Label>
+                <Input
+                  id="edit-legal_name"
+                  value={formData.legal_name}
+                  onChange={(e) => setFormData({ ...formData, legal_name: e.target.value })}
+                  placeholder="e.g. SOURCED WRISTS WATCHES TRADING LLC"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Printed on this location's receipts. Leave blank to use the default store name.
+                </p>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="edit-address">Address</Label>
                 <AddressAutocomplete
                   value={formData.address}
@@ -296,6 +359,34 @@ export function LocationsSettings() {
                     {validationErrors.address}
                   </p>
                 )}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-phone">Phone</Label>
+                  <Input
+                    id="edit-phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="+44 …"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-email">Email</Label>
+                  <Input
+                    id="edit-email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="store@…"
+                  />
+                  {validationErrors.email && (
+                    <p className="text-sm text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {validationErrors.email}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-2">

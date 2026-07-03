@@ -1035,24 +1035,33 @@ export type Database = {
           address: string | null
           created_at: string
           demo_session_id: string | null
+          email: string | null
           id: number
+          legal_name: string | null
           name: string
+          phone: string | null
           status: string | null
         }
         Insert: {
           address?: string | null
           created_at?: string
           demo_session_id?: string | null
+          email?: string | null
           id?: number
+          legal_name?: string | null
           name: string
+          phone?: string | null
           status?: string | null
         }
         Update: {
           address?: string | null
           created_at?: string
           demo_session_id?: string | null
+          email?: string | null
           id?: number
+          legal_name?: string | null
           name?: string
+          phone?: string | null
           status?: string | null
         }
         Relationships: []

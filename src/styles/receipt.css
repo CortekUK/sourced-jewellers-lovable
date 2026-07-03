@@ -44,9 +44,18 @@
   font-style: italic;
 }
 
-.rcpt-meta { 
-  color: hsl(var(--muted-foreground)); 
-  font-size: 12px; 
+.rcpt-legal-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+.rcpt-meta {
+  color: hsl(var(--muted-foreground));
+  font-size: 12px;
   line-height: 1.4;
 }
 
