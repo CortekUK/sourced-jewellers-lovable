@@ -4,6 +4,7 @@ import { formatCurrency, formatPaymentMethod } from '@/lib/utils';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLocations } from '@/hooks/useLocations';
 import { exportReceiptCSV } from '@/utils/receiptExport';
 import { supabase } from '@/integrations/supabase/client';
 import { EmailReceiptDialog } from '@/components/pos/EmailReceiptDialog';
@@ -25,6 +26,7 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
   const { theme } = useTheme();
   const { toast } = useToast();
   const { userRole } = useAuth();
+  const { data: locations } = useLocations();
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
 
@@ -50,6 +52,12 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
 
   // Use the new logo
   const logo = branding.logo || "/new-logo-cropped.png";
+
+  // Per-location address: if the sale was made at a location that has its own
+  // address set (e.g. Dubai), show that on the receipt. Otherwise fall back to
+  // the default store address so nothing is shown wrong before addresses are set.
+  const saleLocation = locations?.find((loc) => loc.id === sale.location_id);
+  const receiptAddress = saleLocation?.address?.trim() || store.address;
   
   const handlePrint = () => {
     window.print();
@@ -160,7 +168,7 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
       <header className="rcpt-header">
         <img src={logo} alt={store.name} className="rcpt-logo" />
         <div className="rcpt-meta">
-          {store.address} • {store.phone} • {store.email}
+          {receiptAddress} • {store.phone} • {store.email}
         </div>
       </header>
 

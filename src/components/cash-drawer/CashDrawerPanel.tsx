@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
 import { useCashDrawerBalances } from '@/hooks/useCashDrawer';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useAuth } from '@/contexts/AuthContext';
 import { CashMovementModal } from './CashMovementModal';
 import { CashDrawerHistoryModal } from './CashDrawerHistoryModal';
 import { 
@@ -19,7 +20,10 @@ import { format } from 'date-fns';
 
 export function CashDrawerPanel() {
   const { data: balances, isLoading, refetch } = useCashDrawerBalances();
-  const { isOwner, isAtLeast } = usePermissions();
+  const { isOwner, isManager } = usePermissions();
+  const { cashDrawerAccess } = useAuth();
+  // Owners and managers always have access; specific staff can be granted it.
+  const canMoveCash = isOwner || isManager || cashDrawerAccess;
   const [movementModal, setMovementModal] = useState<{
     isOpen: boolean;
     locationId: number | null;
@@ -117,7 +121,7 @@ export function CashDrawerPanel() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {isAtLeast('staff') && (
+                  {canMoveCash && (
                     <>
                       <Button
                         variant="outline"

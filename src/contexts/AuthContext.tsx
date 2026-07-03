@@ -18,6 +18,8 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   userRole: UserRole;
+  /** Per-user grant to add/remove cash from the drawer (owners/managers always allowed) */
+  cashDrawerAccess: boolean;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, role?: UserRole) => Promise<{ error: any }>;
@@ -44,27 +46,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [userRole, setUserRole] = useState<UserRole>('staff'); // Default to staff
+  const [cashDrawerAccess, setCashDrawerAccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Function to fetch user role from database
-  const fetchUserRole = async (userId: string) => {
+  // Function to fetch user role + cash drawer grant from database
+  const fetchUserProfile = async (
+    userId: string
+  ): Promise<{ role: UserRole; cashDrawerAccess: boolean }> => {
     try {
       const { data: profile, error } = await supabase
         .from('profiles')
-        .select('role, full_name')
+        .select('role, full_name, cash_drawer_access')
         .eq('user_id', userId)
         .single();
 
       if (error) {
-        console.error('Error fetching user role:', error);
-        return 'staff'; // Default fallback
+        console.error('Error fetching user profile:', error);
+        return { role: 'staff', cashDrawerAccess: false }; // Default fallback
       }
 
-      return profile?.role || 'staff';
+      return {
+        role: (profile?.role as UserRole) || 'staff',
+        cashDrawerAccess: profile?.cash_drawer_access ?? false,
+      };
     } catch (error) {
-      console.error('Error fetching user role:', error);
-      return 'staff';
+      console.error('Error fetching user profile:', error);
+      return { role: 'staff', cashDrawerAccess: false };
     }
   };
 
@@ -81,6 +89,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Clear role immediately if no session
         if (!session?.user) {
           setUserRole('staff');
+          setCashDrawerAccess(false);
           setLoading(false);
         }
       }
@@ -104,13 +113,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         
         if (session?.user) {
           try {
-            console.log('AuthContext: Fetching initial user role');
-            const role = await fetchUserRole(session.user.id);
-            setUserRole(role as UserRole);
+            console.log('AuthContext: Fetching initial user profile');
+            const { role, cashDrawerAccess } = await fetchUserProfile(session.user.id);
+            setUserRole(role);
+            setCashDrawerAccess(cashDrawerAccess);
             console.log('AuthContext: Initial user role set to', role);
           } catch (error) {
-            console.error('AuthContext: Error fetching initial user role:', error);
+            console.error('AuthContext: Error fetching initial user profile:', error);
             setUserRole('staff'); // Fallback to staff role
+            setCashDrawerAccess(false);
           }
         }
       } catch (error) {
@@ -139,14 +150,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Separate effect to fetch user role when user changes
   useEffect(() => {
     if (user?.id) {
-      console.log('AuthContext: Fetching user role for', user.id);
-      fetchUserRole(user.id).then(role => {
-        setUserRole(role as UserRole);
+      console.log('AuthContext: Fetching user profile for', user.id);
+      fetchUserProfile(user.id).then(({ role, cashDrawerAccess }) => {
+        setUserRole(role);
+        setCashDrawerAccess(cashDrawerAccess);
         console.log('AuthContext: User role set to', role);
         setLoading(false);
       }).catch(error => {
-        console.error('AuthContext: Error fetching user role:', error);
+        console.error('AuthContext: Error fetching user profile:', error);
         setUserRole('staff');
+        setCashDrawerAccess(false);
         setLoading(false);
       });
     }
@@ -208,6 +221,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(null);
       setSession(null);
       setUserRole('staff');
+      setCashDrawerAccess(false);
       
       // Then attempt server-side logout
       const { error } = await supabase.auth.signOut();
@@ -260,8 +274,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const refreshUserRole = async () => {
     if (user?.id) {
       try {
-        const role = await fetchUserRole(user.id);
-        setUserRole(role as UserRole);
+        const { role, cashDrawerAccess } = await fetchUserProfile(user.id);
+        setUserRole(role);
+        setCashDrawerAccess(cashDrawerAccess);
       } catch (error) {
         console.error('Error refreshing user role:', error);
       }
@@ -274,6 +289,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         user,
         session,
         userRole,
+        cashDrawerAccess,
         loading,
         signIn,
         signUp,

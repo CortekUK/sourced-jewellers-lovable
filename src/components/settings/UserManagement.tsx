@@ -29,6 +29,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Switch } from '@/components/ui/switch';
 import { Users, Shield, AlertTriangle, Loader2, UserPlus, Trash2, Eye, EyeOff, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -57,6 +58,7 @@ interface UserProfile {
   full_name: string | null;
   role: UserRole;
   avatar_url: string | null;
+  cash_drawer_access: boolean;
   created_at: string;
 }
 
@@ -167,6 +169,46 @@ export function UserManagement() {
     } finally {
       setUpdating(null);
       setConfirmChange(null);
+    }
+  };
+
+  const handleCashDrawerToggle = async (targetUser: UserProfile, enabled: boolean) => {
+    setUpdating(targetUser.user_id);
+    // Optimistic update
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.user_id === targetUser.user_id ? { ...u, cash_drawer_access: enabled } : u
+      )
+    );
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ cash_drawer_access: enabled })
+        .eq('user_id', targetUser.user_id);
+
+      if (error) throw error;
+
+      toast({
+        title: enabled ? 'Cash drawer access granted' : 'Cash drawer access removed',
+        description: `${targetUser.full_name || targetUser.email} ${
+          enabled ? 'can now' : 'can no longer'
+        } add & remove cash.`,
+      });
+    } catch (error) {
+      console.error('Error updating cash drawer access:', error);
+      // Revert on failure
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.user_id === targetUser.user_id ? { ...u, cash_drawer_access: !enabled } : u
+        )
+      );
+      toast({
+        title: 'Error',
+        description: 'Failed to update cash drawer access',
+        variant: 'destructive',
+      });
+    } finally {
+      setUpdating(null);
     }
   };
 
@@ -514,6 +556,7 @@ export function UserManagement() {
                   <TableHead>Email</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Change Role</TableHead>
+                  <TableHead className="text-center">Cash Drawer</TableHead>
                   <TableHead className="w-[80px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -564,6 +607,20 @@ export function UserManagement() {
                           <SelectItem value="staff">Staff</SelectItem>
                         </SelectContent>
                       </Select>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {user.role === 'staff' ? (
+                        <Switch
+                          checked={user.cash_drawer_access}
+                          disabled={updating === user.user_id}
+                          onCheckedChange={(checked) =>
+                            handleCashDrawerToggle(user, checked)
+                          }
+                          aria-label="Cash drawer access"
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">Always</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
