@@ -583,7 +583,8 @@ const StaffActivitySection = () => {
 export default function Dashboard() {
   const {
     user,
-    loading: authLoading
+    loading: authLoading,
+    cashDrawerAccess
   } = useAuth();
   const { isOwner, isAtLeast } = usePermissions();
   const {
@@ -687,8 +688,8 @@ export default function Dashboard() {
         <PurchasingSnapshotCards />
       </div>
 
-      {/* Cash Drawer Status - Owner/Manager only */}
-      {isAtLeast('manager') && (
+      {/* Cash Drawer Status - managers/owners, plus staff granted access */}
+      {(isAtLeast('manager') || cashDrawerAccess) && (
         <div className="mb-6 md:mb-8">
           <CashDrawerPanel />
         </div>
