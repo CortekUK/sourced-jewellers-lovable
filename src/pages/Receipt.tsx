@@ -37,11 +37,12 @@ export default function Receipt() {
         .select(`
           *,
           products(
-            name, 
-            internal_sku, 
-            sku, 
-            is_trade_in, 
-            is_consignment
+            name,
+            internal_sku,
+            sku,
+            is_trade_in,
+            is_consignment,
+            currency
           )
         `)
         .eq('sale_id', saleId);

@@ -1291,6 +1291,7 @@ export type Database = {
           consignment_supplier_id: number | null
           consignment_terms: string | null
           created_at: string
+          currency: string
           demo_session_id: string | null
           description: string | null
           diamond_type: string | null
@@ -1328,6 +1329,7 @@ export type Database = {
           consignment_supplier_id?: number | null
           consignment_terms?: string | null
           created_at?: string
+          currency?: string
           demo_session_id?: string | null
           description?: string | null
           diamond_type?: string | null
@@ -1365,6 +1367,7 @@ export type Database = {
           consignment_supplier_id?: number | null
           consignment_terms?: string | null
           created_at?: string
+          currency?: string
           demo_session_id?: string | null
           description?: string | null
           diamond_type?: string | null

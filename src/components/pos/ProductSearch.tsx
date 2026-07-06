@@ -200,7 +200,7 @@ export function ProductSearch({ onAddToCart, cartItems }: ProductSearchProps) {
                     
                     {/* Price in Gold */}
                     <p className="text-sm text-[#D4AF37] font-medium mb-0.5">
-                      {formatCurrency(product.unit_price)}
+                      {formatCurrency(product.unit_price, (product as any).currency)}
                       {product.tax_rate > 0 && (
                         <span className="ml-2 text-muted-foreground">• {product.tax_rate}% tax</span>
                       )}

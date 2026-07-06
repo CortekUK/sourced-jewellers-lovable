@@ -19,11 +19,20 @@ export function formatPaymentMethod(method: string): string {
   return methods[method?.toLowerCase()] || method?.charAt(0).toUpperCase() + method?.slice(1) || 'Unknown';
 }
 
-// Currency formatting
-export function formatCurrency(amount: number, currency = 'GBP'): string {
+// Supported product/sale currencies
+export type Currency = 'GBP' | 'AED';
+
+// Short symbol/prefix for a currency (for manual strings and input adornments)
+export function getCurrencySymbol(currency: string | null | undefined = 'GBP'): string {
+  return currency === 'AED' ? 'AED' : '£';
+}
+
+// Currency formatting. Pass a product/sale currency ('GBP' | 'AED') to show the
+// right symbol — there is NO conversion, the amount is shown as-is.
+export function formatCurrency(amount: number, currency: string | null | undefined = 'GBP'): string {
   return new Intl.NumberFormat('en-GB', {
     style: 'currency',
-    currency,
+    currency: currency || 'GBP',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);

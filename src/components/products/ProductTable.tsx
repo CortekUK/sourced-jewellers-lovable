@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/tooltip';
 import { usePermissions, CRM_MODULES } from '@/hooks/usePermissions';
 import { useManagerOrAboveGuard } from '@/hooks/useOwnerGuard';
-import { getSupplierDisplayName } from '@/lib/utils';
+import { getSupplierDisplayName, getCurrencySymbol } from '@/lib/utils';
 
 interface ProductTableProps {
   products: any[];
@@ -383,20 +383,20 @@ export function ProductTable({
 
                     {/* Sell Price */}
                     <TableCell className={`${cellPadding} text-right`}>
-                      <span className="font-medium text-primary">£{Number(product.unit_price).toFixed(2)}</span>
+                      <span className="font-medium text-primary">{getCurrencySymbol((product as any).currency)}{Number(product.unit_price).toFixed(2)}</span>
                     </TableCell>
 
                     {canViewCost && (
                       <>
                         {/* Cost */}
                         <TableCell className={`${cellPadding} text-right`}>
-                          <span className="text-muted-foreground">£{Number(product.unit_cost).toFixed(2)}</span>
+                          <span className="text-muted-foreground">{getCurrencySymbol((product as any).currency)}{Number(product.unit_cost).toFixed(2)}</span>
                         </TableCell>
 
                         {/* Profit */}
                         <TableCell className={`${cellPadding} text-right`}>
                           <span className={profit > 0 ? 'text-success font-medium' : 'text-muted-foreground'}>
-                            £{profit.toFixed(2)}
+                            {getCurrencySymbol((product as any).currency)}{profit.toFixed(2)}
                           </span>
                         </TableCell>
 

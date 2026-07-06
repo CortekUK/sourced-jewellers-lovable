@@ -33,7 +33,7 @@ import { ImageUpload } from '@/components/ui/image-upload';
 import { DocumentUpload } from '@/components/ui/document-upload';
 import { ProductCardSkeleton, StatsCardSkeleton } from '@/components/ui/loading-states';
 import { QueryErrorHandler } from '@/components/ui/error-states';
-import { getSupplierDisplayName } from '@/lib/utils';
+import { getSupplierDisplayName, getCurrencySymbol } from '@/lib/utils';
 import type { ProductInsert, ProductWithStock } from '@/types';
 import type { EnhancedProductFilters as EnhancedProductFiltersType } from '@/hooks/useEnhancedProducts';
 import { useStockStatus, getStockBadge } from '@/hooks/useStockStatus';
@@ -243,12 +243,12 @@ const ProductCard = ({
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <p className="text-xs text-muted-foreground mb-1">Sell Price</p>
-            <p className="font-luxury text-xl font-bold text-primary">£{Number(product.unit_price).toFixed(2)}</p>
+            <p className="font-luxury text-xl font-bold text-primary">{getCurrencySymbol((product as any).currency)}{Number(product.unit_price).toFixed(2)}</p>
           </div>
           {canViewCost && (
             <div>
               <p className="text-xs text-muted-foreground mb-1">Cost</p>
-              <p className="text-lg text-muted-foreground">£{Number(product.unit_cost).toFixed(2)}</p>
+              <p className="text-lg text-muted-foreground">{getCurrencySymbol((product as any).currency)}{Number(product.unit_cost).toFixed(2)}</p>
             </div>
           )}
         </div>
@@ -259,7 +259,7 @@ const ProductCard = ({
             <div>
               <p className="text-xs text-muted-foreground mb-1">Profit</p>
               <p className={`font-medium ${Number(profit) > 0 ? 'text-success' : 'text-muted-foreground'}`}>
-                £{profit}
+                {getCurrencySymbol((product as any).currency)}{profit}
               </p>
             </div>
             <div>

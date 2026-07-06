@@ -32,6 +32,12 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
 
   const { sale, saleItems, partExchanges, pxTotal, staff } = data;
 
+  // Receipt currency: derived from the sold items (a Dubai sale is all AED).
+  // Falls back to GBP. No conversion — amounts are shown as stored.
+  const saleCurrency: string =
+    saleItems?.find((it: any) => it.products?.currency)?.products?.currency || 'GBP';
+  const money = (amount: number) => formatCurrency(amount, saleCurrency);
+
   // Get customer email if available
   const customerEmail = sale.customer_email;
   const customerName = sale.customer_name;
@@ -217,11 +223,11 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
                   {/* Placeholder for serials - can be enhanced later */}
                 </td>
                 <td className="right">{item.quantity}</td>
-                <td className="right">{formatCurrency(item.unit_price)}</td>
+                <td className="right">{money(item.unit_price)}</td>
                 <td className="right">
-                  {item.discount ? `-${formatCurrency(item.discount)}` : '—'}
+                  {item.discount ? `-${money(item.discount)}` : '—'}
                 </td>
-                <td className="right">{formatCurrency(lineTotal)}</td>
+                <td className="right">{money(lineTotal)}</td>
               </tr>
             );
           })}
@@ -240,7 +246,7 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
               <td className="right">—</td>
               <td className="right">—</td>
               <td className="right">—</td>
-              <td className="right text-destructive">-{formatCurrency(px.allowance)}</td>
+              <td className="right text-destructive">-{money(px.allowance)}</td>
             </tr>
           ))}
         </tbody>
@@ -249,23 +255,23 @@ export function ReceiptDocument({ data, settings }: ReceiptProps) {
       <section className="rcpt-totals">
         <div>
           <span>Subtotal</span>
-          <span>{formatCurrency(sale.subtotal)}</span>
+          <span>{money(sale.subtotal)}</span>
         </div>
         {sale.discount_total > 0 && (
           <div>
             <span>Discount</span>
-            <span>-{formatCurrency(sale.discount_total)}</span>
+            <span>-{money(sale.discount_total)}</span>
           </div>
         )}
         {sale.tax_total > 0 && (
           <div>
             <span>Tax</span>
-            <span>{formatCurrency(sale.tax_total)}</span>
+            <span>{money(sale.tax_total)}</span>
           </div>
         )}
         <div className="net">
           <span>Net Total</span>
-          <span>{formatCurrency(sale.total - pxTotal)}</span>
+          <span>{money(sale.total - pxTotal)}</span>
         </div>
       </section>
 

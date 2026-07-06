@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useProductTradeInStatus } from '@/hooks/useProductTradeInStatus';
 import { usePartExchangesByProduct } from '@/hooks/usePartExchanges';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { getSupplierDisplayName, getCleanedDescription, formatCurrency } from '@/lib/utils';
+import { getSupplierDisplayName, getCleanedDescription, formatCurrency, getCurrencySymbol } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -397,7 +397,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                     </div>
                     <div className="min-w-0">
                       <span className="text-xs text-muted-foreground block">Sell Price</span>
-                      <p className="text-xl font-bold text-primary truncate">£{Number(product.unit_price).toFixed(2)}</p>
+                      <p className="text-xl font-bold text-primary truncate">{getCurrencySymbol((product as any).currency)}{Number(product.unit_price).toFixed(2)}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -413,7 +413,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                     <div className="min-w-0">
                       <span className="text-xs text-muted-foreground block">Profit</span>
                       <p className={`text-xl font-bold truncate ${Number(profit) >= 0 ? 'text-success' : 'text-destructive'}`}>
-                        £{profit}
+                        {getCurrencySymbol((product as any).currency)}{profit}
                       </p>
                     </div>
                   </div>
@@ -761,12 +761,12 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                       {canViewCost && (
                       <div className="flex justify-between py-3 first:pt-0">
                         <span className="text-muted-foreground text-sm">Cost Price</span>
-                        <span className="font-medium">£{Number(product.unit_cost).toFixed(2)}</span>
+                        <span className="font-medium">{getCurrencySymbol((product as any).currency)}{Number(product.unit_cost).toFixed(2)}</span>
                       </div>
                       )}
                       <div className="flex justify-between py-3">
                         <span className="text-muted-foreground text-sm">Sell Price</span>
-                        <span className="font-medium">£{Number(product.unit_price).toFixed(2)}</span>
+                        <span className="font-medium">{getCurrencySymbol((product as any).currency)}{Number(product.unit_price).toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between py-3 last:pb-0">
                         <span className="text-muted-foreground text-sm">Tax Rate</span>
@@ -777,7 +777,7 @@ export function ProductDetailModal({ product, open, onOpenChange, onEditClick, o
                     <div className="divide-y divide-border/50 sm:pl-5 sm:border-l border-border/50">
                       <div className="flex justify-between py-3 sm:first:pt-0">
                         <span className="text-muted-foreground text-sm">Profit per Unit</span>
-                        <span className={`font-medium ${Number(profit) >= 0 ? 'text-success' : 'text-destructive'}`}>£{profit}</span>
+                        <span className={`font-medium ${Number(profit) >= 0 ? 'text-success' : 'text-destructive'}`}>{getCurrencySymbol((product as any).currency)}{profit}</span>
                       </div>
                       <div className="flex justify-between py-3 last:pb-0">
                         <span className="text-muted-foreground text-sm">Markup</span>

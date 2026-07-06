@@ -45,7 +45,7 @@ import { MultiImageUpload } from '@/components/ui/multi-image-upload';
 import { DocumentUpload } from '@/components/ui/document-upload';
 import { AddProductForm } from '@/components/forms/AddProductForm';
 import { InlineSupplierAdd } from '@/components/forms/InlineSupplierAdd';
-import { getCleanedDescription, extractIndividualSeller, cn, formatCurrency } from '@/lib/utils';
+import { getCleanedDescription, extractIndividualSeller, cn, formatCurrency, getCurrencySymbol } from '@/lib/utils';
 
 interface DocumentUploadItem {
   id: string;
@@ -114,6 +114,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
     supplier_id: '',
     individual_name: '',
     location_id: '',
+    currency: 'GBP',
     unit_cost: '',
     unit_price: '',
     reorder_threshold: '0',
@@ -154,6 +155,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         supplier_id: product.supplier_id?.toString() || '',
         individual_name: individualName || '',
         location_id: (product as any).location_id?.toString() || '',
+        currency: (product as any).currency || 'GBP',
         unit_cost: product.unit_cost?.toString() || '',
         unit_price: product.unit_price?.toString() || '',
         reorder_threshold: (product as any).reorder_threshold?.toString() || '0',
@@ -195,6 +197,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         supplier_id: '',
         individual_name: '',
         location_id: '',
+        currency: 'GBP',
         unit_cost: '',
         unit_price: '',
         reorder_threshold: '0',
@@ -247,6 +250,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
         year_of_production: formData.year_of_production.trim() || null,
         supplier_id: formData.supplier_type === 'registered' && formData.supplier_id ? parseInt(formData.supplier_id) : null,
         location_id: formData.location_id ? parseInt(formData.location_id) : null,
+        currency: formData.currency,
         unit_cost: parseFloat(formData.unit_cost) || 0,
         unit_price: parseFloat(formData.unit_price) || 0,
         reorder_threshold: parseInt(formData.reorder_threshold) || 0,
@@ -381,6 +385,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
             year_of_production: formData.year_of_production.trim() || null,
             supplier_id: formData.supplier_type === 'registered' && formData.supplier_id ? parseInt(formData.supplier_id) : null,
             location_id: formData.location_id ? parseInt(formData.location_id) : null,
+            currency: formData.currency,
             unit_cost: parseFloat(formData.unit_cost) || 0,
             unit_price: parseFloat(formData.unit_price) || 0,
             reorder_threshold: parseInt(formData.reorder_threshold) || 0,
@@ -1025,28 +1030,51 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
                 </div>
               </AccordionTrigger>
               <AccordionContent className="space-y-6 pt-4 pb-6 px-1.5">
+                <div className="space-y-2">
+                  <Label htmlFor="currency" className="text-primary font-medium">Currency</Label>
+                  <Select
+                    value={formData.currency}
+                    onValueChange={(value) => setFormData({ ...formData, currency: value })}
+                  >
+                    <SelectTrigger id="currency" className="focus:border-primary md:w-1/2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GBP">£ GBP (UK)</SelectItem>
+                      <SelectItem value="AED">AED (Dubai)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Prices below are entered and shown in this currency. No conversion is applied.
+                  </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="cost" className="text-primary font-medium">Cost Price *</Label>
-                    <Input 
+                    <Label htmlFor="cost" className="text-primary font-medium">
+                      Cost Price ({getCurrencySymbol(formData.currency)}) *
+                    </Label>
+                    <Input
                       id="cost"
                       type="number"
                       step="1" min="0"
-                      placeholder="0" 
+                      placeholder="0"
                       value={formData.unit_cost}
                       onChange={(e) => setFormData({...formData, unit_cost: e.target.value})}
                       required
                       className="focus:border-primary"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <Label htmlFor="price" className="text-primary font-medium">Sell Price *</Label>
-                    <Input 
+                    <Label htmlFor="price" className="text-primary font-medium">
+                      Sell Price ({getCurrencySymbol(formData.currency)}) *
+                    </Label>
+                    <Input
                       id="price"
                       type="number"
                       step="1" min="0"
-                      placeholder="0" 
+                      placeholder="0"
                       value={formData.unit_price}
                       onChange={(e) => setFormData({...formData, unit_price: e.target.value})}
                       required
@@ -1069,7 +1097,7 @@ export function EditProductModal({ product, open, onOpenChange }: EditProductMod
                           "font-luxury text-2xl font-semibold",
                           profit >= 0 ? "text-green-600" : "text-red-500"
                         )}>
-                          £{profit.toFixed(2)} ({markup.toFixed(1)}% markup)
+                          {formatCurrency(profit, formData.currency)} ({markup.toFixed(1)}% markup)
                         </p>
                       </div>
                     </div>

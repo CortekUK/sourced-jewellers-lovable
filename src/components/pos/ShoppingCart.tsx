@@ -62,6 +62,11 @@ export function ShoppingCartComponent({
 }: ShoppingCartProps) {
   const [editingPriceId, setEditingPriceId] = useState<number | null>(null);
   const [editPriceValue, setEditPriceValue] = useState('');
+  // Currency for cart-level totals: derived from the catalog items in the cart.
+  // Sales are single-currency in practice (a Dubai sale is all AED); custom
+  // items and mixed carts fall back to GBP.
+  const cartCurrency: string =
+    (items.find((i) => (i.product as any)?.currency)?.product as any)?.currency || 'GBP';
   // Calculate discount based on type
   const calculateItemDiscount = (lineTotal: number) => {
     if (discountType === 'percentage') {
@@ -187,7 +192,7 @@ export function ShoppingCartComponent({
                         ) : (
                           <>
                             {priceChanged && (
-                              <span className="line-through text-muted-foreground/60">{formatCurrency(catalogPrice)}</span>
+                              <span className="line-through text-muted-foreground/60">{formatCurrency(catalogPrice, (item.product as any)?.currency)}</span>
                             )}
                             <button 
                               onClick={startEditing}
@@ -195,7 +200,7 @@ export function ShoppingCartComponent({
                                 priceIncreased ? 'text-blue-600 dark:text-blue-400' : priceChanged ? 'text-success' : 'text-primary'
                               }`}
                             >
-                              {formatCurrency(item.unit_price)}
+                              {formatCurrency(item.unit_price, (item.product as any)?.currency)}
                               <Pencil className="h-3 w-3 opacity-60" />
                             </button>
                             <span>Each</span>
@@ -207,10 +212,10 @@ export function ShoppingCartComponent({
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-sm text-primary">{formatCurrency(lineFinal)}</p>
+                      <p className="font-medium text-sm text-primary">{formatCurrency(lineFinal, (item.product as any)?.currency)}</p>
                       {discount > 0 && (
                         <p className="text-xs text-success">
-                          -{formatCurrency(lineDiscount)} discount
+                          -{formatCurrency(lineDiscount, (item.product as any)?.currency)} discount
                         </p>
                       )}
                     </div>
@@ -365,31 +370,31 @@ export function ShoppingCartComponent({
               <h5 className="font-semibold text-sm mb-2">Summary</h5>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal:</span>
-                <span className="text-primary font-medium">{formatCurrency(totals.subtotal)}</span>
+                <span className="text-primary font-medium">{formatCurrency(totals.subtotal, cartCurrency)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">
-                    Discount ({discountType === 'percentage' ? `${discount}%` : formatCurrency(discount)}):
+                    Discount ({discountType === 'percentage' ? `${discount}%` : formatCurrency(discount, cartCurrency)}):
                   </span>
-                  <span className="text-success font-medium">-{formatCurrency(totals.discount_total)}</span>
+                  <span className="text-success font-medium">-{formatCurrency(totals.discount_total, cartCurrency)}</span>
                 </div>
               )}
               {totals.tax_total > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Tax:</span>
-                  <span className="text-primary font-medium">{formatCurrency(totals.tax_total)}</span>
+                  <span className="text-primary font-medium">{formatCurrency(totals.tax_total, cartCurrency)}</span>
                 </div>
               )}
               {partExchangeTotal > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Trade-In Allowance:</span>
-                  <span className="text-success font-medium">-{formatCurrency(partExchangeTotal)}</span>
+                  <span className="text-success font-medium">-{formatCurrency(partExchangeTotal, cartCurrency)}</span>
                 </div>
               )}
               <div className={`flex justify-between font-bold text-base pt-2 border-t ${netTotal < 0 ? 'text-destructive' : 'text-primary'}`}>
                 <span>{netTotal < 0 ? 'Owed to Customer:' : 'Net Total:'}</span>
-                <span>{formatCurrency(Math.abs(netTotal))}</span>
+                <span>{formatCurrency(Math.abs(netTotal), cartCurrency)}</span>
               </div>
             </div>
           </div>
