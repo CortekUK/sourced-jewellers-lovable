@@ -1034,6 +1034,7 @@ export type Database = {
         Row: {
           address: string | null
           created_at: string
+          currency: string
           demo_session_id: string | null
           email: string | null
           id: number
@@ -1045,6 +1046,7 @@ export type Database = {
         Insert: {
           address?: string | null
           created_at?: string
+          currency?: string
           demo_session_id?: string | null
           email?: string | null
           id?: number
@@ -1056,6 +1058,7 @@ export type Database = {
         Update: {
           address?: string | null
           created_at?: string
+          currency?: string
           demo_session_id?: string | null
           email?: string | null
           id?: number

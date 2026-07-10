@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import { useRecordCashMovement, useSetCashFloat, CashMovementType } from '@/hooks/useCashDrawer';
+import { getCurrencySymbol } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -19,6 +20,7 @@ interface CashMovementModalProps {
   onClose: () => void;
   locationId: number | null;
   locationName: string;
+  currency?: string;
   movementType: 'deposit' | 'withdrawal' | 'float_set';
 }
 
@@ -27,6 +29,7 @@ export function CashMovementModal({
   onClose,
   locationId,
   locationName,
+  currency = 'GBP',
   movementType,
 }: CashMovementModalProps) {
   const [amount, setAmount] = useState('');
@@ -109,7 +112,7 @@ export function CashMovementModal({
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="amount">Amount ({getCurrencySymbol(currency)})</Label>
             <CurrencyInput
               id="amount"
               value={amount}

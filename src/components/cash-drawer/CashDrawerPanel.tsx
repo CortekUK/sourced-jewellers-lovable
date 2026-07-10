@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
 import { useCashDrawerBalances } from '@/hooks/useCashDrawer';
+import { useLocations } from '@/hooks/useLocations';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useAuth } from '@/contexts/AuthContext';
 import { CashMovementModal } from './CashMovementModal';
@@ -20,21 +21,27 @@ import { format } from 'date-fns';
 
 export function CashDrawerPanel() {
   const { data: balances, isLoading, refetch } = useCashDrawerBalances();
+  const { data: locations } = useLocations();
   const { isOwner, isManager } = usePermissions();
   const { cashDrawerAccess } = useAuth();
   // Owners and managers always have access; specific staff can be granted it.
   const canMoveCash = isOwner || isManager || cashDrawerAccess;
+  // Each location's drawer displays in its own currency (e.g. Dubai in AED).
+  const currencyFor = (locationId: number): string =>
+    locations?.find((loc) => loc.id === locationId)?.currency || 'GBP';
   const [movementModal, setMovementModal] = useState<{
     isOpen: boolean;
     locationId: number | null;
     locationName: string;
+    currency: string;
     type: 'deposit' | 'withdrawal' | 'float_set';
-  }>({ isOpen: false, locationId: null, locationName: '', type: 'deposit' });
+  }>({ isOpen: false, locationId: null, locationName: '', currency: 'GBP', type: 'deposit' });
   const [historyModal, setHistoryModal] = useState<{
     isOpen: boolean;
     locationId: number | null;
     locationName: string;
-  }>({ isOpen: false, locationId: null, locationName: '' });
+    currency: string;
+  }>({ isOpen: false, locationId: null, locationName: '', currency: 'GBP' });
 
   if (isLoading) {
     return (
@@ -117,7 +124,7 @@ export function CashDrawerPanel() {
                 <div className={`text-3xl font-bold mb-5 ${
                   location.current_balance < 0 ? 'text-destructive' : 'text-primary'
                 }`}>
-                  {formatCurrency(location.current_balance)}
+                  {formatCurrency(location.current_balance, currencyFor(location.location_id))}
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -131,6 +138,7 @@ export function CashDrawerPanel() {
                           isOpen: true,
                           locationId: location.location_id,
                           locationName: location.location_name,
+                          currency: currencyFor(location.location_id),
                           type: 'deposit'
                         })}
                       >
@@ -145,6 +153,7 @@ export function CashDrawerPanel() {
                           isOpen: true,
                           locationId: location.location_id,
                           locationName: location.location_name,
+                          currency: currencyFor(location.location_id),
                           type: 'withdrawal'
                         })}
                       >
@@ -161,6 +170,7 @@ export function CashDrawerPanel() {
                         isOpen: true,
                         locationId: location.location_id,
                         locationName: location.location_name,
+                        currency: currencyFor(location.location_id),
                         type: 'float_set'
                       })}
                     >
@@ -173,7 +183,8 @@ export function CashDrawerPanel() {
                     onClick={() => setHistoryModal({
                       isOpen: true,
                       locationId: location.location_id,
-                      locationName: location.location_name
+                      locationName: location.location_name,
+                      currency: currencyFor(location.location_id)
                     })}
                   >
                     <History className="h-3 w-3 mr-1" />
@@ -191,6 +202,7 @@ export function CashDrawerPanel() {
         onClose={() => setMovementModal({ ...movementModal, isOpen: false })}
         locationId={movementModal.locationId}
         locationName={movementModal.locationName}
+        currency={movementModal.currency}
         movementType={movementModal.type}
       />
 
@@ -199,6 +211,7 @@ export function CashDrawerPanel() {
         onClose={() => setHistoryModal({ ...historyModal, isOpen: false })}
         locationId={historyModal.locationId}
         locationName={historyModal.locationName}
+        currency={historyModal.currency}
       />
     </Card>
   );

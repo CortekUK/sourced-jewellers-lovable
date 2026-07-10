@@ -8,6 +8,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AddressAutocomplete } from '@/components/ui/address-autocomplete';
 import { useLocations, useCreateLocation, useUpdateLocation, useDeleteLocation } from '@/hooks/useLocations';
 import { Plus, Edit, Trash2, MapPin, Loader2, AlertCircle } from 'lucide-react';
@@ -20,6 +21,7 @@ const locationSchema = z.object({
   address: z.string().max(500, "Address must be less than 500 characters").optional(),
   phone: z.string().max(50, "Phone must be less than 50 characters").optional(),
   email: z.string().email("Enter a valid email").max(150).optional().or(z.literal('')),
+  currency: z.enum(["GBP", "AED"]),
   status: z.enum(["active", "inactive"])
 });
 
@@ -41,11 +43,12 @@ export function LocationsSettings() {
     address: '',
     phone: '',
     email: '',
+    currency: 'GBP' as 'GBP' | 'AED',
     status: 'active' as 'active' | 'inactive'
   });
 
   const resetForm = () => {
-    setFormData({ name: '', legal_name: '', address: '', phone: '', email: '', status: 'active' });
+    setFormData({ name: '', legal_name: '', address: '', phone: '', email: '', currency: 'GBP', status: 'active' });
     setValidationErrors({});
   };
 
@@ -62,6 +65,7 @@ export function LocationsSettings() {
       address: location.address || '',
       phone: location.phone || '',
       email: location.email || '',
+      currency: (location.currency as 'GBP' | 'AED') || 'GBP',
       status: location.status as 'active' | 'inactive'
     });
     setValidationErrors({});
@@ -223,6 +227,25 @@ export function LocationsSettings() {
                       </p>
                     )}
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="currency">Currency</Label>
+                  <Select
+                    value={formData.currency}
+                    onValueChange={(value) => setFormData({ ...formData, currency: value as 'GBP' | 'AED' })}
+                  >
+                    <SelectTrigger id="currency" className="sm:w-1/2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="GBP">£ GBP</SelectItem>
+                      <SelectItem value="AED">AED</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Used for this location's cash drawer and receipts.
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -387,6 +410,25 @@ export function LocationsSettings() {
                     </p>
                   )}
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-currency">Currency</Label>
+                <Select
+                  value={formData.currency}
+                  onValueChange={(value) => setFormData({ ...formData, currency: value as 'GBP' | 'AED' })}
+                >
+                  <SelectTrigger id="edit-currency" className="sm:w-1/2">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="GBP">£ GBP</SelectItem>
+                    <SelectItem value="AED">AED</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Used for this location's cash drawer and receipts.
+                </p>
               </div>
 
               <div className="flex items-center gap-2">

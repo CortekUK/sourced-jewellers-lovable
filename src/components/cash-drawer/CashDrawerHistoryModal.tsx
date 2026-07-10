@@ -26,6 +26,7 @@ interface CashDrawerHistoryModalProps {
   onClose: () => void;
   locationId: number | null;
   locationName: string;
+  currency?: string;
 }
 
 const movementTypeConfig: Record<CashMovementType, { label: string; icon: typeof ArrowUpCircle; color: string }> = {
@@ -42,6 +43,7 @@ export function CashDrawerHistoryModal({
   onClose,
   locationId,
   locationName,
+  currency = 'GBP',
 }: CashDrawerHistoryModalProps) {
   const { data: movements, isLoading } = useCashDrawerHistory(locationId || undefined);
 
@@ -133,10 +135,10 @@ export function CashDrawerHistoryModal({
                     {/* Amount and balance */}
                     <div className="text-right shrink-0">
                       <p className={`text-base font-semibold tabular-nums ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                        {isPositive ? '+' : ''}{formatCurrency(movement.amount)}
+                        {isPositive ? '+' : ''}{formatCurrency(movement.amount, currency)}
                       </p>
                       <p className="text-xs text-muted-foreground tabular-nums">
-                        Balance: {formatCurrency(movement.runningBalance)}
+                        Balance: {formatCurrency(movement.runningBalance, currency)}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
                         {format(new Date(movement.created_at), 'dd MMM yyyy HH:mm')}
